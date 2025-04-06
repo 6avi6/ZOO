@@ -45,3 +45,18 @@
     background-color: #2c5282;
   }
   
+  .btn {
+    background-color: #2b6cb0;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 6px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn:hover {
+    background-color: #2c5282;
+  }
+  

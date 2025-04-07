@@ -1,23 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import '../Dashboard/styles/Dashboards.css';
 
 const RejestratorDashboard = () => {
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Panel rejestratora</h1>
-      <div className="grid grid-cols-2 gap-4">
-        <Link to="/rejestrator/add-animal" className="btn">Dodaj zwierzę</Link>
-        <Link to="/rejestrator/caretaker-form" className="btn">Dodaj opiekuna</Link>
-        <Link to="/rejestrator/add-enclosure" className="btn">Dodaj wybieg</Link>
-        <Link to="/admin/dictionary-management" className="btn">Dodaj dane słownikowe</Link>
+    <div className="dashboard-container">
+      <div className="dashboard-content">
+        <h1 className="dashboard-title">Panel rejestratora</h1>
+        <div className="dashboard-actions">
+          <Link to="/rejestrator/add-animal" className="dashboard-btn">Dodaj zwierzę</Link>
+          <Link to="/rejestrator/caretaker-form" className="dashboard-btn">Dodaj opiekuna</Link>
+          <Link to="/rejestrator/add-enclosure" className="dashboard-btn">Dodaj wybieg</Link>
+          <Link to="/admin/dictionary-management" className="dashboard-btn">Dodaj dane słownikowe</Link>
+        </div>
       </div>
 
-      <div className="mt-8">
-  <Link to="/" className="text-sm text-blue-600 underline hover:text-blue-800">
-    ⬅️ Wróć do strony głównej
-  </Link>
-</div>
-
+      <Link to="/" className="dashboard-back">Wróć do strony głównej</Link>
     </div>
   );
 };

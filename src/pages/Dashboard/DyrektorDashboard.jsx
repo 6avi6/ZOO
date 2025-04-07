@@ -1,24 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import '../Dashboard/styles/Dashboards.css';
 
 const DyrektorDashboard = () => {
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Panel dyrektora</h1>
-      <div className="grid grid-cols-2 gap-4">
-        <Link to="/dyrektor/reports" className="btn">Przeglądaj raporty</Link>
-        <Link to="/dyrektor/staff-list" className="btn">Wyświetl pracowników</Link>
-        <Link to="/dyrektor/buy-animal" className="btn">Kup nowe zwierzę</Link>
+    <div className="dashboard-container">
+    <div className="dashboard-content">
+      <h1 className="dashboard-title">Panel dyrektora</h1>
+      <div className="dashboard-actions">
+        <Link to="/dyrektor/reports" className="dashboard-btn">Przeglądaj raporty</Link>
+        <Link to="/dyrektor/staff-list" className="dashboard-btn">Lista pracowników</Link>
+        <Link to="/dyrektor/buy-animal" className="dashboard-btn">Kup nowe zwierzę</Link>
       </div>
-
-      <div className="mt-8">
-  <Link to="/" className="text-sm text-blue-600 underline hover:text-blue-800">
-    ⬅️ Wróć do strony głównej
-  </Link>
-</div>
-
     </div>
-  );
+
+    <Link to="/" className="dashboard-back"> Wróć do strony głównej</Link>
+  </div>
+);
 };
 
 export default DyrektorDashboard;

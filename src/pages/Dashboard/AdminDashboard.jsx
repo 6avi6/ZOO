@@ -14,7 +14,7 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      <Link to="/" className="dashboard-back">⬅ Wróć do strony głównej</Link>
+      <Link to="/" className="dashboard-back">Wróć do strony głównej</Link>
     </div>
   );
 };

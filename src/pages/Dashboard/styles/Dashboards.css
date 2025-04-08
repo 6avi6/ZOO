@@ -16,6 +16,15 @@
     font-size: 28px;
     font-weight: bold;
     margin-bottom: 30px;
+    color: #111827;
+  }
+  
+  .dashboard-section {
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 40px;
+    margin-bottom: 16px;
+    color: #374151;
   }
   
   .dashboard-actions {
@@ -32,8 +41,9 @@
     border-radius: 6px;
     text-decoration: none;
     font-weight: 500;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease;
     width: fit-content;
+    min-width: 220px;
   }
   
   .dashboard-btn:hover {

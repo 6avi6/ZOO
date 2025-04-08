@@ -8,8 +8,9 @@ const OpiekunDashboard = () => {
       <div className="dashboard-content">
         <h1 className="dashboard-title">Panel opiekuna zwierząt</h1>
         <div className="dashboard-actions">
-          <Link to="/opiekun/animal-update" className="dashboard-btn">Aktualizuj dane zwierzęcia</Link>
-          <Link to="/opiekun/feeding-update" className="dashboard-btn">Zmień dane żywieniowe</Link>
+        <Link to="/opiekun/update-animal" className="dashboard-btn">Aktualizuj dane zwierzęcia</Link>
+        <Link to="/opiekun/update-feeding" className="dashboard-btn">Zmień dane żywieniowe</Link>
+
         </div>
       </div>
 

@@ -9,7 +9,7 @@ const DyrektorDashboard = () => {
       <h1 className="dashboard-title">Panel dyrektora</h1>
       <div className="dashboard-actions">
         <Link to="/dyrektor/reports" className="dashboard-btn">Przeglądaj raporty</Link>
-        <Link to="/dyrektor/staff" className="dashboard-btn">Lista pracowników</Link>
+        
 
         <Link to="/dyrektor/buy-animal" className="dashboard-btn">Kup nowe zwierzę</Link>
       </div>

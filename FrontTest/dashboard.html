@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Zoo Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Witaj w Zoo!</h1>
+
+    <button onclick="getProfile()">👤 Moje dane</button>
+    <button onclick="getHello()">🌿 Hello (ogólne)</button>
+
+    <h2>Hello dla ról:</h2>
+    <button onclick="getHelloRole('Veterinarian')">🐾 Weterynarz</button>
+    <button onclick="getHelloRole('Registrar')">📝 Rejestrator</button>
+    <button onclick="getHelloRole('Caregiver')">🦴 Opiekun</button>
+    <button onclick="getHelloRole('Director')">🎩 Dyrektor</button>
+    <button onclick="getHelloRole('Admin')">🔐 Admin</button>
+    <button onclick="getHelloRole('VeterinarianCaregiver')">🐾+🦴 Weter. & Opiekun</button>
+
+    <h2>Admin — użytkownicy</h2>
+    <button onclick="getUsers()">📋 Pobierz użytkowników</button>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

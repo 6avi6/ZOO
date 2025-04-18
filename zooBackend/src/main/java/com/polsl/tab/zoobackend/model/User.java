@@ -3,6 +3,7 @@ package com.polsl.tab.zoobackend.model;
 import lombok.*;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -31,6 +32,18 @@ public class User implements UserDetails {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private RefreshToken refreshToken;
+
+    @Column
+    private String firstName;
+
+    @Column
+    private String lastName;
+
+    @Column(unique = true)
+    private String email;
+
+    @Column
+    private LocalDate hireDate;
 
     public User() {}
 

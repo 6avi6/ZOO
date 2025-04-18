@@ -1,4 +1,4 @@
-const API = 'http://localhost:8083';
+const API = 'http://localhost:8083/api';
 
 // autoryzowane fetch z tokenem i obsługą 401
 async function authorizedFetch(url, options = {}, retry = true) {
@@ -49,21 +49,21 @@ async function refreshAccessToken() {
 
 // dane użytkownika /api/me
 async function getProfile() {
-  const res = await authorizedFetch(`${API}/api/me`);
+  const res = await authorizedFetch(`${API}/me`);
   const data = await res.json();
   alert(`Zalogowany jako: ${data.username}\nRola: ${data.role}`);
 }
 
 // hello endpoint ogólny
 async function getHello() {
-  const res = await fetch(`${API}/api/hello`);
+  const res = await fetch(`${API}/hello`);
   const text = await res.text();
   alert(text);
 }
 
 // hello dla ról
 async function getHelloRole(role) {
-  const res = await authorizedFetch(`${API}/api/hello/${role}`);
+  const res = await authorizedFetch(`${API}/hello/${role}`);
   const text = await res.text();
   alert(text);
 }

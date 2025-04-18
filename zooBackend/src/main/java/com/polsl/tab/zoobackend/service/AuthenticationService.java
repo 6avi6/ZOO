@@ -91,7 +91,7 @@ public class AuthenticationService {
 
     public void setRefreshTokenCookie(HttpServletResponse response, String newRefreshToken) {
         String cookieValue = String.format(
-                "refreshToken=%s; Path=/auth/refresh; HttpOnly; SameSite=None; Secure; Max-Age=%d",
+                "refreshToken=%s; Path=/api/auth/refresh; HttpOnly; SameSite=None; Secure; Max-Age=%d",
                 newRefreshToken, 3 * 24 * 60 * 60
         );
 

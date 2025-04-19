@@ -29,10 +29,10 @@ public class AdminController {
         return userService.getAllUsers().stream().map(userMapper::toSummaryDto).collect(Collectors.toList());
     }
 
-    @PutMapping("/user{id}")
+    @PutMapping("/user/{id}")
     public ResponseEntity<?> updateClient(@PathVariable Long id, @Valid @RequestBody UserProfileDTO updateRequest) {
         User updatedClient = userService.updateUser(id, updateRequest);
-        return ResponseEntity.ok(userMapper.toDto(updatedClient));
+        return ResponseEntity.ok(userMapper.toSummaryDto(updatedClient));
     }
 
     @DeleteMapping("/user/{id}")

@@ -7,6 +7,8 @@ import com.polsl.tab.zoobackend.model.User;
 import com.polsl.tab.zoobackend.service.CustomUserDetailsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ public class UserController {
 
     private final CustomUserDetailsService userService;
     private final UserMapper userMapper;
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping("/me")
     public ResponseEntity<UserProfileDTO> getCurrentUserProfile(Authentication authentication) {
@@ -30,7 +33,10 @@ public class UserController {
 
         User user = userService.getUserByUsername(username);
 
-        if (user == null) { return ResponseEntity.status(404).body(null); }
+        if (user == null) {
+            logger.error("User is null: " + user);
+            return ResponseEntity.status(404).body(null);
+        }
 
         return ResponseEntity.ok(userMapper.toDto(user));
     }
@@ -43,7 +49,10 @@ public class UserController {
         User userDetails = (User) authentication.getPrincipal();
         Long id = userDetails.getId();
 
-        if (id == null) { return ResponseEntity.status(401).build(); }
+        if (id == null) {
+            logger.error("Id is null: " + id);
+            return ResponseEntity.status(401).build();
+        }
 
         User updatedClient = userService.updateUser(id, updateRequest);
         return ResponseEntity.ok(userMapper.toDto(updatedClient));

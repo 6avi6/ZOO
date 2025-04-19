@@ -1,5 +1,6 @@
 package com.polsl.tab.zoobackend.controller;
 
+import com.polsl.tab.zoobackend.config.JwtUtil;
 import com.polsl.tab.zoobackend.dto.authentication.RegisterRequest;
 import com.polsl.tab.zoobackend.service.AuthenticationService;
 import com.polsl.tab.zoobackend.dto.authentication.AuthenticationRequest;
@@ -7,6 +8,8 @@ import com.polsl.tab.zoobackend.dto.authentication.AuthenticationResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     public AuthenticationController(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
@@ -45,6 +49,7 @@ public class AuthenticationController {
             }
         }
         if (refreshToken == null) {
+            logger.error("Brak refresh tokenu");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Brak refresh tokenu");
         }
 

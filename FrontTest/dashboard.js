@@ -71,7 +71,7 @@ async function updateUserFromInput() {
     return;
   }
 
-  const res = await authorizedFetch(`${API}user/me`, {
+  const res = await authorizedFetch(`${API}/user/me`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(updateData)
@@ -79,7 +79,12 @@ async function updateUserFromInput() {
 
   if (res.ok) {
     const updatedUser = await res.json();
-    alert(`Użytkownik zaktualizowany:\nID: ${updatedUser.id}\nUsername: ${updatedUser.username}\nRola: ${updatedUser.role}`);
+    alert(`Użytkownik zaktualizowany: Username: ${updatedUser.username}
+                        \nRola: ${updatedUser.role}
+                        \nImię: ${updatedUser.firstName} 
+                        \nNazwisko: ${updatedUser.lastName}
+                        \nEmail: ${updatedUser.email}
+                        \nData zatrudnienia: ${updatedUser.hireDate}`);
   } else if (res.status === 404) {
     alert("Nie znaleziono użytkownika do zaktualizowania.");
   } else if (res.status === 401) {
@@ -98,7 +103,12 @@ async function getProfile() {
     return;
   }
   const data = await res.json();
-  alert(`Zalogowany jako: ${data.username}\nRola: ${data.role}`);
+  alert(`Zalogowany jako: ${data.username}
+                        \nRola: ${data.role}
+                        \nImię: ${data.firstName} 
+                        \nNazwisko: ${data.lastName}
+                        \nEmail: ${data.email}
+                        \nData zatrudnienia: ${data.hireDate}`);
 }
 
 // hello endpoint ogólny

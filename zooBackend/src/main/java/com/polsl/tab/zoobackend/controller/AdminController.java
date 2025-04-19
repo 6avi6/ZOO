@@ -2,14 +2,12 @@ package com.polsl.tab.zoobackend.controller;
 
 import com.polsl.tab.zoobackend.dto.user.UserProfileDTO;
 import com.polsl.tab.zoobackend.dto.user.UserSummaryDTO;
-import com.polsl.tab.zoobackend.dto.user.UserUpdateRequest;
+import com.polsl.tab.zoobackend.exception.ResourceNotFoundException;
 import com.polsl.tab.zoobackend.mapper.UserMapper;
-import com.polsl.tab.zoobackend.model.Role;
 import com.polsl.tab.zoobackend.model.User;
 import com.polsl.tab.zoobackend.service.CustomUserDetailsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
@@ -38,7 +36,7 @@ public class AdminController {
     @DeleteMapping("/user/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         if (!userService.userExists(id)) {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("Client with ID " + id + " not found");
         }
 
         userService.deleteUser(id);

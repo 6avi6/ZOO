@@ -10,7 +10,12 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Date;
 import java.util.function.Function;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,6 +24,8 @@ public class JwtUtil {
     private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 15; // 15 minutes
     private static final SecureRandom secureRandom = new SecureRandom();
     private static final int TOKEN_LENGTH = 32; // Length in bytes (256 bits)
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
 
     public String generateAccessToken(String username, Long userId) {
         return Jwts.builder()
@@ -40,15 +47,34 @@ public class JwtUtil {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public boolean validateToken(String token, String username) {
-        return username.equals(extractUsername(token)) && !isTokenExpired(token);
+    /**
+     * Validate the JWT token signature and expiration.
+     */
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser()
+                    .verifyWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY)))
+                    .build()
+                    .parseSignedClaims(token);
+            return true;
+        } catch (MalformedJwtException e) {
+            logger.error("Invalid JWT token: {}", e.getMessage());
+        } catch (ExpiredJwtException e) {
+            logger.error("Expired JWT token: {}", e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            logger.error("Unsupported JWT token: {}", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            logger.error("Empty JWT claims string: {}", e.getMessage());
+        } catch (JwtException e) {
+            // general JWT exception
+            logger.error("JWT error: {}", e.getMessage());
+        }
+        return false;
     }
 
-    public boolean isTokenExpired(String token) {
-        return extractClaim(token, Claims::getExpiration).before(new Date());
-    }
-
-    // get any data from a JWT token
+    /**
+     * Get any data from a JWT token
+     */
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = Jwts.parser()
                 .verifyWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY)))

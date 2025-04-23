@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: zoo-db
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: zoo
+    ports:
+      - "8084:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Utrwalanie danych bazy
+    networks:
+      - zoo-network  # Przypisanie do własnej sieci
+
+  backend:
+    build: .
+    container_name: zoo-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/zoo
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update  # Automatyczne tworzenie tabel
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+    ports:
+      - "8083:8083"
+    networks:
+      - zoo-network  # Przypisanie do tej samej sieci
+
+volumes:
+  postgres_data:
+    driver: local  # Lokalny wolumen dla danych bazy
+
+networks:
+  zoo-network:
+    driver: bridge

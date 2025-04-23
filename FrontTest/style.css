@@ -1,0 +1,111 @@
+/* Ustawienie pełnej wysokości i braku marginesów na body i html */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+/* Stylizacja body - ustawienie flexboxa na środku i dozwolenie na przewijanie */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Wyrównanie do góry */
+  height: 100%;
+  overflow-y: auto; /* Pozwolenie na przewijanie w pionie */
+}
+
+/* Kontener główny */
+.container {
+  background: white;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-height: 90vh; /* Ograniczenie wysokości kontenera */
+  overflow-y: auto; /* Pozwolenie na przewijanie wewnątrz kontenera */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Stylowanie formularza */
+input, select, button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 16px;
+  box-sizing: border-box; /* Zapewnia, że padding nie wpływa na rozmiar */
+}
+
+/* Styl przycisków */
+button {
+  background-color: #2b6cb0;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Dodatkowy styl dla przycisków */
+.button {
+  display: inline-block;
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #2b6cb0;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+/* Przyciski w formularzu */
+button {
+  background-color: #2b6cb0;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Układ formularza w dwóch kolumnach */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Dwie kolumny */
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* Dostosowanie do małych ekranów */
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr; /* Jedna kolumna na małych ekranach */
+  }
+}
+
+/* Stylizacja dla tytułów i nagłówków */
+h1, h2, h3 {
+  margin-bottom: 20px;
+}
+
+/* Stylowanie inputów - zmniejszenie marginesów dla lepszej przestrzeni */
+input {
+  margin-top: 8px;
+}
+
+/* Przyciski z różnymi rolami */
+button {
+  background-color: #2b6cb0;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Przyciski w formularzu */
+button {
+  background-color: #2b6cb0;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}

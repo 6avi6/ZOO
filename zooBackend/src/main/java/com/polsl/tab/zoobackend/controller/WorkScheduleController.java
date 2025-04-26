@@ -72,32 +72,12 @@ public class WorkScheduleController {
         return ResponseEntity.noContent().build();
     }
 
-
     @GetMapping("/date-range")
     public ResponseEntity<List<WorkScheduleDto>> getByDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
         List<WorkScheduleDto> dtos = workScheduleService.getByDateRange(start, end).stream()
                 .map(workScheduleMapper::toDtoWithUsers)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(dtos);
-    }
-
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<WorkScheduleDto>> getByUser(@PathVariable Long userId) {
-        List<WorkScheduleDto> dtos = workScheduleService.getByUser(userId).stream()
-                .map(workScheduleMapper::toDto)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(dtos);
-    }
-
-    @GetMapping("/user/{userId}/date-range")
-    public ResponseEntity<List<WorkScheduleDto>> getByUserAndDateRange(
-            @PathVariable Long userId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
-        List<WorkScheduleDto> dtos = workScheduleService.getByUserAndDateRange(userId, start, end).stream()
-                .map(workScheduleMapper::toDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
     }

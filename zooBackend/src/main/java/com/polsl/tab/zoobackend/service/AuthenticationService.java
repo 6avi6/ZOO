@@ -38,7 +38,7 @@ public class AuthenticationService {
 
         User user = userService.getUserByUsername(request.getUsername());
 
-        String accessToken = jwtUtil.generateAccessToken(user.getUsername(), user.getId());
+        String accessToken = jwtUtil.generateAccessToken(user.getUsername(), user.getId(), user.getRole().toString());
         String refreshToken = generateRefreshToken(user);
 
         return new AuthenticationResponse(accessToken, refreshToken);
@@ -70,7 +70,7 @@ public class AuthenticationService {
 
         refreshTokenRepository.delete(storedToken);
         String newRefreshToken = generateRefreshToken(user);
-        String newAccessToken = jwtUtil.generateAccessToken(user.getUsername(), user.getId());
+        String newAccessToken = jwtUtil.generateAccessToken(user.getUsername(), user.getId(), user.getRole().toString());
 
         setRefreshTokenCookie(response, newRefreshToken);
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '../Dashboard/styles/Dashboards.css';
 
-const DyrektorDashboard = () => {
+const DirectorDashboard = () => {
   return (
     <div className="dashboard-container">
     <div className="dashboard-content">
@@ -20,4 +20,4 @@ const DyrektorDashboard = () => {
 );
 };
 
-export default DyrektorDashboard;
+export default DirectorDashboard;

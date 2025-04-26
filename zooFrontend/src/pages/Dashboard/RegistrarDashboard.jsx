@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '../Dashboard/styles/Dashboards.css';
 
-const RejestratorDashboard = () => {
+const RegistrarDashboard = () => {
   return (
     <div className="dashboard-container">
       <div className="dashboard-content">
@@ -34,4 +34,4 @@ const RejestratorDashboard = () => {
   );
 };
 
-export default RejestratorDashboard;
+export default RegistrarDashboard;

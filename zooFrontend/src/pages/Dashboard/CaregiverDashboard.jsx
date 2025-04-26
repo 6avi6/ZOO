@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import '../Dashboard/styles/Dashboards.css';
 
-const OpiekunDashboard = () => {
+const CaregiverDashboard = () => {
   return (
     <div className="dashboard-container">
       <div className="dashboard-content">
@@ -19,4 +19,4 @@ const OpiekunDashboard = () => {
   );
 };
 
-export default OpiekunDashboard;
+export default CaregiverDashboard;

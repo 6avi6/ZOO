@@ -60,6 +60,8 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/enclosures/**").permitAll()
+                        .requestMatchers("/api/animals/**").permitAll()
                         .requestMatchers("/api/hello").permitAll()
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/user/**").authenticated()

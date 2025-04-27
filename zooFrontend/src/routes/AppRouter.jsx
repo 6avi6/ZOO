@@ -5,11 +5,11 @@ import Login from '../pages/Login/Login';
 import Register from '../pages/Register';
 import NotFound from '../pages/NotFound';
 
-import AdminDashboard from '../pages/Dashboard/AdminDashboard';
-import DirectorDashboard from '../pages/Dashboard/DirectorDashboard';
-import CaregiverDashboard from '../pages/Dashboard/CaregiverDashboard';
-import RegistrarDashboard from '../pages/Dashboard/RegistrarDashboard';
-import VeterinarianDashboard from '../pages/Dashboard/VeterinarianDashboard';
+import AdminDashboard from '../pages/Admin/Dashboard/AdminDashboard';
+import DirectorDashboard from '../pages/Director/Dashboard/DirectorDashboard';
+import CaregiverDashboard from '../pages/Caregiver/Dashboard/CaregiverDashboard';
+import RegistrarDashboard from '../pages/Registrar/Dashboard/RegistrarDashboard';
+import VeterinarianDashboard from '../pages/Veterinarian/Dashboard/VeterinarianDashboard';
 
 import AddAnimal from '../pages/Registrar/AddAnimal';
 import EditAnimal from '../pages/Registrar/EditAnimal';

@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Navbar from "../manage-users/Navbar";
 
-const DictionaryManagement = () => {
+const ManageDictionary = () => {
   return (
-    <div className="dashboard-container">
+
+    <div>
+        <Navbar />
       <div className="dashboard-content">
         <h1 className="dashboard-title">Dane słownikowe</h1>
         <div className="dashboard-actions">
@@ -17,4 +20,4 @@ const DictionaryManagement = () => {
   );
 };
 
-export default DictionaryManagement;
+export default ManageDictionary;

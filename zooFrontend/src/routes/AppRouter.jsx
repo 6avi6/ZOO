@@ -1,45 +1,45 @@
 //logika ktora po zalogowaniu porzekieruje uzytkownika do odpowiedniego dashboardu 
 import { Routes, Route } from 'react-router-dom';
 import Home from '../Home';
-import Login from '../pages/Login/Login';
+import Login from '../pages/login/Login';
 import Register from '../pages/Register';
 import NotFound from '../pages/NotFound';
 
-import AdminDashboard from '../pages/Admin/Dashboard/AdminDashboard';
-import DirectorDashboard from '../pages/Director/Dashboard/DirectorDashboard';
-import CaregiverDashboard from '../pages/Caregiver/Dashboard/CaregiverDashboard';
-import RegistrarDashboard from '../pages/Registrar/Dashboard/RegistrarDashboard';
-import VeterinarianDashboard from '../pages/Veterinarian/Dashboard/VeterinarianDashboard';
+import AdminDashboard from '../pages/admin/dashboard/AdminDashboard';
+import DirectorDashboard from '../pages/director/dashboard/DirectorDashboard';
+import CaregiverDashboard from '../pages/caregiver/dashboard/CaregiverDashboard';
+import RegistrarDashboard from '../pages/registrar/dashboard/RegistrarDashboard';
+import VeterinarianDashboard from '../pages/veterinarian/dashboard/VeterinarianDashboard';
 
-import AddAnimal from '../pages/Registrar/AddAnimal';
-import EditAnimal from '../pages/Registrar/EditAnimal';
-import AddCaretaker from '../pages/Registrar/AddCaretaker';
-import EditEnclosure from '../pages/Registrar/EditEnclosure';
+import AddAnimal from '../pages/registrar/AddAnimal';
+import EditAnimal from '../pages/registrar/EditAnimal';
+import AddCaretaker from '../pages/registrar/AddCaretaker';
+import EditEnclosure from '../pages/registrar/EditEnclosure';
 
-import ManageUsers from '../pages/Admin/ManageUsers';
-import DictionaryManagement from '../pages/Admin/DictionaryManagement';
-import AddUser from '../pages/Admin/AddUser';
-import DeleteUser from '../pages/Admin/DeleteUser';
-import EditUser from '../pages/Admin/EditUser';
-import ViewUsers from '../pages/Admin/ViewUsers';
-import AddAnimalSpecies from '../pages/Admin/AddAnimalSpecies';
-import AddFoodType from '../pages/Admin/AddFoodType';
-import AddEnclosureType from '../pages/Admin/AddEnclosureType';
+import ManageUsers from '../pages/admin/manage-users/ManageUsers';
+import ManageDictionary from '../pages/admin/manage-dictionary/ManageDictionary';
+import AddUser from '../pages/admin/manage-users/AddUser';
+import DeleteUser from '../pages/admin/manage-users/DeleteUser';
+import EditUser from '../pages/admin/manage-users/EditUser';
+import ViewUsers from '../pages/admin/manage-users/ViewUsers';
+import AddAnimalSpecies from '../pages/admin/manage-dictionary/AddAnimalSpecies';
+import AddFoodType from '../pages/admin/manage-dictionary/AddFoodType';
+import AddEnclosureType from '../pages/admin/manage-dictionary/AddEnclosureType';
 
 
-import ReportsOverview from '../pages/Director/ReportsOverview';
-import BuyAnimal from '../pages/Director/BuyAnimal';
-import EmployeesReport from '../pages/Director/EmployeesReport';
-import EnclosuresReport from '../pages/Director/EnclosuresReport';
-import AssignmentsReport from '../pages/Director/AssignmentsReport';
-import SickAnimalsReport from '../pages/Director/SickAnimalsReport';
+import ReportsOverview from '../pages/director/ReportsOverview';
+import BuyAnimal from '../pages/director/BuyAnimal';
+import EmployeesReport from '../pages/director/EmployeesReport';
+import EnclosuresReport from '../pages/director/EnclosuresReport';
+import AssignmentsReport from '../pages/director/AssignmentsReport';
+import SickAnimalsReport from '../pages/director/SickAnimalsReport';
 
-import AnimalUpdate from '../pages/Caregiver/AnimalUpdate';
-import FeedingUpdate from '../pages/Caregiver/FeedingUpdate';
+import AnimalUpdate from '../pages/caregiver/AnimalUpdate';
+import FeedingUpdate from '../pages/caregiver/FeedingUpdate';
 
-import RegisterTreatment from '../pages/Veterinarian/RegisterTreatment';
-import ViewReports from '../pages/Veterinarian/ViewReports';
-import SickAnimals from '../pages/Veterinarian/SickAnimals';
+import RegisterTreatment from '../pages/veterinarian/RegisterTreatment';
+import ViewReports from '../pages/veterinarian/ViewReports';
+import SickAnimals from '../pages/veterinarian/SickAnimals';
 
 
 
@@ -65,7 +65,7 @@ const AppRouter = () => {
       <Route path="/rejestrator/edit-enclosure" element={<EditEnclosure />} />
 
       <Route path="/admin/manage-users" element={<ManageUsers />} />
-      <Route path="/admin/dictionary-management" element={<DictionaryManagement />} />
+      <Route path="/admin/manage-dictionary" element={<ManageDictionary />} />
       <Route path="/admin/manage-users/add" element={<AddUser />} />
       <Route path="/admin/manage-users/delete" element={<DeleteUser />} />
       <Route path="/admin/manage-users/edit" element={<EditUser />} />

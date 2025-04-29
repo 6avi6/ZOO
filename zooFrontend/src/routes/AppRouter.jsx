@@ -40,6 +40,7 @@ import FeedingUpdate from '../pages/caregiver/FeedingUpdate';
 import RegisterTreatment from '../pages/veterinarian/RegisterTreatment';
 import ViewReports from '../pages/veterinarian/ViewReports';
 import SickAnimals from '../pages/veterinarian/SickAnimals';
+import PrivateRoute from "./PrivateRoute";
 
 
 
@@ -49,52 +50,54 @@ import SickAnimals from '../pages/veterinarian/SickAnimals';
 const AppRouter = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="*" element={<NotFound />} />
-      <Route path="/admin/dashboard" element={<AdminDashboard />} />
-      <Route path="/director/dashboard" element={<DirectorDashboard />} />
-      <Route path="/caregiver/dashboard" element={<CaregiverDashboard />} />
-      <Route path="/rejestrator/dashboard" element={<RegistrarDashboard />} />
-      <Route path="/veterinarian/dashboard" element={<VeterinarianDashboard />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="*" element={<NotFound />} />
 
-      <Route path="/rejestrator/add-animal" element={<AddAnimal />} />
-      <Route path="/rejestrator/edit-animal" element={<EditAnimal />} />
-      <Route path="/rejestrator/add-caretaker" element={<AddCaretaker />} />
-      <Route path="/rejestrator/edit-enclosure" element={<EditEnclosure />} />
+        <Route element={<PrivateRoute requiredRole="REGISTRAR" />}>
+            <Route path="/registrar/dashboard" element={<RegistrarDashboard />} />
+            <Route path="/registrar/add-animal" element={<AddAnimal />} />
+            <Route path="/registrar/edit-animal" element={<EditAnimal />} />
+            <Route path="/registrar/add-caretaker" element={<AddCaretaker />} />
+            <Route path="/registrar/edit-enclosure" element={<EditEnclosure />} />
+        </Route>
 
-      <Route path="/admin/manage-users" element={<ManageUsers />} />
-      <Route path="/admin/manage-dictionary" element={<ManageDictionary />} />
-      <Route path="/admin/manage-users/add" element={<AddUser />} />
-      <Route path="/admin/manage-users/delete" element={<DeleteUser />} />
-      <Route path="/admin/manage-users/edit" element={<EditUser />} />
-      <Route path="/admin/manage-users/view" element={<ViewUsers />} />
-      <Route path="/admin/add-animal-species" element={<AddAnimalSpecies />} />
-      <Route path="/admin/add-food-type" element={<AddFoodType />} />
-      <Route path="/admin/add-enclosure-type" element={<AddEnclosureType />} />
+        <Route element={<PrivateRoute requiredRole="ADMIN" />}>
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/manage-users" element={<ManageUsers />} />
+            <Route path="/admin/manage-dictionary" element={<ManageDictionary />} />
+            <Route path="/admin/manage-users/add" element={<AddUser />} />
+            <Route path="/admin/manage-users/delete" element={<DeleteUser />} />
+            <Route path="/admin/manage-users/edit" element={<EditUser />} />
+            <Route path="/admin/manage-users/view" element={<ViewUsers />} />
+            <Route path="/admin/add-animal-species" element={<AddAnimalSpecies />} />
+            <Route path="/admin/add-food-type" element={<AddFoodType />} />
+            <Route path="/admin/add-enclosure-type" element={<AddEnclosureType />} />
+        </Route>
 
+        <Route element={<PrivateRoute requiredRole="DIRECTOR" />}>
+            <Route path="/director/dashboard" element={<DirectorDashboard />} />
+            <Route path="/director/reports" element={<ReportsOverview />} />
+            <Route path="/director/buy-animal" element={<BuyAnimal />} />
+            <Route path="/director/reports/employees" element={<EmployeesReport />} />
+            <Route path="/director/reports/enclosures" element={<EnclosuresReport />} />
+            <Route path="/director/reports/assignments" element={<AssignmentsReport />} />
+            <Route path="/director/reports/sick-animals" element={<SickAnimalsReport />} />
+        </Route>
 
+        <Route element={<PrivateRoute requiredRole="CAREGIVER" />}>
+            <Route path="/caregiver/dashboard" element={<CaregiverDashboard />} />
+            <Route path="/caregiver/update-animal" element={<AnimalUpdate />} />
+            <Route path="/caregiver/update-feeding" element={<FeedingUpdate />} />
+        </Route>
 
-      <Route path="/director/reports" element={<ReportsOverview />} />
-      <Route path="/director/buy-animal" element={<BuyAnimal />} />
-      <Route path="/director/reports/employees" element={<EmployeesReport />} />
-      <Route path="/director/reports/enclosures" element={<EnclosuresReport />} />
-      <Route path="/director/reports/assignments" element={<AssignmentsReport />} />
-      <Route path="/director/reports/sick-animals" element={<SickAnimalsReport />} />
-      
-      <Route path="/caregiver/update-animal" element={<AnimalUpdate />} />
-      <Route path="/caregiver/update-feeding" element={<FeedingUpdate />} />
-
-      <Route path="/veterinarian/register-treatment" element={<RegisterTreatment />} />
-      <Route path="/veterinarian/reports" element={<ViewReports />} />
-      <Route path="/veterinarian/sick-animals" element={<SickAnimals />} />
-
-
-
-
-
-
+        <Route element={<PrivateRoute requiredRole="VETERINARIAN" />}>
+            <Route path="/veterinarian/dashboard" element={<VeterinarianDashboard />} />
+            <Route path="/veterinarian/register-treatment" element={<RegisterTreatment />} />
+            <Route path="/veterinarian/reports" element={<ViewReports />} />
+            <Route path="/veterinarian/sick-animals" element={<SickAnimals />} />
+        </Route>
     </Routes>
   );
 };

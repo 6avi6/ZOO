@@ -41,6 +41,7 @@ import RegisterTreatment from '../pages/veterinarian/RegisterTreatment';
 import ViewReports from '../pages/veterinarian/ViewReports';
 import SickAnimals from '../pages/veterinarian/SickAnimals';
 import PrivateRoute from "./PrivateRoute";
+import AdminAccount from "../pages/admin/account/AdminAccount";
 
 
 
@@ -65,6 +66,7 @@ const AppRouter = () => {
 
         <Route element={<PrivateRoute requiredRole="ADMIN" />}>
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/account" element={<AdminAccount />} />
             <Route path="/admin/manage-users" element={<ManageUsers />} />
             <Route path="/admin/manage-dictionary" element={<ManageDictionary />} />
             <Route path="/admin/manage-users/add" element={<AddUser />} />

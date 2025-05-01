@@ -24,7 +24,9 @@ const Navbar = () => {
                     <Link to={'/admin/manage-dictionary'}>
                         <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-[#F4E7CB] transition-all duration-200">Słownik</p>
                     </Link>
-                    <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-[#F4E7CB] transition-all duration-200">Konto</p>
+                    <Link to={'/admin/account'}>
+                        <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-[#F4E7CB] transition-all duration-200">Konto</p>
+                    </Link>
                 </div>
                 <IoLogOutOutline className="size-12 mr-4 p-2 text-gray-800 rounded-full hover:scale-110 transition-all duration-200 cursor-pointer" />
             </div>

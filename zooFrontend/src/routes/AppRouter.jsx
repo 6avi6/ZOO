@@ -71,7 +71,7 @@ const AppRouter = () => {
             <Route path="/admin/manage-dictionary" element={<ManageDictionary />} />
             <Route path="/admin/manage-users/add" element={<AddUser />} />
             <Route path="/admin/manage-users/delete" element={<DeleteUser />} />
-            <Route path="/admin/manage-users/edit" element={<EditUser />} />
+            <Route path="/admin/manage-users/edit/:id" element={<EditUser />} />
             <Route path="/admin/manage-users/view" element={<ViewUsers />} />
             <Route path="/admin/add-animal-species" element={<AddAnimalSpecies />} />
             <Route path="/admin/add-food-type" element={<AddFoodType />} />

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from "../manage-users/Navbar";
+import Navbar from "../Navbar";
 
 const ManageDictionary = () => {
   return (

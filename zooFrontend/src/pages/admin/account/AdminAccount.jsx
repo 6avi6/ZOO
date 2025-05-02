@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import Navbar from "../manage-users/Navbar";
+import Navbar from "../Navbar";
 import {getCurrentUser} from "../../../services/UserService";
 
 const AdminAccount = () => {
@@ -36,8 +36,8 @@ const AdminAccount = () => {
     return (
         <div>
             <Navbar />
-            <div className="bg-white mt-16 mx-auto h-[700px] max-w-lg rounded-lg border shadow-sm border-gray-300">
-                <h1 className="mx-auto ml-12 text-2xl text-gray-800 my-6">Konto</h1>
+            <div className="bg-white mt-12 mx-auto h-[700px] max-w-lg rounded-lg border shadow-sm border-gray-300">
+                <h1 className="mx-auto ml-12 font-semibold text-2xl text-gray-800 my-6">Konto</h1>
                 <div className="mx-12 my-6 flex flex-col justify-between gap-6">
                     <div>
                         <label className="block text-gray-700 text-md mb-1">Imię</label>

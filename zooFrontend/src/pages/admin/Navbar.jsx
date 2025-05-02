@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import logo from '../../../assets/logo.png';
+import logo from '../../assets/logo.png';
 import {IoClose, IoLogOutOutline, IoMenu} from "react-icons/io5";
 
 import {Link} from "react-router-dom";

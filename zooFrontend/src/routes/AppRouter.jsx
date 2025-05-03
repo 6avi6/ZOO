@@ -21,7 +21,7 @@ import ManageDictionary from '../pages/admin/manage-dictionary/ManageDictionary'
 import AddUser from '../pages/admin/manage-users/AddUser';
 import DeleteUser from '../pages/admin/manage-users/DeleteUser';
 import EditUser from '../pages/admin/manage-users/EditUser';
-import ViewUsers from '../pages/admin/manage-users/ViewUsers';
+import UserDetails from '../pages/admin/manage-users/UserDetails';
 import AddAnimalSpecies from '../pages/admin/manage-dictionary/AddAnimalSpecies';
 import AddFoodType from '../pages/admin/manage-dictionary/AddFoodType';
 import AddEnclosureType from '../pages/admin/manage-dictionary/AddEnclosureType';
@@ -72,7 +72,7 @@ const AppRouter = () => {
             <Route path="/admin/manage-users/add" element={<AddUser />} />
             <Route path="/admin/manage-users/delete" element={<DeleteUser />} />
             <Route path="/admin/manage-users/edit/:id" element={<EditUser />} />
-            <Route path="/admin/manage-users/view" element={<ViewUsers />} />
+            <Route path="/admin/manage-users/:id" element={<UserDetails />} />
             <Route path="/admin/add-animal-species" element={<AddAnimalSpecies />} />
             <Route path="/admin/add-food-type" element={<AddFoodType />} />
             <Route path="/admin/add-enclosure-type" element={<AddEnclosureType />} />

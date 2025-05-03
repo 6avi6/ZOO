@@ -26,9 +26,9 @@ const TokenWatcher = () => {
             localStorage.removeItem('accessToken');
             navigate('/login');
         }
-    }, [location.pathname]); // <== działa za każdym razem, gdy zmienia się ścieżka
+    }, [location.pathname]);
 
-    return null; // Nie renderuje nic widocznego
+    return null;
 };
 
 export default TokenWatcher;

@@ -53,9 +53,14 @@ const ManageUsers = () => {
                         {users.map((user) => (
 
                             <tr key={user.id} className="hover:bg-gray-50">
-                                <td className="p-3">{user.id}</td>
-                                <td className="p-3">{user.username}</td>
-                                <td className="p-3">{user.role}</td>
+                                    <td className="p-3">{user.id}</td>
+                                    <td className="p-3">
+                                        <Link to={`/admin/manage-users/${user.id}`} className="text-[#526C43] hover:text-[#234228] transition-all duration-150 font-semibold">
+                                            {user.username}
+                                        </Link>
+                                    </td>
+                                    <td className="p-3">{user.role}</td>
+
                                 <td className="">
                                     <Link to={`/admin/manage-users/edit/${user.id}`} className="text-[#526C43] hover:text-[#234228] transition-all duration-150">
                                         <MdDriveFileRenameOutline className="inline-block w-6 h-6" />

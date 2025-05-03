@@ -1,6 +1,6 @@
 //logika ktora po zalogowaniu porzekieruje uzytkownika do odpowiedniego dashboardu 
 import { Routes, Route } from 'react-router-dom';
-import Home from '../Home';
+/*import Home from '../Home';*/
 import Login from '../pages/login/Login';
 import Register from '../pages/Register';
 import NotFound from '../pages/NotFound';
@@ -42,6 +42,7 @@ import ViewReports from '../pages/veterinarian/ViewReports';
 import SickAnimals from '../pages/veterinarian/SickAnimals';
 import PrivateRoute from "./PrivateRoute";
 import AdminAccount from "../pages/admin/account/AdminAccount";
+import HomeRedirect from "./HomeRedirect";
 
 
 
@@ -51,10 +52,11 @@ import AdminAccount from "../pages/admin/account/AdminAccount";
 const AppRouter = () => {
   return (
     <Routes>
-        <Route path="/" element={<Home />} />
+        {/*<Route path="/" element={<Home />} />*/}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/" element={<HomeRedirect />} />
 
         <Route element={<PrivateRoute requiredRole="REGISTRAR" />}>
             <Route path="/registrar/dashboard" element={<RegistrarDashboard />} />

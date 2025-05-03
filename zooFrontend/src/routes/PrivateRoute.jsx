@@ -1,22 +1,18 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import { useAuth } from '../services/AuthContext';
 
 const PrivateRoute = ({ requiredRole }) => {
-    const token = localStorage.getItem('accessToken');
+    const { user, authChecked } = useAuth();
 
-    if (!token) return <Navigate to="/login" />;
+    if (!authChecked) return null;
 
-    try {
-        const decoded = jwtDecode(token);
+    if (!user) return <Navigate to="/login" />;
 
-        if (requiredRole && decoded.role !== requiredRole) {
-            return <Navigate to="/unauthorized" />;
-        }
-
-        return <Outlet />;
-    } catch (error) {
-        return <Navigate to="/login" />;
+    if (requiredRole && user.role !== requiredRole) {
+        return <Navigate to="/unauthorized" />;
     }
+
+    return <Outlet />;
 };
 
 export default PrivateRoute;

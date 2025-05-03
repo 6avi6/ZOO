@@ -1,13 +1,10 @@
-import axios from 'axios';
-import {useParams} from "react-router-dom";
-
-const API_URL = 'http://localhost:8083/api/admin';
+import axiosInstance from "./axiosInstance";
 
 export const getAllUsers = async () => {
     const token = localStorage.getItem('accessToken');
 
     try {
-        const response = await axios.get(`${API_URL}/users`, {
+        const response = await axiosInstance.get(`api/admin/users`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -23,7 +20,7 @@ export const getUserWorkSchedule = async (id) => {
     const token = localStorage.getItem('accessToken');
 
     try {
-        const response = await axios.get(`${API_URL}/user/${id}/work-schedule`, {
+        const response = await axiosInstance.get(`api/admin/user/${id}/work-schedule`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

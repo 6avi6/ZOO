@@ -1,12 +1,14 @@
 import React from 'react';
 import AppRouter from './routes/AppRouter';
-import TokenWatcher from "./pages/login/TokenWatcher";
+import {AuthProvider} from "./services/AuthContext";
 
 function App() {
   return (
     <div className="App">
-        <TokenWatcher />
-        <AppRouter />
+        <AuthProvider>
+            <AppRouter />
+        </AuthProvider>
+
     </div>
   );
 }

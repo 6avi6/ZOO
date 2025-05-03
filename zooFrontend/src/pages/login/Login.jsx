@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
-
+import axiosInstance from '../../services/axiosInstance';
+import {useNavigate} from "react-router-dom";
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -10,40 +8,19 @@ const Login = () => {
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
 
+
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8083/api/auth/login', {
-                username,
-                password
-            });
+            const response = await axiosInstance.post('/api/auth/login', { username, password });
 
             if (response.data.accessToken) {
                 const token = response.data.accessToken;
                 localStorage.setItem('accessToken', token);
 
-                const decoded = jwtDecode(token);
-                console.log('Dekodowany token:', decoded);
-
-                switch (decoded.role) {
-                    case 'VETERINARIAN':
-                        navigate('/veterinarian/dashboard');
-                        break;
-                    case 'ADMIN':
-                        navigate('/admin/dashboard');
-                        break;
-                    case 'DIRECTOR':
-                        navigate('/director/dashboard');
-                        break;
-                    case 'REGISTRAR':
-                        navigate('/registrar/dashboard');
-                        break;
-                    case 'CAREGIVER':
-                        navigate('/caregiver/dashboard');
-                        break;
-                    default:
-                        navigate('/'); // fallback
-                }
+                // 👇 wywołuje nasłuchujący efekt w AuthProvider
+                window.dispatchEvent(new Event('storage'));
+                navigate('/');
 
                 setMessage('Zalogowano pomyślnie!');
             } else {
@@ -79,19 +56,13 @@ const Login = () => {
                         required
                     />
                 </div>
-                <button
-                    type="submit"
-                    className="bg-[#2b6cb0] rounded-md p-2 text-white hover:bg-[#2c5282] transition-all duration-250 shadow-md"
-                >
+                <button type="submit" className="bg-[#2b6cb0] rounded-md p-2 text-white hover:bg-[#2c5282] transition-all duration-250 shadow-md">
                     Zaloguj
                 </button>
-                {message && (
-                    <p className="text-red-500">{message}</p>
-                )}
+                {message && <p className="text-red-500">{message}</p>}
             </form>
         </div>
     );
 };
 
 export default Login;
-

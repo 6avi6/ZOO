@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axiosInstance from '../../services/axiosInstance';
 import {useNavigate} from "react-router-dom";
+import {login} from "../../services/authService";
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -12,16 +12,10 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axiosInstance.post('/api/auth/login', { username, password });
+            const success = await login(username, password);
 
-            if (response.data.accessToken) {
-                const token = response.data.accessToken;
-                localStorage.setItem('accessToken', token);
-
-                // 👇 wywołuje nasłuchujący efekt w AuthProvider
-                window.dispatchEvent(new Event('storage'));
+            if (success) {
                 navigate('/');
-
                 setMessage('Zalogowano pomyślnie!');
             } else {
                 setMessage('Błąd logowania');

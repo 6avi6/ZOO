@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import Navbar from "../Navbar";
-import {getCurrentUser} from "../../../services/UserService";
+import {getCurrentUser} from "../../../services/userService";
 
 const AdminAccount = () => {
     const [user, setUser] = useState({
@@ -16,13 +16,13 @@ const AdminAccount = () => {
         const fetchUser = async () => {
             try {
                 const userData = await getCurrentUser();
-                console.log('Otrzymane dane użytkownika:', userData); // Dodane dla debugowania
+                console.log('Otrzymane dane użytkownika:', userData);
                 setUser({
                     firstName: userData.firstName || '',
                     lastName: userData.lastName || '',
                     username: userData.username || '',
                     email: userData.email || '',
-                    hireDate: userData.hireDate || '', // Poprawiono nazwę pola
+                    hireDate: userData.hireDate || '',
                     role: userData.role || ''
                 });
             } catch (error) {

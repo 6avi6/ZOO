@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from "../Navbar";
-import { getAllUsers } from '../../../services/AdminService';
+import { getAllUsers } from '../../../services/adminService';
 import { MdDriveFileRenameOutline } from "react-icons/md";
 import { MdOutlineDelete } from "react-icons/md";
 

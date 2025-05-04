@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import logo from '../../assets/logo.png';
 import { IoClose, IoLogOutOutline, IoMenu } from 'react-icons/io5';
 import { Link, useNavigate } from 'react-router-dom';
-import axiosInstance from '../../services/axiosInstance';
-import axios from "axios"; // dostosuj ścieżkę jeśli inna
+import { logout } from '../../services/authService';
 
 const Navbar = () => {
     const [menu, setMenu] = useState(false);
@@ -11,28 +10,14 @@ const Navbar = () => {
 
     const toggleMenu = () => setMenu(!menu);
 
-    const logout = async () => {
+    const handleLogout = async () => {
         try {
-            const accessToken = localStorage.getItem('accessToken');
-
-            await axios.post(
-                'http://localhost:8083/api/auth/refresh/logout',
-                null,
-                {
-                    withCredentials: true,
-                    headers: {
-                        Authorization: `Bearer: ${accessToken}`,
-                    },
-                }
-            );
-
-            localStorage.removeItem('accessToken');
+            await logout();
             navigate('/login');
         } catch (error) {
-            console.error('Logout failed (hardcoded):', error);
+            console.error('Logout failed:', error);
         }
     };
-
 
     return (
         <div className="bg-white h-[80px] w-full flex items-center border-b-2 border-gray-200">
@@ -62,7 +47,7 @@ const Navbar = () => {
                     </Link>
                 </div>
                 <IoLogOutOutline
-                    onClick={logout}
+                    onClick={handleLogout}
                     className="size-12 mr-4 p-2 text-gray-800 rounded-full hover:scale-110 transition-all duration-200 cursor-pointer"
                 />
             </div>
@@ -100,7 +85,7 @@ const Navbar = () => {
                     </Link>
                 </ul>
                 <IoLogOutOutline
-                    onClick={logout}
+                    onClick={handleLogout}
                     className="size-14 mt-8 mx-auto p-2 text-gray-800 rounded-full hover:scale-110 transition-all duration-200 cursor-pointer"
                 />
             </div>

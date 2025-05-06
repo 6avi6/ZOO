@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../Dashboard/styles/Dashboards.css';
+import '../../../styles/Dashboards.css';
 
-const WeterynarzDashboard = () => {
+const VeterinarianDashboard = () => {
   return (
     <div className="dashboard-container">
       <div className="dashboard-content">
@@ -20,4 +20,4 @@ const WeterynarzDashboard = () => {
   );
 };
 
-export default WeterynarzDashboard;
+export default VeterinarianDashboard;

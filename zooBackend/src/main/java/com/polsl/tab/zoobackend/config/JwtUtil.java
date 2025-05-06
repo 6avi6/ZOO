@@ -27,9 +27,10 @@ public class JwtUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
 
-    public String generateAccessToken(String username, Long userId) {
+    public String generateAccessToken(String username, Long userId, String role) {
         return Jwts.builder()
                 .claim("userId", userId)
+                .claim("role", role)
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))

@@ -2,8 +2,7 @@
 import { Routes, Route } from 'react-router-dom';
 /*import Home from '../Home';*/
 import Login from '../pages/login/Login';
-import Register from '../pages/Register';
-import NotFound from '../pages/NotFound';
+
 
 import AdminDashboard from '../pages/admin/dashboard/AdminDashboard';
 import DirectorDashboard from '../pages/director/dashboard/DirectorDashboard';
@@ -54,8 +53,6 @@ const AppRouter = () => {
     <Routes>
         {/*<Route path="/" element={<Home />} />*/}
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="*" element={<NotFound />} />
         <Route path="/" element={<HomeRedirect />} />
 
         <Route element={<PrivateRoute requiredRole="REGISTRAR" />}>

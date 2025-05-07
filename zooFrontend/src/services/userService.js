@@ -11,4 +11,13 @@ export const getCurrentUser = async () => {
     }
 };
 
+export const updateCurrentUser = async (data) => {
+    try {
+        const response = await axiosInstance.put(`api/user/me`, data);
+        return response.data;
+    } catch(error) {
+        throw error;
+    }
+}
+
 

@@ -1,18 +1,24 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 
 const PrivateRoute = ({ requiredRole }) => {
-    const { user, authChecked } = useAuth();
+    const token = localStorage.getItem('accessToken');
+    if (!token) return null;
 
-    if (!authChecked) return null;
+    try {
+        const payload = token.split('.')[1];
+        if (!payload) throw new Error("Invalid token format");
 
-    if (!user) return <Navigate to="/login" />;
+        const user = JSON.parse(atob(payload));
 
-    if (requiredRole && user.role !== requiredRole) {
-        return <Navigate to="/unauthorized" />;
+        if (requiredRole && user.role !== requiredRole) {
+            return <Navigate to="/unauthorized" />;
+        }
+
+        return <Outlet />;
+    } catch (error) {
+        console.error('Błąd podczas dekodowania tokena:', error);
+        return null;
     }
-
-    return <Outlet />;
 };
 
 export default PrivateRoute;

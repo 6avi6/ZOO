@@ -4,6 +4,7 @@ import Navbar from "../Navbar";
 import { getAllUsers } from '../../../services/adminService';
 import { MdDriveFileRenameOutline } from "react-icons/md";
 import { MdOutlineDelete } from "react-icons/md";
+import { IoPersonAddOutline } from "react-icons/io5";
 
 
 
@@ -31,8 +32,16 @@ const ManageUsers = () => {
     return (
         <div>
             <Navbar />
-            <div className="bg-white mt-12 mx-auto min-h-[300px] w-[80%] rounded-lg border shadow-sm border-gray-300  p-8">
-                <h1 className="text-2xl font-semibold text-gray-800 mb-6">Lista użytkowników</h1>
+            <div className="bg-white mt-12 mx-auto min-h-[300px] w-[80%] rounded-lg border shadow-sm border-gray-300  p-8 relative">
+                <div className="flex flex-row items-center justify-between mb-6">
+                    <h1 className="text-2xl font-semibold text-gray-800">Lista użytkowników</h1>
+                    <Link to="/admin/manage-users/add">
+                        <button className="hidden bg-[#526C43] hover:bg-[#234228] text-white py-2 px-4 rounded-md transition-all duration-150">
+                            Dodaj użytkownika
+                        </button>
+                    </Link>
+
+                </div>
 
                 {loading ? (
                     <p>Ładowanie...</p>
@@ -55,19 +64,19 @@ const ManageUsers = () => {
                             <tr key={user.id} className="hover:bg-gray-50">
                                     <td className="p-3">{user.id}</td>
                                     <td className="p-3">
-                                        <Link to={`/admin/manage-users/${user.id}`} className="text-[#526C43] hover:text-[#234228] transition-all duration-150 font-semibold">
+                                        <Link to={`/admin/manage-users/${user.id}`} className=" underline hover:text-[#234228] transition-all duration-150">
                                             {user.username}
                                         </Link>
                                     </td>
                                     <td className="p-3">{user.role}</td>
 
                                 <td className="">
-                                    <Link to={`/admin/manage-users/edit/${user.id}`} className="text-[#526C43] hover:text-[#234228] transition-all duration-150">
+                                    <Link to={`/admin/manage-users/edit/${user.id}`} className="text-black hover:text-[#08bf29] transition-all duration-150">
                                         <MdDriveFileRenameOutline className="inline-block w-6 h-6" />
                                     </Link>
                                 </td>
                                 <td className="">
-                                    <Link to={`/admin/manage-users/edit/${user.id}`} className="text-[#C2680D] hover:text-[#A54C02] transition-all duration-150">
+                                    <Link to={`/admin/manage-users/edit/${user.id}`} className="text-black hover:text-[#e30b1e] transition-all duration-150">
                                         <MdOutlineDelete className="inline-block w-6 h-6 " />
                                     </Link>
                                 </td>
@@ -76,8 +85,16 @@ const ManageUsers = () => {
                         </tbody>
                     </table>
                 )}
+                <Link to="/admin/manage-users/add">
+                    <IoPersonAddOutline
+                        size={32}
+                        className="absolute top-7 right-8 text-gray-800 rounded-md cursor-pointer hover:text-[#08bf29] transition-all duration-150"
+                    />
+                </Link>
+
+
             </div>
-        </div>
+               </div>
     );
 };
 

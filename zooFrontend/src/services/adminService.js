@@ -1,4 +1,5 @@
 import axiosInstance from "./axiosInstance";
+import axios from "axios";
 
 export const getAllUsers = async () => {
     try {
@@ -16,6 +17,16 @@ export const getUserWorkSchedule = async (id) => {
         return response.data;
     } catch (error) {
         console.error('Błąd podczas pobierania harmonogramu użytkownika:', error);
+        throw error;
+    }
+};
+
+export const registerUser = async (data) => {
+    try {
+        const response = await axios.post('http://localhost:8083/api/auth/register', data);
+        return response.data;
+    } catch (error) {
+        console.error('Błąd podczas rejestracji:', error);
         throw error;
     }
 };

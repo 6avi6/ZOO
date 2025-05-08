@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import Navbar from "../Navbar";
+import AdminNavbar from "../../../components/AdminNavbar";
 import { Slide, ToastContainer, toast } from "react-toastify";
 import { registerUser } from "../../../services/adminService";
 import { IoMdClose } from "react-icons/io";
+import App from "../../../App";
+import AppToast from "../../../components/AppToast";
 
 
 
@@ -32,6 +34,11 @@ const AddUser = () => {
 
       if (response === "Registration successfully completed") {
         toast.success('Użytkownik został dodany!');
+        setFormData({
+          username: '',
+          password: '',
+          role: ''
+        });
       } else {
         toast.error(response);
       }
@@ -43,7 +50,7 @@ const AddUser = () => {
 
   return (
       <div>
-        <Navbar />
+        <AdminNavbar />
         <div className="bg-white mt-12 mx-auto min-h-[300px] w-[80%] rounded-lg border shadow-sm border-gray-300 p-8 relative">
           <h1 className="mb-6 mx-auto font-semibold text-2xl text-gray-800">Dodaj użytkownika</h1>
           <form className="flex flex-col justify-between gap-2" onSubmit={handleRegisterUser}>
@@ -97,17 +104,7 @@ const AddUser = () => {
 
 
 
-          <ToastContainer
-              position="bottom-right"
-              autoClose={2000}
-              hideProgressBar={true}
-              newestOnTop={false}
-              theme="light"
-              transition={Slide}
-              pauseOnHover={false}
-              toastClassName="bg-white text-black border border-gray-200 shadow"
-              progressClassName="bg-green-500"
-          />
+          <AppToast />
         </div>
       </div>
   );

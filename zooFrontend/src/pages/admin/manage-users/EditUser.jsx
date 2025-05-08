@@ -1,5 +1,5 @@
 import React from 'react';
-import Navbar from "../Navbar";
+import AdminNavbar from "../../../components/AdminNavbar";
 
 
 
@@ -7,7 +7,7 @@ const EditUser = () => {
 
   return (
       <div>
-        <Navbar />
+        <AdminNavbar />
 
       </div>
   );

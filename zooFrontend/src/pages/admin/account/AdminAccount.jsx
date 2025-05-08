@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import Navbar from "../Navbar";
+import AdminNavbar from "../../../components/AdminNavbar";
 import {getCurrentUser, updateCurrentUser} from "../../../services/userService";
-import {ToastContainer, toast, Slide} from "react-toastify";
+import {toast} from "react-toastify";
+import AppToast from "../../../components/AppToast";
 
 const AdminAccount = () => {
     const [user, setUser] = useState({
@@ -12,16 +13,15 @@ const AdminAccount = () => {
         hireDate: '',
         role: ''
     });
-    const notify = () => toast("Pomyślnie zapisano dane.", {})
-
     const handleSave = async () => {
         try {
             const updatedUser = await updateCurrentUser(user);
             console.log("Zapisano dane:", updatedUser);
-            notify();
+            toast.success("Zapisano dane.");
         } catch (error) {
             console.error("Błąd zapisu danych:", error);
-            alert("Błąd zapisu danych.");
+            toast.error("Błąd zapisu danych");
+
         }
     };
 
@@ -50,7 +50,7 @@ const AdminAccount = () => {
 
     return (
         <div>
-            <Navbar />
+            <AdminNavbar />
             <div className="bg-white my-12 mx-auto h-[550px] max-w-lg rounded-lg border shadow-sm border-gray-300">
                 <h1 className="mx-auto ml-12 font-semibold text-2xl text-gray-800 my-6">Konto</h1>
                 <div className="mx-12  flex flex-col justify-between gap-2">
@@ -100,17 +100,7 @@ const AdminAccount = () => {
                             onClick={handleSave}>Zapisz</button>
                 </div>
             </div>
-            <ToastContainer
-                position="bottom-right"
-                autoClose={2000}
-                hideProgressBar={true}
-                newestOnTop={false}
-                theme="light"
-                transition={Slide}
-                pauseOnHover={false}
-                toastClassName="bg-white text-black border border-gray-200 shadow"
-                progressClassName="bg-green-500"
-            />
+            <AppToast />
         </div>
     );
 };

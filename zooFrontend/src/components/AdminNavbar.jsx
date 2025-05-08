@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import logo from '../../assets/logo.png';
+import logo from '../assets/logo.png';
 import { IoClose, IoLogOutOutline, IoMenu } from 'react-icons/io5';
 import { Link, useNavigate } from 'react-router-dom';
-import { logout } from '../../services/authService';
+import { logout } from '../services/authService';
 
-const Navbar = () => {
+const AdminNavbar = () => {
     const [menu, setMenu] = useState(false);
     const navigate = useNavigate();
 
@@ -93,4 +93,4 @@ const Navbar = () => {
     );
 };
 
-export default Navbar;
+export default AdminNavbar;

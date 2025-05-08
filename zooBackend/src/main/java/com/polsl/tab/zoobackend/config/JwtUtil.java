@@ -10,6 +10,8 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.Date;
 import java.util.function.Function;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -20,12 +22,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class JwtUtil {
-    private static final String SECRET_KEY = "3Fk9bH2nV6D7Ml7H9QzPjQogS2nB8tVWyH4E0YYvD2g=";
-    private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 15; // 15 minutes
+    private final String secretKey;
+    private final long accessTokenExpiration;
     private static final SecureRandom secureRandom = new SecureRandom();
     private static final int TOKEN_LENGTH = 32; // Length in bytes (256 bits)
-
     private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
+
+    public JwtUtil(
+            @Value("${jwt.secret}") String secretKey,
+            @Value("${jwt.access-expiration}") long accessTokenExpiration) {
+        this.secretKey = secretKey;
+        this.accessTokenExpiration = accessTokenExpiration;
+    }
 
     public String generateAccessToken(String username, Long userId, String role) {
         return Jwts.builder()
@@ -33,8 +41,8 @@ public class JwtUtil {
                 .claim("role", role)
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
-                .signWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY)), SignatureAlgorithm.HS256)
+                .expiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
+                .signWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey)), SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -54,7 +62,7 @@ public class JwtUtil {
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
-                    .verifyWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY)))
+                    .verifyWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey)))
                     .build()
                     .parseSignedClaims(token);
             return true;
@@ -78,7 +86,7 @@ public class JwtUtil {
      */
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET_KEY)))
+                .verifyWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey)))
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();

@@ -64,7 +64,7 @@ public class AuthenticationService {
         return "Registration successfully completed";
     }
 
-    public ResponseEntity<?> refreshToken(String refreshToken, HttpServletResponse response) {
+    public ResponseEntity<?> refreshToken(String refreshToken, HttpServletResponse response, int refreshTokenExpiration) {
         RefreshToken storedToken = refreshTokenRepository.findByToken(refreshToken)
                 .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
 
@@ -79,7 +79,7 @@ public class AuthenticationService {
         String newRefreshToken = generateRefreshToken(user);
         String newAccessToken = jwtUtil.generateAccessToken(user.getUsername(), user.getId(), user.getRole().toString());
 
-        setRefreshTokenCookie(response, newRefreshToken, 3 * 24 * 60 * 60);
+        setRefreshTokenCookie(response, newRefreshToken, refreshTokenExpiration);
 
         return ResponseEntity.ok(new AuthenticationResponse(newAccessToken, null));
     }
@@ -96,7 +96,7 @@ public class AuthenticationService {
         return token.getToken();
     }
 
-    public void setRefreshTokenCookie(HttpServletResponse response, String newRefreshToken, Integer maxAge) {
+    public void setRefreshTokenCookie(HttpServletResponse response, String newRefreshToken, int maxAge) {
         String cookieValue = String.format(
                 "refreshToken=%s; Path=/api/auth/refresh; HttpOnly; SameSite=None; Secure; Max-Age=%d",
                 newRefreshToken != null ? newRefreshToken : "", maxAge

@@ -5,6 +5,7 @@ import { getAllUsers } from '../../../services/adminService';
 import { MdDriveFileRenameOutline } from "react-icons/md";
 import { MdOutlineDelete } from "react-icons/md";
 import { IoPersonAddOutline } from "react-icons/io5";
+import {deleteUser} from "../../../services/userService";
 
 
 
@@ -13,6 +14,20 @@ const ManageUsers = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const handleDelete = async (id) => {
+        setLoading(true);
+        try {
+            await deleteUser(id);
+            const updatedUsers = await getAllUsers();
+            setUsers(updatedUsers);
+        } catch (err) {
+            setError('Nie udało się usunąć użytkownika.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -76,9 +91,8 @@ const ManageUsers = () => {
                                     </Link>
                                 </td>
                                 <td className="">
-                                    <Link to={`/admin/manage-users/edit/${user.id}`} className="text-black hover:text-[#e30b1e] transition-all duration-150">
-                                        <MdOutlineDelete className="inline-block w-6 h-6 " />
-                                    </Link>
+                                        <MdOutlineDelete className="inline-block w-6 h-6 hover:text-[#e30b1e] transition-all duration-150 cursor-pointer"
+                                        onClick={() => handleDelete(user.id)}/>
                                 </td>
                             </tr>
                         ))}

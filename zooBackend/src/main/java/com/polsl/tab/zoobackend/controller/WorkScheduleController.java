@@ -1,6 +1,7 @@
 package com.polsl.tab.zoobackend.controller;
 
-import com.polsl.tab.zoobackend.dto.WorkScheduleDto;
+import com.polsl.tab.zoobackend.dto.workSchedule.WorkScheduleRequest;
+import com.polsl.tab.zoobackend.dto.workSchedule.WorkScheduleResponse;
 import com.polsl.tab.zoobackend.mapper.WorkScheduleMapper;
 import com.polsl.tab.zoobackend.model.WorkSchedule;
 import com.polsl.tab.zoobackend.service.WorkScheduleService;
@@ -25,7 +26,7 @@ public class WorkScheduleController {
     private final WorkScheduleMapper workScheduleMapper;
 
     @PostMapping
-    public ResponseEntity<WorkScheduleDto> create(@RequestBody WorkScheduleDto req) {
+    public ResponseEntity<WorkScheduleResponse> create(@RequestBody WorkScheduleRequest req) {
         WorkSchedule entity = new WorkSchedule();
         entity.setShiftStart(req.getShiftStart());
         entity.setShiftEnd(req.getShiftEnd());
@@ -35,33 +36,33 @@ public class WorkScheduleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<WorkScheduleDto> getById(@PathVariable Long id) {
+    public ResponseEntity<WorkScheduleResponse> getById(@PathVariable Long id) {
         WorkSchedule ws = workScheduleService.getById(id);
         return ResponseEntity.ok(workScheduleMapper.toDtoWithUsers(ws));
     }
 
     @GetMapping
-    public ResponseEntity<List<WorkScheduleDto>> getAll() {
+    public ResponseEntity<List<WorkScheduleResponse>> getAll() {
         List<WorkSchedule> list = workScheduleService.getAll();
-        List<WorkScheduleDto> dtos = list.stream()
+        List<WorkScheduleResponse> dtos = list.stream()
                 .map(workScheduleMapper::toDtoWithUsers)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/paged")
-    public ResponseEntity<Page<WorkScheduleDto>> getAllPaged(
+    public ResponseEntity<Page<WorkScheduleResponse>> getAllPaged(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         Page<WorkSchedule> pageEnt = workScheduleService.getAll(PageRequest.of(page, size));
-        Page<WorkScheduleDto> pageDto = pageEnt.map(workScheduleMapper::toDtoWithUsers);
+        Page<WorkScheduleResponse> pageDto = pageEnt.map(workScheduleMapper::toDtoWithUsers);
         return ResponseEntity.ok(pageDto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<WorkScheduleDto> update(
+    public ResponseEntity<WorkScheduleResponse> update(
             @PathVariable Long id,
-            @RequestBody WorkScheduleDto dto) {
+            @RequestBody WorkScheduleRequest dto) {
         WorkSchedule updated = workScheduleService.update(id, dto);
         return ResponseEntity.ok(workScheduleMapper.toDtoWithUsers(updated));
     }
@@ -73,10 +74,10 @@ public class WorkScheduleController {
     }
 
     @GetMapping("/date-range")
-    public ResponseEntity<List<WorkScheduleDto>> getByDateRange(
+    public ResponseEntity<List<WorkScheduleResponse>> getByDateRange(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
-        List<WorkScheduleDto> dtos = workScheduleService.getByDateRange(start, end).stream()
+        List<WorkScheduleResponse> dtos = workScheduleService.getByDateRange(start, end).stream()
                 .map(workScheduleMapper::toDtoWithUsers)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);

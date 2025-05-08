@@ -1,6 +1,6 @@
 package com.polsl.tab.zoobackend.controller;
 
-import com.polsl.tab.zoobackend.dto.WorkScheduleDto;
+import com.polsl.tab.zoobackend.dto.workSchedule.WorkScheduleResponse;
 import com.polsl.tab.zoobackend.dto.user.UserProfileDTO;
 import com.polsl.tab.zoobackend.dto.user.UserSummaryDTO;
 import com.polsl.tab.zoobackend.exception.ResourceNotFoundException;
@@ -51,19 +51,19 @@ public class AdminController {
     }
 
     @GetMapping("/user/{id}/work-schedule")
-    public ResponseEntity<List<WorkScheduleDto>> getByUser(@PathVariable Long id) {
-        List<WorkScheduleDto> dtos = workScheduleService.getByUser(id).stream()
+    public ResponseEntity<List<WorkScheduleResponse>> getByUser(@PathVariable Long id) {
+        List<WorkScheduleResponse> dtos = workScheduleService.getByUser(id).stream()
                 .map(workScheduleMapper::toDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
     }
 
     @GetMapping("/user/{id}/work-schedule/date-range")
-    public ResponseEntity<List<WorkScheduleDto>> getByUserAndDateRange(
+    public ResponseEntity<List<WorkScheduleResponse>> getByUserAndDateRange(
             @PathVariable Long id,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
-        List<WorkScheduleDto> dtos = workScheduleService.getByUserAndDateRange(id, start, end).stream()
+        List<WorkScheduleResponse> dtos = workScheduleService.getByUserAndDateRange(id, start, end).stream()
                 .map(workScheduleMapper::toDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);

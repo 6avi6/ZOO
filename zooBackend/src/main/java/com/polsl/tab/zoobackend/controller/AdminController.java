@@ -30,14 +30,33 @@ public class AdminController {
     private final WorkScheduleMapper workScheduleMapper;
 
     @GetMapping("/users")
-    public List<UserSummaryDTO> getAllUsers() {
-        return userService.getAllUsers().stream().map(userMapper::toSummaryDto).collect(Collectors.toList());
+    public ResponseEntity<?> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(users.stream().map(userMapper::toSummaryDto).collect(Collectors.toList()));
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<UserProfileDTO> getUserById(@PathVariable Long id) {
+        User user = userService.getUserById(id);
+        return ResponseEntity.ok(userMapper.toProfileDto(user));
+    }
+
+    @GetMapping("/users/search")
+    public List<UserProfileDTO> searchUsers(
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName
+    ) {
+        return userService.searchUsers(username, email, firstName, lastName).stream()
+                .map(userMapper::toProfileDto)
+                .collect(Collectors.toList());
     }
 
     @PutMapping("/user/{id}")
     public ResponseEntity<?> updateClient(@PathVariable Long id, @Valid @RequestBody UserProfileDTO updateRequest) {
         User updatedClient = userService.updateUser(id, updateRequest);
-        return ResponseEntity.ok(userMapper.toSummaryDto(updatedClient));
+        return ResponseEntity.ok(userMapper.toProfileDto(updatedClient));
     }
 
     @DeleteMapping("/user/{id}")

@@ -3,7 +3,6 @@ package com.polsl.tab.zoobackend.controller;
 import com.polsl.tab.zoobackend.dto.authentication.PasswordChangeRequest;
 import com.polsl.tab.zoobackend.dto.user.UserProfileDTO;
 import com.polsl.tab.zoobackend.dto.user.UserUpdateRequest;
-import com.polsl.tab.zoobackend.exception.BadRequestException;
 import com.polsl.tab.zoobackend.mapper.UserMapper;
 import com.polsl.tab.zoobackend.model.User;
 import com.polsl.tab.zoobackend.service.CustomUserDetailsService;
@@ -11,7 +10,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +38,7 @@ public class UserController {
             return ResponseEntity.status(404).body(null);
         }
 
-        return ResponseEntity.ok(userMapper.toDto(user));
+        return ResponseEntity.ok(userMapper.toProfileDto(user));
     }
 
     @PutMapping("/me")
@@ -57,7 +55,7 @@ public class UserController {
         }
 
         User updatedClient = userService.updateUser(id, updateRequest);
-        return ResponseEntity.ok(userMapper.toDto(updatedClient));
+        return ResponseEntity.ok(userMapper.toProfileDto(updatedClient));
     }
 
     @PutMapping("/change-password")

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from './assets/logo.png';
-import './Home.css';
+import './styles/Home.css';
 
 const Home = () => {
   const [role, setRole] = useState('');

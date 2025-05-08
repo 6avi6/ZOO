@@ -110,7 +110,7 @@ public class AuthenticationService {
         String refreshToken = extractCookie(request, "refreshToken");
 
         if (refreshToken == null)
-            throw new RefreshTokenNotFoundException("Refresh token not found");
+            throw new RefreshTokenNotFoundException("Refresh token is null");
 
         RefreshToken rt =  refreshTokenRepository.findByToken(refreshToken)
                 .orElseThrow(() -> new RefreshTokenNotFoundException("Refresh token not found"));

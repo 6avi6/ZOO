@@ -2,28 +2,26 @@ package com.polsl.tab.zoobackend.service;
 
 import com.polsl.tab.zoobackend.dto.user.UserProfileDTO;
 import com.polsl.tab.zoobackend.dto.user.UserUpdateRequest;
+import com.polsl.tab.zoobackend.exception.BadRequestException;
 import com.polsl.tab.zoobackend.exception.ResourceNotFoundException;
 import com.polsl.tab.zoobackend.model.User;
 import com.polsl.tab.zoobackend.model.Role;
-import com.polsl.tab.zoobackend.dto.user.UserSummaryDTO;
 import com.polsl.tab.zoobackend.repository.UserRepository;
-import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -102,6 +100,18 @@ public class CustomUserDetailsService implements UserDetailsService {
             }
             user.setEmail(email);
         }
+    }
+
+    public void changePassword(String username, String oldPassword, String newPassword) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new BadRequestException("Old password is incorrect.");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 }
 

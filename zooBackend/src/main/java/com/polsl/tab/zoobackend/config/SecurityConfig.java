@@ -2,6 +2,7 @@ package com.polsl.tab.zoobackend.config;
 
 import com.polsl.tab.zoobackend.service.CustomUserDetailsService;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,7 +16,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
@@ -30,14 +30,12 @@ import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtFilter jwtFilter;
     private final CustomUserDetailsService userDetailsService;
+    private final PasswordEncoder passwordEncoder;
 
-    public SecurityConfig(JwtFilter jwtFilter, CustomUserDetailsService userDetailsService) {
-        this.jwtFilter = jwtFilter;
-        this.userDetailsService = userDetailsService;
-    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -92,18 +90,13 @@ public class SecurityConfig {
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setPasswordEncoder(passwordEncoder);
         return authProvider;
     }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Bean

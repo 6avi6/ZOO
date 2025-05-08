@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from "../Navbar";
+import AdminNavbar from "../../../components/AdminNavbar";
 
 const ManageDictionary = () => {
   return (
 
     <div>
-        <Navbar />
+        <AdminNavbar />
       <div className="dashboard-content">
         <h1 className="dashboard-title">Dane słownikowe</h1>
         <div className="dashboard-actions">

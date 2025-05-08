@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from "../Navbar";
+import AdminNavbar from "../../../components/AdminNavbar";
 import { getAllUsers } from '../../../services/adminService';
 import { MdDriveFileRenameOutline } from "react-icons/md";
 import { MdOutlineDelete } from "react-icons/md";
 import { IoPersonAddOutline } from "react-icons/io5";
 import {deleteUser} from "../../../services/userService";
+import { toast } from "react-toastify";
+import AppToast from "../../../components/AppToast";
+
 
 
 
@@ -21,8 +24,10 @@ const ManageUsers = () => {
             await deleteUser(id);
             const updatedUsers = await getAllUsers();
             setUsers(updatedUsers);
+            toast.success("Użytkownik został usunięty")
         } catch (err) {
             setError('Nie udało się usunąć użytkownika.');
+            toast.error(err)
         } finally {
             setLoading(false);
         }
@@ -46,7 +51,7 @@ const ManageUsers = () => {
 
     return (
         <div>
-            <Navbar />
+            <AdminNavbar />
             <div className="bg-white mt-12 mx-auto min-h-[300px] w-[80%] rounded-lg border shadow-sm border-gray-300  p-8 relative">
                 <div className="flex flex-row items-center justify-between mb-6">
                     <h1 className="text-2xl font-semibold text-gray-800">Lista użytkowników</h1>
@@ -106,9 +111,11 @@ const ManageUsers = () => {
                     />
                 </Link>
 
+                <AppToast />
+
 
             </div>
-               </div>
+        </div>
     );
 };
 

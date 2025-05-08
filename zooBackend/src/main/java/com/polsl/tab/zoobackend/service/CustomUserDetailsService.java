@@ -10,6 +10,8 @@ import com.polsl.tab.zoobackend.repository.UserRepository;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -41,6 +43,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         return userRepository.findAll();
     }
 
+    public Page<User> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
+
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Client with ID " + id + " not found"));
@@ -55,6 +61,17 @@ public class CustomUserDetailsService implements UserDetailsService {
             if (lastName != null) predicates.add(cb.like(cb.lower(root.get("lastName")), "%" + lastName.toLowerCase() + "%"));
             return cb.and(predicates.toArray(new Predicate[0]));
         });
+    }
+
+    public Page<User> searchUsers(String username, String email, String firstName, String lastName, Pageable pageable) {
+        return userRepository.findAll((root, query, cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (username != null) predicates.add(cb.equal(root.get("username"), username));
+            if (email != null) predicates.add(cb.equal(root.get("email"), email));
+            if (firstName != null) predicates.add(cb.like(cb.lower(root.get("firstName")), "%" + firstName.toLowerCase() + "%"));
+            if (lastName != null) predicates.add(cb.like(cb.lower(root.get("lastName")), "%" + lastName.toLowerCase() + "%"));
+            return cb.and(predicates.toArray(new Predicate[0]));
+        }, pageable);
     }
 
     public boolean userExists(String username) {

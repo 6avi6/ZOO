@@ -11,6 +11,8 @@ import com.polsl.tab.zoobackend.service.CustomUserDetailsService;
 import com.polsl.tab.zoobackend.service.WorkScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +32,16 @@ public class AdminController {
     private final WorkScheduleMapper workScheduleMapper;
 
     @GetMapping("/users")
-    public ResponseEntity<?> getAllUsers() {
+    public ResponseEntity<List<UserSummaryDTO>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users.stream().map(userMapper::toSummaryDto).collect(Collectors.toList()));
+    }
+
+    @GetMapping("/users/paged")
+    public ResponseEntity<Page<UserSummaryDTO>> getAllUsersPaged(Pageable pageable) {
+        Page<User> pageEnt = userService.getAllUsers(pageable);
+        Page<UserSummaryDTO> pageDto = pageEnt.map(userMapper::toSummaryDto);
+        return ResponseEntity.ok(pageDto);
     }
 
     @GetMapping("/user/{id}")
@@ -51,6 +60,18 @@ public class AdminController {
         return userService.searchUsers(username, email, firstName, lastName).stream()
                 .map(userMapper::toProfileDto)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/users/search/paged")
+    public Page<UserProfileDTO> searchUsersPaged(
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String lastName,
+            Pageable pageable
+    ) {
+        return userService.searchUsers(username, email, firstName, lastName, pageable)
+                .map(userMapper::toProfileDto);
     }
 
     @PutMapping("/user/{id}")

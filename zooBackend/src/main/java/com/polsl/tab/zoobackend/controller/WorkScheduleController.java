@@ -7,7 +7,7 @@ import com.polsl.tab.zoobackend.model.WorkSchedule;
 import com.polsl.tab.zoobackend.service.WorkScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,10 +51,8 @@ public class WorkScheduleController {
     }
 
     @GetMapping("/paged")
-    public ResponseEntity<Page<WorkScheduleResponse>> getAllPaged(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Page<WorkSchedule> pageEnt = workScheduleService.getAll(PageRequest.of(page, size));
+    public ResponseEntity<Page<WorkScheduleResponse>> getAllPaged(Pageable pageable) {
+        Page<WorkSchedule> pageEnt = workScheduleService.getAll(pageable);
         Page<WorkScheduleResponse> pageDto = pageEnt.map(workScheduleMapper::toDtoWithUsers);
         return ResponseEntity.ok(pageDto);
     }

@@ -20,4 +20,16 @@ export const updateCurrentUser = async (data) => {
     }
 }
 
+export const deleteUser = async (id) => {
+    try {
+        const response = await axiosInstance.delete(`api/admin/user/${id}`);
+        return response.data;
+    } catch(error) {
+        throw error;
+    }
+}
+
+
+
+
 

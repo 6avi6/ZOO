@@ -8,6 +8,8 @@ import { IoPersonAddOutline } from "react-icons/io5";
 import {deleteUser} from "../../../services/userService";
 import { toast } from "react-toastify";
 import AppToast from "../../../components/AppToast";
+import { AiOutlineEdit } from "react-icons/ai";
+
 
 
 
@@ -92,7 +94,7 @@ const ManageUsers = () => {
 
                                 <td className="">
                                     <Link to={`/admin/manage-users/edit/${user.id}`} className="text-black hover:text-[#08bf29] transition-all duration-150">
-                                        <MdDriveFileRenameOutline className="inline-block w-6 h-6" />
+                                        <AiOutlineEdit className="inline-block w-6 h-6" />
                                     </Link>
                                 </td>
                                 <td className="">

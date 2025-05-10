@@ -29,6 +29,7 @@ public class AnimalController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+
     @PostMapping
     public ResponseEntity<Animal> create(@RequestBody Animal animal) {
         return ResponseEntity.ok(service.create(animal));

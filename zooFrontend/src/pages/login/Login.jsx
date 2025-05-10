@@ -50,7 +50,7 @@ const Login = () => {
                         required
                     />
                 </div>
-                <button type="submit" className="bg-[#2b6cb0] rounded-md p-2 text-white hover:bg-[#2c5282] transition-all duration-250 shadow-md">
+                <button type="submit" className="bg-[#526C43] rounded-md p-2 text-white hover:bg-[#234228] transition-all duration-250 shadow-md">
                     Zaloguj
                 </button>
                 {message && <p className="text-red-500">{message}</p>}

@@ -30,20 +30,18 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Role role;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private RefreshToken refreshToken;
-
-    @Column
-    private String firstName;
-
-    @Column
-    private String lastName;
-
     @Column(unique = true)
     private String email;
 
-    @Column
+    private String firstName;
+    private String lastName;
     private LocalDate hireDate;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private RefreshToken refreshToken;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserWorkSchedule> userWorkSchedule;
 
     public User() {}
 

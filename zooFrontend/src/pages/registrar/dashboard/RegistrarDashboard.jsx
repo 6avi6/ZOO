@@ -11,21 +11,20 @@ const RegistrarDashboard = () => {
         {/* Sekcja: Rejestracja zwierząt */}
         <h2 className="dashboard-section"> Rejestracja zwierząt</h2>
         <div className="dashboard-actions">
-        <Link to="/rejestrator/add-animal" className="dashboard-btn">Dodaj zwierzę</Link>
-        <Link to="/rejestrator/edit-animal" className="dashboard-btn">Edytuj dane zwierzęcia</Link>
+        <Link to="/registrar/edit-animal" className="dashboard-btn">Edytuj dane zwierząt</Link>
         </div>
 
         {/* Sekcja: Rejestracja opiekunów */}
         <h2 className="dashboard-section"> Rejestracja opiekunów</h2>
         <div className="dashboard-actions">
-        <Link to="/rejestrator/add-caretaker" className="dashboard-btn">Edytuj opiekuna</Link>
+        <Link to="/registrar/edit-caretaker" className="dashboard-btn">Edytuj dane opiekunów</Link>
         </div>
 
         {/* Sekcja: Zarządzanie wybiegami */}
         <h2 className="dashboard-section"> Zarządzanie wybiegami</h2>
         <div className="dashboard-actions">
 
-        <Link to="/rejestrator/edit-enclosure" className="dashboard-btn">Edytuj wybieg</Link>
+        <Link to="/registrar/edit-enclosure" className="dashboard-btn">Edytuj wybieg</Link>
         </div>
       </div>
 

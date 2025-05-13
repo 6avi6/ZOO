@@ -6,10 +6,13 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "users")
@@ -42,6 +45,16 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserWorkSchedule> userWorkSchedule;
+
+    @OneToMany(mappedBy = "veterinarian", cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<VeterinaryVisit> veterinaryVisits;
+
+    @ManyToMany(mappedBy = "feedingUsers")
+    private Set<Feeding> feedings;
+
+    @ManyToMany(mappedBy = "assignedUsers")
+    private Set<Animal> assignedAnimals;
 
     public User() {}
 

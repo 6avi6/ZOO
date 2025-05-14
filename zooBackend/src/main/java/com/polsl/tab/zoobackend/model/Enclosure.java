@@ -8,9 +8,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "enclosures")
-@Getter
-@Setter
-
+@Data
 public class Enclosure {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

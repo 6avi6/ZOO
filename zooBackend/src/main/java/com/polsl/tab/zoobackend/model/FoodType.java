@@ -12,7 +12,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "food_types")
-@Getter @Setter
+@Data
 public class FoodType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -38,7 +38,7 @@ public class Animal {
     private String sex;
 
     @Column(nullable = false)
-    private Number weight;
+    private Double weight;
 
     @ManyToOne
     @JoinColumn(name = "enclosure_id", nullable = false)

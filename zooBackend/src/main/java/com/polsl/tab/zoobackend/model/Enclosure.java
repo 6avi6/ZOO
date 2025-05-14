@@ -26,10 +26,10 @@ public class Enclosure {
     private String insolation;
 
     @Column(nullable = false)
-    private Number temperature;
+    private Double temperature;
 
     @Column(nullable = false)
-    private Number maxAnimals;
+    private Integer maxAnimals;
 
     @OneToMany(mappedBy = "enclosure", cascade = CascadeType.ALL)
     @JsonManagedReference

@@ -3,6 +3,7 @@ package com.polsl.tab.zoobackend.model;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -55,8 +56,8 @@ public class Animal {
         joinColumns = @JoinColumn(name = "animal_id"),
         inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<User> assignedUsers;
+    private Set<User> assignedUsers = new HashSet<>();
 
     @ManyToMany(mappedBy = "animals")
-    private Set<Feeding> feedings;
+    private Set<Feeding> feedings = new HashSet<>();
 }

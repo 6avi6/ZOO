@@ -2,7 +2,8 @@ package com.polsl.tab.zoobackend.controller;
 
 import com.polsl.tab.zoobackend.dto.animal.AnimalRequest;
 import com.polsl.tab.zoobackend.dto.animal.AnimalResponse;
-import com.polsl.tab.zoobackend.model.Animal;
+import com.polsl.tab.zoobackend.dto.user.UserProfileDTO;
+import com.polsl.tab.zoobackend.dto.user.UserSummaryDTO;
 import com.polsl.tab.zoobackend.service.AnimalService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,33 +18,47 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AnimalController {
 
-    private final AnimalService service;
+    private final AnimalService animalService;
 
     @GetMapping
     public List<AnimalResponse> getAll() {
-        return service.getAll();
+        return animalService.getAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AnimalResponse> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getById(id));
+        return ResponseEntity.ok(animalService.getById(id));
     }
 
     @PostMapping
     public ResponseEntity<AnimalResponse> create(@RequestBody @Valid AnimalRequest animalRequest) {
-        AnimalResponse created = service.create(animalRequest);
+        AnimalResponse created = animalService.create(animalRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<AnimalResponse> update(@PathVariable Long id, @RequestBody @Valid AnimalRequest animalRequest) {
-        AnimalResponse updated = service.update(id, animalRequest);
+        AnimalResponse updated = animalService.update(id, animalRequest);
         return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.delete(id);
+        animalService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/caretakers")
+    public ResponseEntity<List<UserSummaryDTO>> getAnimalsCaretakers(@PathVariable Long id) {
+        return ResponseEntity.ok(animalService.getCaretakers(id));
+    }
+
+    @PostMapping("/{animalId}/employees")
+    public ResponseEntity<?> assignEmployeesToAnimal(
+            @PathVariable Long animalId,
+            @RequestBody List<Long> employeeIds) {
+
+        animalService.assignEmployees(animalId, employeeIds);
+        return ResponseEntity.ok("Employees assigned to animal.");
     }
 }

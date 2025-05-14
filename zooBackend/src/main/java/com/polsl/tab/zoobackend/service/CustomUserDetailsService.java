@@ -4,8 +4,10 @@ import com.polsl.tab.zoobackend.dto.user.UserProfileDTO;
 import com.polsl.tab.zoobackend.dto.user.UserUpdateRequest;
 import com.polsl.tab.zoobackend.exception.BadRequestException;
 import com.polsl.tab.zoobackend.exception.ResourceNotFoundException;
+import com.polsl.tab.zoobackend.model.Animal;
 import com.polsl.tab.zoobackend.model.User;
 import com.polsl.tab.zoobackend.model.Role;
+import com.polsl.tab.zoobackend.repository.AnimalRepository;
 import com.polsl.tab.zoobackend.repository.UserRepository;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
+    private final AnimalRepository animalRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -143,6 +146,17 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
+    }
+
+    public void assignAnimals(Long employeeId, List<Long> animalIds) {
+        User employee = userRepository.findById(employeeId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id " + employeeId));
+
+        List<Animal> animals = animalRepository.findAllById(animalIds);
+        employee.getAssignedAnimals().addAll(animals);
+        animals.forEach(a -> a.getAssignedUsers().add(employee));
+
+        animalRepository.saveAll(animals);
     }
 }
 

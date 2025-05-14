@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -51,10 +52,10 @@ public class User implements UserDetails {
     private List<VeterinaryVisit> veterinaryVisits;
 
     @ManyToMany(mappedBy = "feedingUsers")
-    private Set<Feeding> feedings;
+    private Set<Feeding> feedings = new HashSet<>();
 
     @ManyToMany(mappedBy = "assignedUsers")
-    private Set<Animal> assignedAnimals;
+    private Set<Animal> assignedAnimals = new HashSet<>();
 
     public User() {}
 

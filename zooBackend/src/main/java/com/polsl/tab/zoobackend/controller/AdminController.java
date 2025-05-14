@@ -108,4 +108,13 @@ public class AdminController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
     }
+
+    @PostMapping("/user/{employeeId}/animals")
+    public ResponseEntity<?> assignAnimalsToEmployee(
+            @PathVariable Long employeeId,
+            @RequestBody List<Long> animalIds) {
+
+        userService.assignAnimals(employeeId, animalIds);
+        return ResponseEntity.ok("Animals assigned to employee.");
+    }
 }

@@ -66,6 +66,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/user/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/admin/**").hasAnyRole("REGISTRAR", "ADMIN", "DIRECTOR")
                         .requestMatchers("/api/admin/**").hasAnyRole("ADMIN", "DIRECTOR")
+                        .requestMatchers("/api/reports/sick-animals").hasAnyRole("DIRECTOR", "VETERINARIAN") //TODO czy to dobrze?
+                        .requestMatchers("/api/reports/**").hasRole("DIRECTOR")
+                        .requestMatchers("/api/animal-treatment-card/**").hasAnyRole("USER", "VETERINARIAN")
                         .requestMatchers(HttpMethod.GET, "/api/work-schedules/**").authenticated()
                         .requestMatchers("/api/work-schedules/**").hasAnyRole("REGISTRAR", "ADMIN", "DIRECTOR")
                         .requestMatchers("/api/hello").permitAll()

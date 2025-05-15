@@ -2,15 +2,20 @@ package com.polsl.tab.zoobackend;
 
 import com.polsl.tab.zoobackend.dto.enclosure.EnclosureRequest;
 import com.polsl.tab.zoobackend.dto.foodType.FoodTypeRequest;
+import com.polsl.tab.zoobackend.dto.symptom.SymptomRequest;
+import com.polsl.tab.zoobackend.dto.user.UserSearchCriteriaDTO;
 import com.polsl.tab.zoobackend.mapper.EnclosureMapper;
 import com.polsl.tab.zoobackend.mapper.FoodTypeMapper;
+import com.polsl.tab.zoobackend.mapper.SymptomMapper;
 import com.polsl.tab.zoobackend.model.*;
 import com.polsl.tab.zoobackend.repository.*;
 
-import jakarta.annotation.PostConstruct;
+import com.polsl.tab.zoobackend.service.AdministrationService;
+import com.polsl.tab.zoobackend.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,9 +38,14 @@ public class TestDataInitializer implements ApplicationRunner {
     private final FoodTypeRepository foodTypeRepository;
     private final AnimalRepository animalRepository;
     private final FeedingRepository feedingRepository;
+    private final AnimalTreatmentCardRepository treatmentCardRepository;
+    private final SymptomRepository symptomRepository;
     private final PasswordEncoder passwordEncoder;
     private final EnclosureMapper enclosureMapper;
     private final FoodTypeMapper foodTypeMapper;
+    private final SymptomMapper symptomMapper;
+    private final CustomUserDetailsService customUserDetailsService;
+    private final AdministrationService administrationService;
 
     @Override
     @Transactional
@@ -46,18 +56,30 @@ public class TestDataInitializer implements ApplicationRunner {
         seedFoodTypes();
         seedAnimals();
         seedFeedings();
+        seedVisitsAndSymptoms();
     }
 
     private void seedUsers() {
         if (userRepository.count() == 0) {
             for (Role role : Role.values()) {
                 String roleLower = role.name().toLowerCase();
+
                 User user1 = new User(roleLower, passwordEncoder.encode(roleLower), role);
+                user1.setEmail(roleLower + "@example.com");
+                user1.setFirstName("First_" + role.name());
+                user1.setLastName("Last_" + role.name());
+                user1.setHireDate(LocalDate.now().minusDays(30));
                 userRepository.save(user1);
-                String username = "string" +role.name().toUpperCase().charAt(0);
+
+                String username = "string" + role.name().toUpperCase().charAt(0);
                 User user2 = new User(username, passwordEncoder.encode(username), role);
+                user2.setEmail(username + "@example.com");
+                user2.setFirstName("String_" + role.name());
+                user2.setLastName("Example_" + role.name());
+                user2.setHireDate(LocalDate.now().minusDays(15));
                 userRepository.save(user2);
             }
+            System.out.println("Seeded Users");
         }
     }
 
@@ -83,6 +105,7 @@ public class TestDataInitializer implements ApplicationRunner {
                     }
                 }
             }
+            System.out.println("Seeded WorkSchedules");
         }
     }
 
@@ -96,6 +119,7 @@ public class TestDataInitializer implements ApplicationRunner {
                     enclosureMapper.toEntity(new EnclosureRequest("Mountain",false,"High",15.0,5))
             );
             enclosureRepository.saveAll(list);
+            System.out.println("Seeded Enclosures");
         }
     }
 
@@ -109,6 +133,7 @@ public class TestDataInitializer implements ApplicationRunner {
                     foodTypeMapper.toEntity(new FoodTypeRequest("Seed Selection","Seeds and nuts"))
             );
             foodTypeRepository.saveAll(list);
+            System.out.println("Seeded FoodTypes");
         }
     }
 
@@ -128,7 +153,7 @@ public class TestDataInitializer implements ApplicationRunner {
                     a.setSex(i % 2 == 0 ? "Male" : "Female");
                     a.setWeight(10.0 * i);
                     a.setEnclosure(encls.get(i % encls.size()));
-                    a.setVeterinaryVisits(null);
+                    a.setAnimalTreatmentCards(null);
 
                     User u1 = users.get(userIndex++ % users.size());
                     User u2 = users.get(userIndex++ % users.size());
@@ -143,6 +168,7 @@ public class TestDataInitializer implements ApplicationRunner {
                 }
                 animalRepository.saveAll(animals);
             }
+            System.out.println("Seeded Animals");
         }
     }
 
@@ -171,6 +197,55 @@ public class TestDataInitializer implements ApplicationRunner {
 
                 feedingRepository.save(f);
             }
+            System.out.println("Seeded Feedings");
+        }
+    }
+
+    private void seedVisitsAndSymptoms() {
+        if (symptomRepository.count() == 0 || treatmentCardRepository.count() == 0) {
+            List<User> caregiver = administrationService.searchUsers(
+                    new UserSearchCriteriaDTO(null, Role.CAREGIVER,null,null,null,null,null),
+                    PageRequest.of(0, 2)).getContent();
+            List<User> veterinarian = administrationService.searchUsers(
+                    new UserSearchCriteriaDTO(null, Role.VETERINARIAN,null,null,null,null,null),
+                    PageRequest.of(0, 2)).getContent();
+
+            List<Animal> animals = animalRepository.findAll();
+            if (animals.size() < 2) throw new RuntimeException("Not enough animals to assign visits");
+            if (caregiver.isEmpty()) throw new RuntimeException("Not enough caregiver to assign TreatmentCard");
+            if (veterinarian.isEmpty()) throw new RuntimeException("Not enough veterinarian to assign TreatmentCard");
+
+            Symptom cough = symptomMapper.toEntity(new SymptomRequest("Coughing", "Dry coughing for 2 days"));
+            Symptom fatigue = symptomMapper.toEntity(new SymptomRequest("Fatigue", "Low activity and lethargy"));
+            Symptom lossOfAppetite = symptomMapper.toEntity(new SymptomRequest("Loss of appetite", "Refuses food since yesterday"));
+
+            symptomRepository.saveAll(List.of(cough, fatigue, lossOfAppetite));
+
+            AnimalTreatmentCard visit0 = new AnimalTreatmentCard();
+            visit0.setAnimal(animals.get(0));
+            visit0.setAssignedUser(caregiver.get(0));
+            visit0.setVisitDate(LocalDateTime.now());
+            visit0.setDescription("Animal may be sick");
+            visit0.setSymptoms(new HashSet<>(List.of(cough)));
+            treatmentCardRepository.save(visit0);
+
+            AnimalTreatmentCard visit1 = new AnimalTreatmentCard();
+            visit1.setAnimal(animals.get(0));
+            visit1.setAssignedUser(veterinarian.get(0));
+            visit1.setVisitDate(LocalDateTime.now().minusDays(2));
+            visit1.setDescription("Animal had cough and fatigue. Given antibiotics.");
+            visit1.setSymptoms(new HashSet<>(List.of(cough, fatigue)));
+            treatmentCardRepository.save(visit1);
+
+            AnimalTreatmentCard visit2 = new AnimalTreatmentCard();
+            visit2.setAnimal(animals.get(0));
+            visit2.setAssignedUser(veterinarian.get(0));
+            visit2.setVisitDate(LocalDateTime.now().minusDays(1));
+            visit2.setDescription("Loss of appetite observed. Recommended hydration and monitoring.");
+            visit2.setSymptoms(new HashSet<>(List.of(lossOfAppetite)));
+            treatmentCardRepository.save(visit2);
+
+            System.out.println("Seeded visits and symptoms for test animals.");
         }
     }
 }

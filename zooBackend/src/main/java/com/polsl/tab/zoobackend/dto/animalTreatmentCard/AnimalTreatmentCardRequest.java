@@ -15,7 +15,7 @@ public class AnimalTreatmentCardRequest {
     private String description;
 
     @NotNull
-    private LocalDateTime visitDate;
+    private LocalDateTime dateTime;
 
     @NotNull
     private Long animalId;

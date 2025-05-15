@@ -21,5 +21,5 @@ public class Symptom {
     private String description; 
 
     @ManyToMany(mappedBy = "symptoms")
-    private Set<AnimalTreatmentCard> visits;
+    private Set<AnimalTreatmentCard> animalTreatmentCards;
 }

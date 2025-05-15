@@ -11,7 +11,7 @@ import java.util.Set;
 public class AnimalTreatmentCardResponse {
     private Long id;
     private String description;
-    private LocalDateTime visitDate;
+    private LocalDateTime dateTime;
     private Long animalId;
     private Long veterinarianId;
     private Set<Long> symptomIds;

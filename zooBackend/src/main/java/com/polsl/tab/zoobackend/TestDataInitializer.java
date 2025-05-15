@@ -56,7 +56,7 @@ public class TestDataInitializer implements ApplicationRunner {
         seedFoodTypes();
         seedAnimals();
         seedFeedings();
-        seedVisitsAndSymptoms();
+        seedAnimalTreatmentCardsAndSymptoms();
     }
 
     private void seedUsers() {
@@ -201,7 +201,7 @@ public class TestDataInitializer implements ApplicationRunner {
         }
     }
 
-    private void seedVisitsAndSymptoms() {
+    private void seedAnimalTreatmentCardsAndSymptoms() {
         if (symptomRepository.count() == 0 || treatmentCardRepository.count() == 0) {
             List<User> caregiver = administrationService.searchUsers(
                     new UserSearchCriteriaDTO(null, Role.CAREGIVER,null,null,null,null,null),
@@ -211,7 +211,7 @@ public class TestDataInitializer implements ApplicationRunner {
                     PageRequest.of(0, 2)).getContent();
 
             List<Animal> animals = animalRepository.findAll();
-            if (animals.size() < 2) throw new RuntimeException("Not enough animals to assign visits");
+            if (animals.size() < 2) throw new RuntimeException("Not enough animals to assign TreatmentCard");
             if (caregiver.isEmpty()) throw new RuntimeException("Not enough caregiver to assign TreatmentCard");
             if (veterinarian.isEmpty()) throw new RuntimeException("Not enough veterinarian to assign TreatmentCard");
 
@@ -221,31 +221,31 @@ public class TestDataInitializer implements ApplicationRunner {
 
             symptomRepository.saveAll(List.of(cough, fatigue, lossOfAppetite));
 
-            AnimalTreatmentCard visit0 = new AnimalTreatmentCard();
-            visit0.setAnimal(animals.get(0));
-            visit0.setAssignedUser(caregiver.get(0));
-            visit0.setVisitDate(LocalDateTime.now());
-            visit0.setDescription("Animal may be sick");
-            visit0.setSymptoms(new HashSet<>(List.of(cough)));
-            treatmentCardRepository.save(visit0);
+            AnimalTreatmentCard animalTreatmentCards0 = new AnimalTreatmentCard();
+            animalTreatmentCards0.setAnimal(animals.get(0));
+            animalTreatmentCards0.setAssignedUser(caregiver.get(0));
+            animalTreatmentCards0.setDateTime(LocalDateTime.now());
+            animalTreatmentCards0.setDescription("Animal may be sick");
+            animalTreatmentCards0.setSymptoms(new HashSet<>(List.of(cough)));
+            treatmentCardRepository.save(animalTreatmentCards0);
 
-            AnimalTreatmentCard visit1 = new AnimalTreatmentCard();
-            visit1.setAnimal(animals.get(0));
-            visit1.setAssignedUser(veterinarian.get(0));
-            visit1.setVisitDate(LocalDateTime.now().minusDays(2));
-            visit1.setDescription("Animal had cough and fatigue. Given antibiotics.");
-            visit1.setSymptoms(new HashSet<>(List.of(cough, fatigue)));
-            treatmentCardRepository.save(visit1);
+            AnimalTreatmentCard animalTreatmentCards1 = new AnimalTreatmentCard();
+            animalTreatmentCards1.setAnimal(animals.get(0));
+            animalTreatmentCards1.setAssignedUser(veterinarian.get(0));
+            animalTreatmentCards1.setDateTime(LocalDateTime.now().minusDays(2));
+            animalTreatmentCards1.setDescription("Animal had cough and fatigue. Given antibiotics.");
+            animalTreatmentCards1.setSymptoms(new HashSet<>(List.of(cough, fatigue)));
+            treatmentCardRepository.save(animalTreatmentCards1);
 
-            AnimalTreatmentCard visit2 = new AnimalTreatmentCard();
-            visit2.setAnimal(animals.get(0));
-            visit2.setAssignedUser(veterinarian.get(0));
-            visit2.setVisitDate(LocalDateTime.now().minusDays(1));
-            visit2.setDescription("Loss of appetite observed. Recommended hydration and monitoring.");
-            visit2.setSymptoms(new HashSet<>(List.of(lossOfAppetite)));
-            treatmentCardRepository.save(visit2);
+            AnimalTreatmentCard animalTreatmentCards2 = new AnimalTreatmentCard();
+            animalTreatmentCards2.setAnimal(animals.get(0));
+            animalTreatmentCards2.setAssignedUser(veterinarian.get(0));
+            animalTreatmentCards2.setDateTime(LocalDateTime.now().minusDays(1));
+            animalTreatmentCards2.setDescription("Loss of appetite observed. Recommended hydration and monitoring.");
+            animalTreatmentCards2.setSymptoms(new HashSet<>(List.of(lossOfAppetite)));
+            treatmentCardRepository.save(animalTreatmentCards2);
 
-            System.out.println("Seeded visits and symptoms for test animals.");
+            System.out.println("Seeded AnimalTreatmentCards and symptoms for test animals.");
         }
     }
 }

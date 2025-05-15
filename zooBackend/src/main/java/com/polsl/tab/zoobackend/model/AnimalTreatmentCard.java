@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "veterinary_visits")
+@Table(name = "animal_treatment_card")
 @Getter
 @Setter
 public class AnimalTreatmentCard {
@@ -23,12 +23,12 @@ public class AnimalTreatmentCard {
     private String description;
     
     @Column(nullable = false)
-    private LocalDateTime visitDate;
+    private LocalDateTime dateTime;
 
     @ManyToMany
     @JoinTable(
-        name = "visit_symptoms",
-        joinColumns = @JoinColumn(name = "visit_id"),
+        name = "animal_treatment_card",
+        joinColumns = @JoinColumn(name = "animal_treatment_card_id"),
         inverseJoinColumns = @JoinColumn(name = "symptom_id")
     )
     private Set<Symptom> symptoms = new HashSet<>();

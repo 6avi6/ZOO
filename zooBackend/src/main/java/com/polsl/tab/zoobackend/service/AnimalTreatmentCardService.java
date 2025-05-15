@@ -24,27 +24,27 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AnimalTreatmentCardService {
 
-    private final AnimalTreatmentCardRepository visitRepository;
+    private final AnimalTreatmentCardRepository animalTreatmentCardRepository;
     private final AnimalRepository animalRepository;
     private final UserRepository userRepository;
     private final SymptomRepository symptomRepository;
     private final AnimalTreatmentCardMapper animalTreatmentCardMapper;
 
-    public List<AnimalTreatmentCardResponse> getAllVisits() {
-        return visitRepository.findAll()
+    public List<AnimalTreatmentCardResponse> getAllTreatmentCards() {
+        return animalTreatmentCardRepository.findAll()
                 .stream()
                 .map(animalTreatmentCardMapper::toDto)
                 .collect(Collectors.toList());
     }
 
-    public AnimalTreatmentCardResponse getVisitById(Long id) {
-        AnimalTreatmentCard visit = visitRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Veterinary visit not found with id: " + id));
-        return animalTreatmentCardMapper.toDto(visit);
+    public AnimalTreatmentCardResponse getTreatmentCardById(Long id) {
+        AnimalTreatmentCard animalTreatmentCard = animalTreatmentCardRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Animal Treatment Card not found with id: " + id));
+        return animalTreatmentCardMapper.toDto(animalTreatmentCard);
     }
 
     @Transactional
-    public AnimalTreatmentCardResponse createVisit(AnimalTreatmentCardRequest dto) {
+    public AnimalTreatmentCardResponse createTreatmentCard(AnimalTreatmentCardRequest dto) {
         Animal animal = animalRepository.findById(dto.getAnimalId())
                 .orElseThrow(() -> new ResourceNotFoundException("Animal not found with id: " + dto.getAnimalId()));
 
@@ -54,18 +54,18 @@ public class AnimalTreatmentCardService {
         Set<Symptom> symptoms = symptomRepository.findAllById(dto.getSymptomIds())
                 .stream().collect(Collectors.toSet());
 
-        AnimalTreatmentCard visit = animalTreatmentCardMapper.toEntity(dto);
-        visit.setAnimal(animal);
-        visit.setAssignedUser(vet);
-        visit.setSymptoms(symptoms);
+        AnimalTreatmentCard animalTreatmentCard = animalTreatmentCardMapper.toEntity(dto);
+        animalTreatmentCard.setAnimal(animal);
+        animalTreatmentCard.setAssignedUser(vet);
+        animalTreatmentCard.setSymptoms(symptoms);
 
-        visit = visitRepository.save(visit);
-        return animalTreatmentCardMapper.toDto(visit);
+        animalTreatmentCard = animalTreatmentCardRepository.save(animalTreatmentCard);
+        return animalTreatmentCardMapper.toDto(animalTreatmentCard);
     }
 
     @Transactional
-    public AnimalTreatmentCardResponse updateVisit(Long id, AnimalTreatmentCardRequest dto) {
-        AnimalTreatmentCard animalTreatmentCard = visitRepository.findById(id)
+    public AnimalTreatmentCardResponse updateTreatmentCard(Long id, AnimalTreatmentCardRequest dto) {
+        AnimalTreatmentCard animalTreatmentCard = animalTreatmentCardRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Animal treatment card not found with id: " + id));
 
         animalTreatmentCardMapper.updateEntity(animalTreatmentCard, dto);
@@ -88,11 +88,11 @@ public class AnimalTreatmentCardService {
             animalTreatmentCard.setSymptoms(symptoms);
         }
 
-        animalTreatmentCard = visitRepository.save(animalTreatmentCard);
+        animalTreatmentCard = animalTreatmentCardRepository.save(animalTreatmentCard);
         return animalTreatmentCardMapper.toDto(animalTreatmentCard);
     }
 
-    public void deleteVisit(Long id) {
-        visitRepository.deleteById(id);
+    public void deleteTreatmentCard(Long id) {
+        animalTreatmentCardRepository.deleteById(id);
     }
 }

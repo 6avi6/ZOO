@@ -16,31 +16,31 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AnimalTreatmentCardController {
 
-    private final AnimalTreatmentCardService visitService;
+    private final AnimalTreatmentCardService animalTreatmentCardServiceService;
 
     @GetMapping
     public List<AnimalTreatmentCardResponse> getAll() {
-        return visitService.getAllVisits();
+        return animalTreatmentCardServiceService.getAllTreatmentCards();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AnimalTreatmentCardResponse> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(visitService.getVisitById(id));
+        return ResponseEntity.ok(animalTreatmentCardServiceService.getTreatmentCardById(id));
     }
 
     @PostMapping
     public ResponseEntity<AnimalTreatmentCardResponse> create(@Valid @RequestBody AnimalTreatmentCardRequest dto) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(visitService.createVisit(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(animalTreatmentCardServiceService.createTreatmentCard(dto));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<AnimalTreatmentCardResponse> update(@PathVariable Long id, @Valid @RequestBody AnimalTreatmentCardRequest dto) {
-        return ResponseEntity.ok(visitService.updateVisit(id, dto));
+        return ResponseEntity.ok(animalTreatmentCardServiceService.updateTreatmentCard(id, dto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        visitService.deleteVisit(id);
+        animalTreatmentCardServiceService.deleteTreatmentCard(id);
         return ResponseEntity.noContent().build();
     }
 }

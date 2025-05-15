@@ -1,5 +1,6 @@
 package com.polsl.tab.zoobackend.controller;
 
+import com.polsl.tab.zoobackend.dto.user.UserSearchCriteriaDTO;
 import com.polsl.tab.zoobackend.dto.workSchedule.WorkScheduleResponse;
 import com.polsl.tab.zoobackend.dto.user.UserProfileDTO;
 import com.polsl.tab.zoobackend.dto.user.UserSummaryDTO;
@@ -7,7 +8,7 @@ import com.polsl.tab.zoobackend.exception.ResourceNotFoundException;
 import com.polsl.tab.zoobackend.mapper.UserMapper;
 import com.polsl.tab.zoobackend.mapper.WorkScheduleMapper;
 import com.polsl.tab.zoobackend.model.User;
-import com.polsl.tab.zoobackend.service.CustomUserDetailsService;
+import com.polsl.tab.zoobackend.service.AdministrationService;
 import com.polsl.tab.zoobackend.service.WorkScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,71 +23,56 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/administration")
 @RequiredArgsConstructor
-public class AdminController {
+public class AdministrationController {
 
-    private final CustomUserDetailsService userService;
+    private final AdministrationService administrationService;
     private final UserMapper userMapper;
     private final WorkScheduleService workScheduleService;
     private final WorkScheduleMapper workScheduleMapper;
 
     @GetMapping("/users")
     public ResponseEntity<List<UserSummaryDTO>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
+        List<User> users = administrationService.getAllUsers();
         return ResponseEntity.ok(users.stream().map(userMapper::toSummaryDto).collect(Collectors.toList()));
     }
 
     @GetMapping("/users/paged")
     public ResponseEntity<Page<UserSummaryDTO>> getAllUsersPaged(Pageable pageable) {
-        Page<User> pageEnt = userService.getAllUsers(pageable);
+        Page<User> pageEnt = administrationService.getAllUsers(pageable);
         Page<UserSummaryDTO> pageDto = pageEnt.map(userMapper::toSummaryDto);
         return ResponseEntity.ok(pageDto);
     }
 
     @GetMapping("/user/{id}")
     public ResponseEntity<UserProfileDTO> getUserById(@PathVariable Long id) {
-        User user = userService.getUserById(id);
+        User user = administrationService.getUserById(id);
         return ResponseEntity.ok(userMapper.toProfileDto(user));
-    }
-
-    @GetMapping("/users/search")
-    public List<UserProfileDTO> searchUsers(
-            @RequestParam(required = false) String username,
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String firstName,
-            @RequestParam(required = false) String lastName
-    ) {
-        return userService.searchUsers(username, email, firstName, lastName).stream()
-                .map(userMapper::toProfileDto)
-                .collect(Collectors.toList());
     }
 
     @GetMapping("/users/search/paged")
     public Page<UserProfileDTO> searchUsersPaged(
-            @RequestParam(required = false) String username,
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String firstName,
-            @RequestParam(required = false) String lastName,
+            @ModelAttribute UserSearchCriteriaDTO criteria,
             Pageable pageable
     ) {
-        return userService.searchUsers(username, email, firstName, lastName, pageable)
+        return administrationService.searchUsers(criteria, pageable)
                 .map(userMapper::toProfileDto);
     }
 
     @PutMapping("/user/{id}")
     public ResponseEntity<?> updateClient(@PathVariable Long id, @Valid @RequestBody UserProfileDTO updateRequest) {
-        User updatedClient = userService.updateUser(id, updateRequest);
+        User updatedClient = administrationService.updateUser(id, updateRequest);
         return ResponseEntity.ok(userMapper.toProfileDto(updatedClient));
     }
 
     @DeleteMapping("/user/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        if (!userService.userExists(id)) {
+        if (!administrationService.userExists(id)) {
             throw new ResourceNotFoundException("Client with ID " + id + " not found");
         }
 
-        userService.deleteUser(id);
+        administrationService.deleteUser(id);
         return ResponseEntity.ok("User deleted successfully.");
     }
 
@@ -114,7 +100,7 @@ public class AdminController {
             @PathVariable Long employeeId,
             @RequestBody List<Long> animalIds) {
 
-        userService.assignAnimals(employeeId, animalIds);
+        administrationService.assignAnimals(employeeId, animalIds);
         return ResponseEntity.ok("Animals assigned to employee.");
     }
 }

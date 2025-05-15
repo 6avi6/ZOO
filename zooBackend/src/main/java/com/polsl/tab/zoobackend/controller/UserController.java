@@ -5,6 +5,7 @@ import com.polsl.tab.zoobackend.dto.user.UserProfileDTO;
 import com.polsl.tab.zoobackend.dto.user.UserUpdateRequest;
 import com.polsl.tab.zoobackend.mapper.UserMapper;
 import com.polsl.tab.zoobackend.model.User;
+import com.polsl.tab.zoobackend.service.AdministrationService;
 import com.polsl.tab.zoobackend.service.CustomUserDetailsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final CustomUserDetailsService userService;
+    private final AdministrationService administrationService;
     private final UserMapper userMapper;
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
@@ -54,7 +56,7 @@ public class UserController {
             return ResponseEntity.status(401).build();
         }
 
-        User updatedClient = userService.updateUser(id, updateRequest);
+        User updatedClient = administrationService.updateUser(id, updateRequest);
         return ResponseEntity.ok(userMapper.toProfileDto(updatedClient));
     }
 

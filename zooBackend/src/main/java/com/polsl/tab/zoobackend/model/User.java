@@ -47,9 +47,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserWorkSchedule> userWorkSchedule;
 
-    @OneToMany(mappedBy = "veterinarian", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "assignedUser", cascade = CascadeType.ALL)
     @JsonBackReference
-    private List<VeterinaryVisit> veterinaryVisits;
+    private List<AnimalTreatmentCard> animalTreatmentCards;
 
     @ManyToMany(mappedBy = "feedingUsers")
     private Set<Feeding> feedings = new HashSet<>();

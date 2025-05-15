@@ -48,7 +48,7 @@ public class Animal {
 
     @OneToMany(mappedBy = "animal", cascade = CascadeType.ALL)
     @JsonManagedReference
-    private List<VeterinaryVisit> veterinaryVisits;
+    private List<AnimalTreatmentCard> animalTreatmentCards;
 
     @ManyToMany
     @JoinTable(

@@ -2,8 +2,8 @@ package com.polsl.tab.zoobackend.model;
 
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -14,8 +14,7 @@ import jakarta.persistence.*;
 @Table(name = "veterinary_visits")
 @Getter
 @Setter
-
-public class VeterinaryVisit {
+public class AnimalTreatmentCard {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,7 +31,7 @@ public class VeterinaryVisit {
         joinColumns = @JoinColumn(name = "visit_id"),
         inverseJoinColumns = @JoinColumn(name = "symptom_id")
     )
-    private Set<Symptom> symptoms;
+    private Set<Symptom> symptoms = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "animal_id", nullable = false)
@@ -41,5 +40,5 @@ public class VeterinaryVisit {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User veterinarian;
+    private User assignedUser;
 }

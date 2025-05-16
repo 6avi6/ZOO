@@ -35,7 +35,7 @@ public class ReportService {
         return enclosureRepository.findAll().stream()
                 .map(e -> new EnclosureReportDto(
                         e.getId(),
-                        e.getTerrainType(),
+                        e.getTerrainType().toString(),
                         e.getMaxAnimals(),
                         // zabezpieczamy przed null
                         e.getAnimals() != null ? e.getAnimals().size() : 0

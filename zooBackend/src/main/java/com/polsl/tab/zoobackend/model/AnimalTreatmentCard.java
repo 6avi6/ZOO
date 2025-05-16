@@ -27,7 +27,7 @@ public class AnimalTreatmentCard {
 
     @ManyToMany
     @JoinTable(
-        name = "animal_treatment_card",
+        name = "animal_treatment_card_symotoms",
         joinColumns = @JoinColumn(name = "animal_treatment_card_id"),
         inverseJoinColumns = @JoinColumn(name = "symptom_id")
     )

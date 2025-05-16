@@ -18,6 +18,7 @@ public interface FeedingMapper {
     @Mapping(source = "foodType.id", target = "foodTypeId")
     @Mapping(source = "animals", target = "animalIds")
     @Mapping(source = "feedingUsers", target = "userIds")
+    @Mapping(target = "enclosureId", expression = "java(mapEnclosureId(feeding.getAnimals()))")
     FeedingResponse toResponse(Feeding feeding);
 
     @Mapping(source = "foodTypeId", target = "foodType")
@@ -47,5 +48,11 @@ public interface FeedingMapper {
     default Set<Long> mapUserIds(Set<User> set) {
         if (set == null) return Set.of();
         return set.stream().map(User::getId).collect(Collectors.toSet());
+    }
+
+    default Long mapEnclosureId(Set<Animal> animals) {
+        if (animals == null || animals.isEmpty()) return null;
+        Animal firstAnimal = animals.iterator().next();
+        return (firstAnimal.getEnclosure() != null) ? firstAnimal.getEnclosure().getId() : null;
     }
 }

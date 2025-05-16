@@ -13,6 +13,7 @@ public class FeedingResponse {
     private LocalTime feedingTime;
     private Boolean isCompleted;
     private Long foodTypeId;
+    private Long enclosureId;
     private Set<Long> animalIds;
     private Set<Long> userIds;
 }

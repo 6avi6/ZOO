@@ -4,6 +4,8 @@ import com.polsl.tab.zoobackend.dto.authentication.AuthenticationRequest;
 import com.polsl.tab.zoobackend.dto.authentication.AuthenticationResponse;
 import com.polsl.tab.zoobackend.dto.authentication.RegisterRequest;
 import com.polsl.tab.zoobackend.exception.RefreshTokenNotFoundException;
+import com.polsl.tab.zoobackend.exception.ResourceNotFoundException;
+import com.polsl.tab.zoobackend.exception.UnauthorizedException;
 import com.polsl.tab.zoobackend.model.RefreshToken;
 import com.polsl.tab.zoobackend.model.Role;
 import com.polsl.tab.zoobackend.model.User;
@@ -20,6 +22,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -131,5 +135,22 @@ public class AuthenticationService {
         }
         logger.error("No refresh token");
         return null;
+    }
+
+    public User getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || authentication.getName() == null) {
+            throw new UnauthorizedException("Authentication or name war null");
+        }
+
+        String username = authentication.getName();
+        User user = userService.getUserByUsername(username);
+
+        if (user == null) {
+            throw new ResourceNotFoundException("User not found");
+        }
+
+        return user;
     }
 }

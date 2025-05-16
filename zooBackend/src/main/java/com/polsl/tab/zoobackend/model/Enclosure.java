@@ -13,9 +13,10 @@ public class Enclosure {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String terrainType;
+    private TerrainType terrainType;
 
     @Column(nullable = false)
     private Boolean isAccessWater;

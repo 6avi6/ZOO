@@ -2,8 +2,8 @@ package com.polsl.tab.zoobackend.controller;
 
 import com.polsl.tab.zoobackend.dto.animal.AnimalRequest;
 import com.polsl.tab.zoobackend.dto.animal.AnimalResponse;
-import com.polsl.tab.zoobackend.dto.user.UserProfileDTO;
 import com.polsl.tab.zoobackend.dto.user.UserSummaryDTO;
+import com.polsl.tab.zoobackend.model.Species;
 import com.polsl.tab.zoobackend.service.AnimalService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -67,5 +67,10 @@ public class AnimalController {
 
         animalService.assignEmployees(animalId, employeeIds);
         return ResponseEntity.ok("Employees assigned to animal.");
+    }
+
+    @GetMapping("/species")
+    public List<Species> getTerrainTypes() {
+        return List.of(Species.values());
     }
 }

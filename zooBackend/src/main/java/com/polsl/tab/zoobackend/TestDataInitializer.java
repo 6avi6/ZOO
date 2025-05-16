@@ -227,6 +227,8 @@ public class TestDataInitializer implements ApplicationRunner {
             animalTreatmentCards0.setDateTime(LocalDateTime.now());
             animalTreatmentCards0.setDescription("Animal may be sick");
             animalTreatmentCards0.setSymptoms(new HashSet<>(List.of(cough)));
+
+            cough.getAnimalTreatmentCards().add(animalTreatmentCards0);
             treatmentCardRepository.save(animalTreatmentCards0);
 
             AnimalTreatmentCard animalTreatmentCards1 = new AnimalTreatmentCard();
@@ -235,6 +237,9 @@ public class TestDataInitializer implements ApplicationRunner {
             animalTreatmentCards1.setDateTime(LocalDateTime.now().minusDays(2));
             animalTreatmentCards1.setDescription("Animal had cough and fatigue. Given antibiotics.");
             animalTreatmentCards1.setSymptoms(new HashSet<>(List.of(cough, fatigue)));
+
+            cough.getAnimalTreatmentCards().add(animalTreatmentCards1);
+            fatigue.getAnimalTreatmentCards().add(animalTreatmentCards1);
             treatmentCardRepository.save(animalTreatmentCards1);
 
             AnimalTreatmentCard animalTreatmentCards2 = new AnimalTreatmentCard();
@@ -243,6 +248,8 @@ public class TestDataInitializer implements ApplicationRunner {
             animalTreatmentCards2.setDateTime(LocalDateTime.now().minusDays(1));
             animalTreatmentCards2.setDescription("Loss of appetite observed. Recommended hydration and monitoring.");
             animalTreatmentCards2.setSymptoms(new HashSet<>(List.of(lossOfAppetite)));
+
+            lossOfAppetite.getAnimalTreatmentCards().add(animalTreatmentCards2);
             treatmentCardRepository.save(animalTreatmentCards2);
 
             System.out.println("Seeded AnimalTreatmentCards and symptoms for test animals.");

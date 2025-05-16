@@ -2,6 +2,7 @@ package com.polsl.tab.zoobackend.model;
 
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -21,5 +22,5 @@ public class Symptom {
     private String description; 
 
     @ManyToMany(mappedBy = "symptoms")
-    private Set<AnimalTreatmentCard> animalTreatmentCards;
+    private Set<AnimalTreatmentCard> animalTreatmentCards = new HashSet<>();
 }

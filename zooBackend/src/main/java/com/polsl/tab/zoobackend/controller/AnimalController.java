@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/animals")
@@ -48,12 +49,18 @@ public class AnimalController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/by-ids")
+    public ResponseEntity<List<AnimalResponse>> getAnimalsByIds(@RequestBody Set<Long> ids) {
+        List<AnimalResponse> animals = animalService.getAnimalsByIds(ids);
+        return ResponseEntity.ok(animals);
+    }
+
     @GetMapping("/{id}/caretakers")
     public ResponseEntity<List<UserSummaryDTO>> getAnimalsCaretakers(@PathVariable Long id) {
         return ResponseEntity.ok(animalService.getCaretakers(id));
     }
 
-    @PostMapping("/{animalId}/employees")
+    @PutMapping("/{animalId}/employees")
     public ResponseEntity<?> assignEmployeesToAnimal(
             @PathVariable Long animalId,
             @RequestBody List<Long> employeeIds) {

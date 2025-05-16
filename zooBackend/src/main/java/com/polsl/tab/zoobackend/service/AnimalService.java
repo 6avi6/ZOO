@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -70,6 +71,14 @@ public class AnimalService {
     public void delete(Long id) {
         animalRepository.deleteById(id);
     }
+
+    public List<AnimalResponse> getAnimalsByIds(Set<Long> ids) {
+        return animalRepository.findAllByIdIn(ids)
+                .stream()
+                .map(animalMapper::toResponse)
+                .toList();
+    }
+
 
     public List<UserSummaryDTO> getCaretakers(Long id) {
         Animal animal = animalRepository.findById(id)

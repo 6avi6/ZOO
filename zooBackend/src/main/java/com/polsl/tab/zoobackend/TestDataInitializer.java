@@ -112,11 +112,11 @@ public class TestDataInitializer implements ApplicationRunner {
     private void seedEnclosures() {
         if (enclosureRepository.count() == 0) {
             List<Enclosure> list = List.of(
-                    enclosureMapper.toEntity(new EnclosureRequest("Forest",true,"High",22.0,5)),
-                    enclosureMapper.toEntity(new EnclosureRequest("Savannah",false,"Medium",30.0,5)),
-                    enclosureMapper.toEntity(new EnclosureRequest("Desert",false,"Low",40.0,5)),
-                    enclosureMapper.toEntity(new EnclosureRequest("Wetland",true,"Medium",25.0,5)),
-                    enclosureMapper.toEntity(new EnclosureRequest("Mountain",false,"High",15.0,5))
+                    enclosureMapper.toEntity(new EnclosureRequest("FOREST",true,"High",22.0,5)),
+                    enclosureMapper.toEntity(new EnclosureRequest("SAVANNA",false,"Medium",30.0,5)),
+                    enclosureMapper.toEntity(new EnclosureRequest("DESERT",false,"Low",40.0,5)),
+                    enclosureMapper.toEntity(new EnclosureRequest("WETLAND",true,"Medium",25.0,5)),
+                    enclosureMapper.toEntity(new EnclosureRequest("MOUNTAIN",false,"High",15.0,5))
             );
             enclosureRepository.saveAll(list);
             System.out.println("Seeded Enclosures");

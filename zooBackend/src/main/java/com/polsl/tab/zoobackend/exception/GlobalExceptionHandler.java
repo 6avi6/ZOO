@@ -15,24 +15,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleNotFound(ResourceNotFoundException ex) {
-        HttpStatus status = HttpStatus.NOT_FOUND;
-        ErrorResponse body = new ErrorResponse(
-                status.value(),
-                status.getReasonPhrase(),
-                ex.getMessage()
-        );
-        return new ResponseEntity<>(body, status);
+        ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Not Found", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorResponse> handleBadRequest(BadRequestException ex) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        ErrorResponse body = new ErrorResponse(
-                status.value(),
-                status.getReasonPhrase(),
-                ex.getMessage()
-        );
-        return new ResponseEntity<>(body, status);
+        ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Bad Request", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -41,77 +31,38 @@ public class GlobalExceptionHandler {
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .reduce((a, b) -> a + "; " + b)
                 .orElse("Validation failed");
-
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        ErrorResponse body = new ErrorResponse(
-                status.value(),
-                "Validation Error",
-                message
-        );
-        return new ResponseEntity<>(body, status);
+        ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Validation Error", message);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
+//        ErrorResponse error = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Server Error", "An unexpected error occurred");
+//        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleJsonParseError(HttpMessageNotReadableException ex) {
         String message = "Invalid JSON format. Please check the syntax (e.g., missing commas or incorrect field values).";
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        ErrorResponse body = new ErrorResponse(
-                status.value(),
-                status.getReasonPhrase(),
-                message
-        );
-        return new ResponseEntity<>(body, status);
+        ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Bad Request", message);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        ErrorResponse body = new ErrorResponse(
-                status.value(),
-                "Data Integrity Violation",
-                ex.getMessage());
-        return new ResponseEntity<>(body, status);
+        ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Data Integrity Violation", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(RefreshTokenNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleRefreshTokenNotFound(RefreshTokenNotFoundException ex) {
-        HttpStatus status = HttpStatus.NOT_FOUND;
-        ErrorResponse body = new ErrorResponse(
-                status.value(),
-                "Refresh token Not Found",
-                ex.getMessage());
-        return new ResponseEntity<>(body, status);
+        ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Token Not Found", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ErrorResponse> handleUnauthorized(UnauthorizedException ex) {
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-        ErrorResponse body = new ErrorResponse(
-                status.value(),
-                status.getReasonPhrase(),
-                ex.getMessage());
-        return new ResponseEntity<>(body, status);
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        ErrorResponse body = new ErrorResponse(
-                status.value(),
-                status.getReasonPhrase(),
-                ex.getMessage()
-        );
-        return new ResponseEntity<>(body, status);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        ErrorResponse body = new ErrorResponse(
-                status.value(),
-                status.getReasonPhrase(),
-                "An unexpected error occurred"
-        );
-        return new ResponseEntity<>(body, status);
+        ErrorResponse error = new ErrorResponse(HttpStatus.UNAUTHORIZED.value(), "UNAUTHORIZED", ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 }

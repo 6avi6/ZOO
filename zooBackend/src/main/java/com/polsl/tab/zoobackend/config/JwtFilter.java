@@ -42,13 +42,13 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        String username = jwtUtil.extractUsername(jwt);
-        if (username == null || SecurityContextHolder.getContext().getAuthentication() != null) {
+        Long id = Long.parseLong(jwtUtil.extractSubject(jwt));
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
             chain.doFilter(request, response);
             return;
         }
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        UserDetails userDetails = userDetailsService.loadUserById(id);
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(
                         userDetails,

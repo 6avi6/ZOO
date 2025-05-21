@@ -92,4 +92,26 @@ public class GlobalExceptionHandler {
                 ex.getMessage());
         return new ResponseEntity<>(body, status);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ErrorResponse body = new ErrorResponse(
+                status.value(),
+                status.getReasonPhrase(),
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(body, status);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        ErrorResponse body = new ErrorResponse(
+                status.value(),
+                status.getReasonPhrase(),
+                "An unexpected error occurred"
+        );
+        return new ResponseEntity<>(body, status);
+    }
 }

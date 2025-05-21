@@ -31,6 +31,7 @@ public class AnimalController {
         return ResponseEntity.ok(animalService.getById(id));
     }
 
+
     @PostMapping
     public ResponseEntity<AnimalResponse> create(@RequestBody @Valid AnimalRequest animalRequest) {
         AnimalResponse created = animalService.create(animalRequest);

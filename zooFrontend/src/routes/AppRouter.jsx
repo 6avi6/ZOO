@@ -2,8 +2,7 @@
 import { Routes, Route } from 'react-router-dom';
 /*import Home from '../Home';*/
 import Login from '../pages/login/Login';
-import Register from '../pages/Register';
-import NotFound from '../pages/NotFound';
+
 
 import AdminDashboard from '../pages/admin/dashboard/AdminDashboard';
 import DirectorDashboard from '../pages/director/dashboard/DirectorDashboard';
@@ -11,15 +10,13 @@ import CaregiverDashboard from '../pages/caregiver/dashboard/CaregiverDashboard'
 import RegistrarDashboard from '../pages/registrar/dashboard/RegistrarDashboard';
 import VeterinarianDashboard from '../pages/veterinarian/dashboard/VeterinarianDashboard';
 
-import AddAnimal from '../pages/registrar/AddAnimal';
 import EditAnimal from '../pages/registrar/EditAnimal';
-import AddCaretaker from '../pages/registrar/AddCaretaker';
+import EditCaretaker from '../pages/registrar/EditCaretaker';
 import EditEnclosure from '../pages/registrar/EditEnclosure';
 
 import ManageUsers from '../pages/admin/manage-users/ManageUsers';
 import ManageDictionary from '../pages/admin/manage-dictionary/ManageDictionary';
 import AddUser from '../pages/admin/manage-users/AddUser';
-import DeleteUser from '../pages/admin/manage-users/DeleteUser';
 import EditUser from '../pages/admin/manage-users/EditUser';
 import UserDetails from '../pages/admin/manage-users/UserDetails';
 import AddAnimalSpecies from '../pages/admin/manage-dictionary/AddAnimalSpecies';
@@ -54,15 +51,12 @@ const AppRouter = () => {
     <Routes>
         {/*<Route path="/" element={<Home />} />*/}
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="*" element={<NotFound />} />
         <Route path="/" element={<HomeRedirect />} />
 
         <Route element={<PrivateRoute requiredRole="REGISTRAR" />}>
             <Route path="/registrar/dashboard" element={<RegistrarDashboard />} />
-            <Route path="/registrar/add-animal" element={<AddAnimal />} />
             <Route path="/registrar/edit-animal" element={<EditAnimal />} />
-            <Route path="/registrar/add-caretaker" element={<AddCaretaker />} />
+            <Route path="/registrar/edit-caretaker" element={<EditCaretaker />} />
             <Route path="/registrar/edit-enclosure" element={<EditEnclosure />} />
         </Route>
 
@@ -72,7 +66,6 @@ const AppRouter = () => {
             <Route path="/admin/manage-users" element={<ManageUsers />} />
             <Route path="/admin/manage-dictionary" element={<ManageDictionary />} />
             <Route path="/admin/manage-users/add" element={<AddUser />} />
-            <Route path="/admin/manage-users/delete" element={<DeleteUser />} />
             <Route path="/admin/manage-users/edit/:id" element={<EditUser />} />
             <Route path="/admin/manage-users/:id" element={<UserDetails />} />
             <Route path="/admin/add-animal-species" element={<AddAnimalSpecies />} />

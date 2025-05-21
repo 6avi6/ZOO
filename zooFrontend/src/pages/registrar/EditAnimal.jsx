@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import RegistrarNavbar from '../../components/RegistrarNavbar'
+import RegistrarNavbar from '../../components/RegistrarNavbar';
 import { getAllAnimals, updateAnimal, deleteAnimal, addAnimal } from '../../services/animalService';
+import { getAllEnclosures , getEnclosureById } from '../../services/enclosureService';
 
 const EditAnimal = () => {
     const [animals, setAnimals] = useState([]);
@@ -16,7 +17,11 @@ const EditAnimal = () => {
         weight: '',
         enclosure: { id: '' }
     });
+    const [enclosures, setEnclosures] = useState([]);
+    const [animalEnclosures, setAnimalEnclosures] = useState({});
 
+
+    // Get aall animals
     useEffect(() => {
         const fetchAnimals = async () => {
             const data = await getAllAnimals();
@@ -25,6 +30,68 @@ const EditAnimal = () => {
         fetchAnimals();
     }, []);
 
+    // TO DO it should be dynamically downloaded
+    const speciesOptions = [
+        'LION', 'ELEPHANT', 'CROCODILE', 'ZEBRA', 'PARROT',
+        'GIRAFFE', 'TIGER', 'HIPPOPOTAMUS', 'PENGUIN', 'MONKEY'
+    ];
+    // TO DO it should be dynamically downloaded
+    const conditionOptions = ['GOOD', 'INJURED', 'DEAD'];
+
+
+    // Pobierz wszystkie wybiegi
+    useEffect(() => {
+        const fetchEnclosures = async () => {
+            try {
+                const allEnclosures = await getAllEnclosures();
+                setEnclosures(allEnclosures);
+                //console.log(allEnclosures);
+            } catch (error) {
+                console.error("Błąd przy pobieraniu wybiegów:", error);
+            }
+        };
+        fetchEnclosures();
+    }, []);
+
+    // Dla każdego zwierzęcia pobierz wybieg i zapisz do animalEnclosures (mapa)
+    useEffect(() => {
+        const fetchAnimalEnclosures = async () => {
+            //console.log(animals)
+            if (!animals.length) return;
+
+            // Mapowanie ID zwierzęcia na obiekt wybiegu
+            const enclosureMap = {};
+
+            // Warto pobrać wszystkie wybiegi i znaleźć odpowiedni wybieg po id, zamiast pobierać pojedynczo,
+            // ale jeśli chcesz pobierać osobno:
+            await Promise.all(animals.map(async (animal) => {
+
+                if (animal && animal.enclosureId) {
+                    try {
+                        // Możesz też szukać w allEnclosures jeśli masz je już pobrane
+                        const enclosure = enclosures.find(e => e.id === animal.enclosureId);
+                        if (enclosure) {
+                            enclosureMap[animal.id] = enclosure;
+                        } else {
+                            // Alternatywnie pobierz z API
+                            const enclosureFromApi = await getEnclosureById(animal.enclosureId);
+                            enclosureMap[animal.id] = enclosureFromApi;
+
+                        }
+                    } catch (error) {
+                        console.error(`Błąd przy pobieraniu wybiegu dla zwierzęcia o ID ${animal.id}:`, error);
+                    }
+                }
+            }));
+
+            setAnimalEnclosures(enclosureMap);
+        };
+
+        fetchAnimalEnclosures();
+    }, [animals, enclosures]); // uruchom, gdy zmienią się animals lub enclosures
+
+
+
     const handleEditClick = (animal) => {
         setEditingAnimal(animal.id);
         setEditedAnimal({ ...animal });
@@ -32,10 +99,13 @@ const EditAnimal = () => {
 
     const handleEditChange = (e) => {
         const { name, value } = e.target;
+        console.log(name, value);
+        console.log("Before",editedAnimal);
         if (name === 'enclosureId') {
+
             setEditedAnimal(prev => ({
                 ...prev,
-                enclosure: { id: value }
+                [name]: value  // <- KONWERSJA
             }));
         } else {
             setEditedAnimal(prev => ({
@@ -43,9 +113,11 @@ const EditAnimal = () => {
                 [name]: value
             }));
         }
+        //console.log("After",editedAnimal);
     };
 
     const handleSaveClick = async (id) => {
+        console.log(id);
         await updateAnimal(id, {
             ...editedAnimal,
             weight: parseFloat(editedAnimal.weight),
@@ -63,18 +135,12 @@ const EditAnimal = () => {
 
     const handleAddAnimalChange = (e) => {
         const { name, value } = e.target;
-        if (name === 'enclosureId') {
-            setNewAnimalData(prev => ({
-                ...prev,
-                enclosure: { id: value }
-            }));
-        } else {
-            setNewAnimalData(prev => ({
-                ...prev,
-                [name]: value
-            }));
-        }
+        setNewAnimalData(prev => ({
+            ...prev,
+            [name]: (name === "weight" || name === "enclosureId") ? Number(value) : value
+        }));
     };
+
 
     const handleAddAnimalSubmit = async (e) => {
         e.preventDefault();
@@ -138,11 +204,42 @@ const EditAnimal = () => {
                                 <>
                                     <td><input name="name" value={editedAnimal.name} onChange={handleEditChange} className="p-1 border rounded" /></td>
                                     <td><input name="birthDate" value={editedAnimal.birthDate} onChange={handleEditChange} className="p-1 border rounded" /></td>
-                                    <td><input name="species" value={editedAnimal.species} onChange={handleEditChange} className="p-1 border rounded" /></td>
-                                    <td><input name="condition" value={editedAnimal.condition} onChange={handleEditChange} className="p-1 border rounded" /></td>
-                                    <td><input name="sex" value={editedAnimal.sex} onChange={handleEditChange} className="p-1 border rounded" /></td>
+                                    <td><select name="species" value={editedAnimal.species} onChange={handleEditChange} className="p-1 border rounded">
+                                        <option value="">Wybierz gatunek</option>
+                                        {speciesOptions.map(species => (
+                                            <option key={species} value={species}>{species}</option>
+                                        ))}
+                                    </select></td>
+                                    <td><select name="condition" value={editedAnimal.condition} onChange={handleEditChange} className="p-1 border rounded">
+                                        <option value="">Wybierz stan zdrowia</option>
+                                        {conditionOptions.map(condition => (
+                                            <option key={condition} value={condition}>{condition}</option>
+                                        ))}
+                                    </select></td>
+                                    <td><select name="sex" value={editedAnimal.sex} onChange={handleEditChange}  className="p-1 border rounded">
+                                        <option value="">Wybierz płeć</option>
+                                        <option value="FEMALE">Female</option>
+                                        <option value="MALE">Male</option>
+                                    </select></td>
                                     <td><input name="weight" value={editedAnimal.weight} onChange={handleEditChange} className="p-1 border rounded" /></td>
-                                    <td><input name="enclosureId" value={editedAnimal.enclosureId} onChange={handleEditChange} className="p-1 border rounded" /></td>
+                                    <td>
+                                        <select
+                                            name="enclosureId"
+                                            value={editedAnimal.enclosureId || ''}
+                                            onChange={handleEditChange}
+                                            className="p-1 border rounded"
+                                        >
+                                            <option value="">Wybierz wybieg</option>
+                                            {enclosures.map((e) => (
+                                                <option key={e.id} value={e.id}>
+                                                    {`${e.id} | ${e.terrainType}`}
+                                                </option>
+                                            ))}
+                                        </select>
+
+                                    </td>
+
+
                                     <td className="flex gap-2">
                                         <button onClick={() => handleSaveClick(animal.id)} className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600">Zapisz</button>
                                         <button onClick={() => setEditingAnimal(null)} className="px-2 py-1 bg-gray-400 text-white rounded hover:bg-gray-500">Anuluj</button>
@@ -156,7 +253,12 @@ const EditAnimal = () => {
                                     <td className="px-4 py-2">{animal.condition}</td>
                                     <td className="px-4 py-2">{animal.sex}</td>
                                     <td className="px-4 py-2">{animal.weight}</td>
-                                    <td className="px-4 py-2">{animal.enclosureID}</td>
+                                    <td className="px-4 py-2">
+                                        {animalEnclosures[animal.id]
+                                            ? `${animalEnclosures[animal.id].id} | ${animalEnclosures[animal.id].terrainType}`
+                                            : ''}
+                                    </td>
+
                                     <td className="flex gap-2">
                                         <button onClick={() => handleEditClick(animal)} className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">Edytuj</button>
                                         <button onClick={() => handleDeleteClick(animal.id)} className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">Usuń</button>
@@ -176,12 +278,47 @@ const EditAnimal = () => {
                         <h2 className="text-2xl font-bold text-center mb-6">Dodaj nowe zwierzę</h2>
                         <form onSubmit={handleAddAnimalSubmit} className="flex flex-col gap-4">
                             <input name="name" placeholder="Nazwa" value={newAnimalData.name} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm" />
-                            <input name="birthDate" placeholder="Data urodzenia (YYYY-MM-DD)" value={newAnimalData.birthDate} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm" />
-                            <input name="species" placeholder="Gatunek" value={newAnimalData.species} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm" />
-                            <input name="condition" placeholder="Stan zdrowia" value={newAnimalData.condition} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm" />
-                            <input name="sex" placeholder="Płeć" value={newAnimalData.sex} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm" />
+                            <input
+                                type="date"
+                                name="birthDate"
+                                value={newAnimalData.birthDate}
+                                onChange={handleAddAnimalChange}
+                                required
+                                className="p-4 border rounded-lg shadow-sm"
+                            />
+                            <select name="species" value={newAnimalData.species} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm">
+                                <option value="">Wybierz gatunek</option>
+                                {speciesOptions.map(species => (
+                                    <option key={species} value={species}>{species}</option>
+                                ))}
+                            </select>
+
+                            <select name="condition" value={newAnimalData.condition} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm">
+                                <option value="">Wybierz stan zdrowia</option>
+                                {conditionOptions.map(condition => (
+                                    <option key={condition} value={condition}>{condition}</option>
+                                ))}
+                            </select>
+                            <select name="sex" value={newAnimalData.sex} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm">
+                                <option value="">Wybierz płeć</option>
+                                <option value="FEMALE">Female</option>
+                                <option value="MALE">Male</option>
+                            </select>
                             <input name="weight" type="number" placeholder="Waga" value={newAnimalData.weight} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm" />
-                            <input name="enclosureId" type="number" placeholder="ID wybiegu" value={newAnimalData.enclosureId} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm" />
+                            <select
+                                name="enclosureId"
+                                value={newAnimalData.enclosureId}
+                                onChange={handleAddAnimalChange}
+                                required
+                                className="p-4 border rounded-lg shadow-sm"
+                            >
+                                <option value="">Wybierz wybieg</option>
+                                {enclosures.map((e) => (
+                                    <option key={e.id} value={e.id}>
+                                        {`${e.id} | ${e.terrainType}`}
+                                    </option>
+                                ))}
+                            </select>
                             <div className="flex justify-between mt-4">
                                 <button type="submit" className="p-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-all">Dodaj</button>
                                 <button type="button" onClick={() => setIsAdding(false)} className="p-3 bg-gray-500 text-white rounded-lg shadow-md hover:bg-gray-600 transition-all">Anuluj</button>

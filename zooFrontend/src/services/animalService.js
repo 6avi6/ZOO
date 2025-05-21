@@ -15,6 +15,7 @@ export const deleteAnimal = async (id) => {
 // Dodaj nowe zwierzę
 export const addAnimal = async (animalData) => {
   try {
+    console.log(animalData);
     const response = await axiosInstance.post('/api/animals', animalData);
     return response.data;
   } catch (error) {

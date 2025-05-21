@@ -35,11 +35,10 @@ public class JwtUtil {
         this.accessTokenExpiration = accessTokenExpiration;
     }
 
-    public String generateAccessToken(String username, Long userId, String role) {
+    public String generateAccessToken(Long userId, String role) {
         return Jwts.builder()
-                .claim("userId", userId)
                 .claim("role", role)
-                .subject(username)
+                .subject(userId.toString())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
                 .signWith(Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey)), SignatureAlgorithm.HS256)
@@ -52,7 +51,7 @@ public class JwtUtil {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(tokenBytes);
     }
 
-    public String extractUsername(String token) {
+    public String extractSubject(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 

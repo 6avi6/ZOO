@@ -37,7 +37,7 @@ const UserDetails = () => {
   return (
       <div>
         <AdminNavbar />
-        <div className="bg-white mt-12 mx-auto min-h-[300px] w-[80%] rounded-lg border shadow-sm border-gray-300  p-8">
+        <div className="bg-white mt-12 mx-auto overflow-x-auto min-h-[300px] w-[80%] rounded-lg border shadow-sm border-gray-300  p-8">
           <h1 className="text-2xl font-semibold text-gray-800 mb-6">Dane użytkownika</h1>
           <p className="text-xl font-semibold">Harmonogram pracy</p>
           {loading ? (

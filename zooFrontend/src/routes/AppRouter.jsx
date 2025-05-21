@@ -10,9 +10,8 @@ import CaregiverDashboard from '../pages/caregiver/dashboard/CaregiverDashboard'
 import RegistrarDashboard from '../pages/registrar/dashboard/RegistrarDashboard';
 import VeterinarianDashboard from '../pages/veterinarian/dashboard/VeterinarianDashboard';
 
-import AddAnimal from '../pages/registrar/AddAnimal';
 import EditAnimal from '../pages/registrar/EditAnimal';
-import AddCaretaker from '../pages/registrar/AddCaretaker';
+import EditCaretaker from '../pages/registrar/EditCaretaker';
 import EditEnclosure from '../pages/registrar/EditEnclosure';
 
 import ManageUsers from '../pages/admin/manage-users/ManageUsers';
@@ -56,9 +55,8 @@ const AppRouter = () => {
 
         <Route element={<PrivateRoute requiredRole="REGISTRAR" />}>
             <Route path="/registrar/dashboard" element={<RegistrarDashboard />} />
-            <Route path="/registrar/add-animal" element={<AddAnimal />} />
             <Route path="/registrar/edit-animal" element={<EditAnimal />} />
-            <Route path="/registrar/add-caretaker" element={<AddCaretaker />} />
+            <Route path="/registrar/edit-caretaker" element={<EditCaretaker />} />
             <Route path="/registrar/edit-enclosure" element={<EditEnclosure />} />
         </Route>
 

@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const getAllUsers = async () => {
     try {
-        const response = await axiosInstance.get(`api/admin/users`);
+        const response = await axiosInstance.get(`api/administration/users`);
         return response.data;
     } catch (error) {
         console.error('Błąd podczas pobierania użytkowników:', error);
@@ -11,9 +11,11 @@ export const getAllUsers = async () => {
     }
 };
 
+
+
 export const getUserWorkSchedule = async (id) => {
     try {
-        const response = await axiosInstance.get(`api/admin/user/${id}/work-schedule`);
+        const response = await axiosInstance.get(`api/administration/user/${id}/work-schedule`);
         return response.data;
     } catch (error) {
         console.error('Błąd podczas pobierania harmonogramu użytkownika:', error);
@@ -23,7 +25,7 @@ export const getUserWorkSchedule = async (id) => {
 
 export const registerUser = async (data) => {
     try {
-        const response = await axios.post('http://localhost:8083/api/auth/register', data);
+        const response = await axiosInstance.post('api/auth/register', data);
         return response.data;
     } catch (error) {
         console.error('Błąd podczas rejestracji:', error);

@@ -79,7 +79,6 @@ const EditCaretaker = () => {
     return (
         <div className="relative p-6 min-h-screen bg-gray-100">
             <RegistrarNavbar />
-            <strong className="text-red-800">Uwaga nie ma endpointów dołączonych</strong>
             {/* Floating Add Button */}
             <button
                 onClick={() => setIsAdding(true)}

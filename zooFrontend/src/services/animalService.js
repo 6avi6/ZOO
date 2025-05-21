@@ -26,12 +26,7 @@ export const addAnimal = async (animalData) => {
 // Pobierz wszystkie zwierzęta
 export const getAllAnimals = async () => {
   try {
-    const token = localStorage.getItem('token'); // lub sessionStorage
-    axios.get('/api/animals', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+
     const response = await axiosInstance.get('/api/animals');
     return response.data;
   } catch (error) {

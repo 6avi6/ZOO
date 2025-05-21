@@ -10,11 +10,6 @@ import { toast } from "react-toastify";
 import AppToast from "../../../components/AppToast";
 import { AiOutlineEdit } from "react-icons/ai";
 
-
-
-
-
-
 const ManageUsers = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -34,8 +29,7 @@ const ManageUsers = () => {
             setLoading(false);
         }
     };
-
-
+    
     useEffect(() => {
         const fetchUsers = async () => {
             try {

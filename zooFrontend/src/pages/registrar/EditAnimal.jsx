@@ -32,7 +32,7 @@ const EditAnimal = () => {
 
     const handleEditChange = (e) => {
         const { name, value } = e.target;
-        if (name === 'enclosure.id') {
+        if (name === 'enclosureId') {
             setEditedAnimal(prev => ({
                 ...prev,
                 enclosure: { id: value }
@@ -49,7 +49,7 @@ const EditAnimal = () => {
         await updateAnimal(id, {
             ...editedAnimal,
             weight: parseFloat(editedAnimal.weight),
-            enclosure: { id: parseInt(editedAnimal.enclosure.id) }
+            enclosure: { id: parseInt(editedAnimal.enclosureId) }
         });
         const updated = await getAllAnimals();
         setAnimals(updated);
@@ -63,7 +63,7 @@ const EditAnimal = () => {
 
     const handleAddAnimalChange = (e) => {
         const { name, value } = e.target;
-        if (name === 'enclosure.id') {
+        if (name === 'enclosureId') {
             setNewAnimalData(prev => ({
                 ...prev,
                 enclosure: { id: value }
@@ -82,7 +82,7 @@ const EditAnimal = () => {
             await addAnimal({
                 ...newAnimalData,
                 weight: parseFloat(newAnimalData.weight),
-                enclosure: { id: parseInt(newAnimalData.enclosure.id) }
+                enclosure: { id: parseInt(newAnimalData.enclosureId) }
             });
             const updated = await getAllAnimals();
             setAnimals(updated);
@@ -142,7 +142,7 @@ const EditAnimal = () => {
                                     <td><input name="condition" value={editedAnimal.condition} onChange={handleEditChange} className="p-1 border rounded" /></td>
                                     <td><input name="sex" value={editedAnimal.sex} onChange={handleEditChange} className="p-1 border rounded" /></td>
                                     <td><input name="weight" value={editedAnimal.weight} onChange={handleEditChange} className="p-1 border rounded" /></td>
-                                    <td><input name="enclosure.id" value={editedAnimal.enclosure.id} onChange={handleEditChange} className="p-1 border rounded" /></td>
+                                    <td><input name="enclosureId" value={editedAnimal.enclosureId} onChange={handleEditChange} className="p-1 border rounded" /></td>
                                     <td className="flex gap-2">
                                         <button onClick={() => handleSaveClick(animal.id)} className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600">Zapisz</button>
                                         <button onClick={() => setEditingAnimal(null)} className="px-2 py-1 bg-gray-400 text-white rounded hover:bg-gray-500">Anuluj</button>
@@ -156,7 +156,7 @@ const EditAnimal = () => {
                                     <td className="px-4 py-2">{animal.condition}</td>
                                     <td className="px-4 py-2">{animal.sex}</td>
                                     <td className="px-4 py-2">{animal.weight}</td>
-                                    <td className="px-4 py-2">{animal.enclosure.id}</td>
+                                    <td className="px-4 py-2">{animal.enclosureID}</td>
                                     <td className="flex gap-2">
                                         <button onClick={() => handleEditClick(animal)} className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">Edytuj</button>
                                         <button onClick={() => handleDeleteClick(animal.id)} className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">Usuń</button>
@@ -181,7 +181,7 @@ const EditAnimal = () => {
                             <input name="condition" placeholder="Stan zdrowia" value={newAnimalData.condition} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm" />
                             <input name="sex" placeholder="Płeć" value={newAnimalData.sex} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm" />
                             <input name="weight" type="number" placeholder="Waga" value={newAnimalData.weight} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm" />
-                            <input name="enclosure.id" type="number" placeholder="ID wybiegu" value={newAnimalData.enclosure.id} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm" />
+                            <input name="enclosureId" type="number" placeholder="ID wybiegu" value={newAnimalData.enclosureId} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm" />
                             <div className="flex justify-between mt-4">
                                 <button type="submit" className="p-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-all">Dodaj</button>
                                 <button type="button" onClick={() => setIsAdding(false)} className="p-3 bg-gray-500 text-white rounded-lg shadow-md hover:bg-gray-600 transition-all">Anuluj</button>

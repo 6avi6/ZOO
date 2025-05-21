@@ -22,10 +22,24 @@ public class GlobalExceptionHandler {
                 ex.getMessage()
         );
         return new ResponseEntity<>(body, status);
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        ErrorResponse body = new ErrorResponse(
+                status.value(),
+                status.getReasonPhrase(),
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(body, status);
     }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ErrorResponse> handleBadRequest(BadRequestException ex) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ErrorResponse body = new ErrorResponse(
+                status.value(),
+                status.getReasonPhrase(),
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(body, status);
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ErrorResponse body = new ErrorResponse(
                 status.value(),
@@ -51,9 +65,25 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, status);
     }
 
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ErrorResponse body = new ErrorResponse(
+                status.value(),
+                "Validation Error",
+                message
+        );
+        return new ResponseEntity<>(body, status);
+    }
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleJsonParseError(HttpMessageNotReadableException ex) {
         String message = "Invalid JSON format. Please check the syntax (e.g., missing commas or incorrect field values).";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ErrorResponse body = new ErrorResponse(
+                status.value(),
+                status.getReasonPhrase(),
+                message
+        );
+        return new ResponseEntity<>(body, status);
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ErrorResponse body = new ErrorResponse(
                 status.value(),
@@ -71,10 +101,22 @@ public class GlobalExceptionHandler {
                 "Data Integrity Violation",
                 ex.getMessage());
         return new ResponseEntity<>(body, status);
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ErrorResponse body = new ErrorResponse(
+                status.value(),
+                "Data Integrity Violation",
+                ex.getMessage());
+        return new ResponseEntity<>(body, status);
     }
 
     @ExceptionHandler(RefreshTokenNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleRefreshTokenNotFound(RefreshTokenNotFoundException ex) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        ErrorResponse body = new ErrorResponse(
+                status.value(),
+                "Refresh token Not Found",
+                ex.getMessage());
+        return new ResponseEntity<>(body, status);
         HttpStatus status = HttpStatus.NOT_FOUND;
         ErrorResponse body = new ErrorResponse(
                 status.value(),
@@ -90,28 +132,6 @@ public class GlobalExceptionHandler {
                 status.value(),
                 status.getReasonPhrase(),
                 ex.getMessage());
-        return new ResponseEntity<>(body, status);
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        ErrorResponse body = new ErrorResponse(
-                status.value(),
-                status.getReasonPhrase(),
-                ex.getMessage()
-        );
-        return new ResponseEntity<>(body, status);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex) {
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        ErrorResponse body = new ErrorResponse(
-                status.value(),
-                status.getReasonPhrase(),
-                "An unexpected error occurred"
-        );
         return new ResponseEntity<>(body, status);
     }
 }

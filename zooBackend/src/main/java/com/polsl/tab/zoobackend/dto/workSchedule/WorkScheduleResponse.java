@@ -1,4 +1,4 @@
-package com.polsl.tab.zoobackend.dto;
+package com.polsl.tab.zoobackend.dto.workSchedule;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class WorkScheduleDto {
+public class WorkScheduleResponse {
     private Long id;
     private LocalDateTime shiftStart;
     private LocalDateTime shiftEnd;

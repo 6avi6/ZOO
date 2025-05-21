@@ -1,6 +1,7 @@
 package com.polsl.tab.zoobackend.mapper;
 
-import com.polsl.tab.zoobackend.dto.WorkScheduleDto;
+import com.polsl.tab.zoobackend.dto.workSchedule.WorkScheduleRequest;
+import com.polsl.tab.zoobackend.dto.workSchedule.WorkScheduleResponse;
 import com.polsl.tab.zoobackend.model.WorkSchedule;
 import org.mapstruct.Mapper;
 
@@ -9,12 +10,12 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface WorkScheduleMapper {
-    WorkScheduleDto toDto(WorkSchedule entity);
-    default WorkScheduleDto toDtoWithUsers(WorkSchedule entity) {
+    WorkScheduleResponse toDto(WorkSchedule entity);
+    default WorkScheduleResponse toDtoWithUsers(WorkSchedule entity) {
         List<Long> userIds = entity.getUserWorkSchedule().stream()
                 .map(uw -> uw.getUser().getId())
                 .collect(Collectors.toList());
-        return new WorkScheduleDto(
+        return new WorkScheduleResponse(
                 entity.getId(),
                 entity.getShiftStart(),
                 entity.getShiftEnd(),
@@ -22,6 +23,6 @@ public interface WorkScheduleMapper {
         );
     }
 
-    WorkSchedule toEntity(WorkScheduleDto dto);
+    WorkSchedule toEntity(WorkScheduleRequest dto);
 }
 

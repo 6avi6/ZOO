@@ -8,16 +8,15 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "enclosures")
-@Getter
-@Setter
-
+@Data
 public class Enclosure {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String terrainType;
+    private TerrainType terrainType;
 
     @Column(nullable = false)
     private Boolean isAccessWater;
@@ -26,10 +25,10 @@ public class Enclosure {
     private String insolation;
 
     @Column(nullable = false)
-    private Number temperature;
+    private Double temperature;
 
     @Column(nullable = false)
-    private Number maxAnimals;
+    private Integer maxAnimals;
 
     @OneToMany(mappedBy = "enclosure", cascade = CascadeType.ALL)
     @JsonManagedReference

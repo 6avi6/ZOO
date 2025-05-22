@@ -15,6 +15,8 @@ import com.polsl.tab.zoobackend.repository.EnclosureRepository;
 import com.polsl.tab.zoobackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -95,5 +97,22 @@ public class AnimalService {
         List<User> employees = userRepository.findAllById(employeeIds);
         animal.getAssignedUsers().addAll(employees);
         animalRepository.save(animal);
+    }
+
+    public boolean transferAnimals(Long targetEnclosureId,
+                                  List<Long> animalIds) {
+        Enclosure targetEnclosure = enclosureRepository.findWithAnimalsById(targetEnclosureId)
+                .orElseThrow(() -> new ResourceNotFoundException("Enclosure not found with id " + targetEnclosureId));
+
+        List<Animal> animalsToTransfer = animalRepository.findAllById(animalIds);
+
+        int newTotal = targetEnclosure.getMaxAnimals() + animalsToTransfer.size();
+
+        for (Animal animal : animalsToTransfer) {
+            animal.setEnclosure(targetEnclosure);
+        }
+
+        animalRepository.saveAll(animalsToTransfer);
+        return newTotal > targetEnclosure.getMaxAnimals();
     }
 }

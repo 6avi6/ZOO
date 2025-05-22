@@ -70,6 +70,20 @@ public class AnimalController {
         return ResponseEntity.ok("Employees assigned to animal.");
     }
 
+    @PostMapping("/transfer")
+    public ResponseEntity<String> transferAnimals(
+            @RequestParam Long targetEnclosureId,
+            @RequestBody List<Long> animalIds) {
+        boolean exceedsMax = animalService.transferAnimals(targetEnclosureId, animalIds);
+
+        String message = "Transfer successful.";
+        if (exceedsMax) {
+            message += " Warning: maxAnimals limit exceeded.";
+        }
+
+        return ResponseEntity.ok(message);
+    }
+
     @GetMapping("/species")
     public List<Species> getTerrainTypes() {
         return List.of(Species.values());

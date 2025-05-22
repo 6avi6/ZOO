@@ -2,24 +2,21 @@ package com.polsl.tab.zoobackend.service;
 
 import com.polsl.tab.zoobackend.dto.animal.AnimalRequest;
 import com.polsl.tab.zoobackend.dto.animal.AnimalResponse;
-import com.polsl.tab.zoobackend.dto.user.UserProfileDTO;
 import com.polsl.tab.zoobackend.dto.user.UserSummaryDTO;
 import com.polsl.tab.zoobackend.exception.ResourceNotFoundException;
 import com.polsl.tab.zoobackend.mapper.AnimalMapper;
 import com.polsl.tab.zoobackend.mapper.UserMapper;
 import com.polsl.tab.zoobackend.model.Animal;
 import com.polsl.tab.zoobackend.model.Enclosure;
+import com.polsl.tab.zoobackend.model.Feeding;
 import com.polsl.tab.zoobackend.model.User;
 import com.polsl.tab.zoobackend.repository.AnimalRepository;
 import com.polsl.tab.zoobackend.repository.EnclosureRepository;
 import com.polsl.tab.zoobackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -71,7 +68,15 @@ public class AnimalService {
     }
 
     public void delete(Long id) {
-        animalRepository.deleteById(id);
+        Animal animal = animalRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Animal not found with id " + id));
+
+        for (Feeding feeding : animal.getFeedings()) {
+            feeding.getAnimals().remove(animal);
+        }
+        animal.getFeedings().clear();
+
+        animalRepository.delete(animal);
     }
 
     public List<AnimalResponse> getAnimalsByIds(Set<Long> ids) {

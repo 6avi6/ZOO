@@ -2,6 +2,7 @@ package com.polsl.tab.zoobackend.service;
 
 import com.polsl.tab.zoobackend.dto.enclosure.EnclosureRequest;
 import com.polsl.tab.zoobackend.dto.enclosure.EnclosureResponse;
+import com.polsl.tab.zoobackend.dto.enclosure.EnclosureSummary;
 import com.polsl.tab.zoobackend.exception.ConflictException;
 import com.polsl.tab.zoobackend.exception.ResourceNotFoundException;
 import com.polsl.tab.zoobackend.mapper.EnclosureMapper;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -76,5 +77,9 @@ public class EnclosureService {
         int totalAnimalsInTarget = target.getAnimals().size() + animalsToTransfer.size();
 
         return totalAnimalsInTarget > target.getMaxAnimals();
+    }
+
+    public List<EnclosureSummary> getFreeEnclosureSummaries() {
+        return enclosureRepository.findFreeEnclosures();
     }
 }

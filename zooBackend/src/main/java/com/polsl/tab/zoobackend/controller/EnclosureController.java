@@ -2,6 +2,7 @@ package com.polsl.tab.zoobackend.controller;
 
 import com.polsl.tab.zoobackend.dto.enclosure.EnclosureRequest;
 import com.polsl.tab.zoobackend.dto.enclosure.EnclosureResponse;
+import com.polsl.tab.zoobackend.dto.enclosure.EnclosureSummary;
 import com.polsl.tab.zoobackend.model.TerrainType;
 import com.polsl.tab.zoobackend.service.EnclosureService;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +54,11 @@ public class EnclosureController {
         }
 
         return ResponseEntity.ok(message);
+    }
+
+    @GetMapping("/free")
+    public ResponseEntity<List<EnclosureSummary>> getFreeEnclosureSummaries() {
+        return ResponseEntity.ok(enclosureService.getFreeEnclosureSummaries());
     }
 
     @GetMapping("/terrain-types")

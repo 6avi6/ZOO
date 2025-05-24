@@ -69,7 +69,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/reports/**").hasRole("DIRECTOR")
                         .requestMatchers("/api/animal-treatment-card/**").hasAnyRole("USER", "VETERINARIAN")
                         .requestMatchers(HttpMethod.GET, "/api/administration/**").hasAnyRole("REGISTRAR", "ADMIN", "DIRECTOR")
-                        .requestMatchers("/api/administration/**").hasAnyRole("ADMIN", "DIRECTOR")
+                        .requestMatchers("/api/administration/**").hasAnyRole("ADMIN","REGISTRAR","DIRECTOR")
                         .requestMatchers(HttpMethod.GET, "/api/work-schedules/**").authenticated()
                         .requestMatchers("/api/work-schedules/**").hasAnyRole("REGISTRAR", "ADMIN", "DIRECTOR")
                         .requestMatchers("/api/caregiver/**").hasRole("CAREGIVER")

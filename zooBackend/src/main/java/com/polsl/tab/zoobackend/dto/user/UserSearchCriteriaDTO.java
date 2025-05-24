@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 public class UserSearchCriteriaDTO {
+    private Integer id;
     private String username;
     private Role role;
     private String firstName;

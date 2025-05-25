@@ -67,4 +67,10 @@ public class FeedingController {
         Integer updatedRecords = service.deleteFeedingsInRange(request);
         return ResponseEntity.ok("Deleted records: " + updatedRecords.toString());
     }
+
+    @PutMapping("/mark-completed")
+    public ResponseEntity<Void> markFeedingsAsCompleted(@RequestBody List<Long> request) {
+        service.markFeedingsAsCompleted(request);
+        return ResponseEntity.ok().build();
+    }
 }

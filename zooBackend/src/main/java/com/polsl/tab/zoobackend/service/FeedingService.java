@@ -142,4 +142,14 @@ public class FeedingService {
         feedingRepo.deleteAll(feedings);
         return feedings.size();
     }
+
+    public void markFeedingsAsCompleted(List<Long> feedingIds) {
+        List<Feeding> feedings = feedingRepo.findAllById(feedingIds);
+
+        for (Feeding feeding : feedings) {
+            feeding.setIsCompleted(true);
+        }
+
+        feedingRepo.saveAll(feedings);
+    }
 }

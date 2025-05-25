@@ -4,6 +4,8 @@ import com.polsl.tab.zoobackend.dto.authentication.AuthenticationRequest;
 import com.polsl.tab.zoobackend.dto.authentication.AuthenticationResponse;
 import com.polsl.tab.zoobackend.dto.authentication.RegisterRequest;
 import com.polsl.tab.zoobackend.exception.RefreshTokenNotFoundException;
+import com.polsl.tab.zoobackend.exception.ResourceNotFoundException;
+import com.polsl.tab.zoobackend.exception.UnauthorizedException;
 import com.polsl.tab.zoobackend.model.RefreshToken;
 import com.polsl.tab.zoobackend.model.Role;
 import com.polsl.tab.zoobackend.model.User;
@@ -20,6 +22,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -64,7 +68,7 @@ public class AuthenticationService {
         return "Registration successfully completed";
     }
 
-    public ResponseEntity<?> refreshToken(String refreshToken, HttpServletResponse response) {
+    public ResponseEntity<?> refreshToken(String refreshToken, HttpServletResponse response, int refreshTokenExpiration) {
         RefreshToken storedToken = refreshTokenRepository.findByToken(refreshToken)
                 .orElseThrow(() -> new RuntimeException("Invalid refresh token"));
 
@@ -79,7 +83,7 @@ public class AuthenticationService {
         String newRefreshToken = generateRefreshToken(user);
         String newAccessToken = jwtUtil.generateAccessToken(user.getUsername(), user.getId(), user.getRole().toString());
 
-        setRefreshTokenCookie(response, newRefreshToken, 3 * 24 * 60 * 60);
+        setRefreshTokenCookie(response, newRefreshToken, refreshTokenExpiration);
 
         return ResponseEntity.ok(new AuthenticationResponse(newAccessToken, null));
     }
@@ -96,7 +100,7 @@ public class AuthenticationService {
         return token.getToken();
     }
 
-    public void setRefreshTokenCookie(HttpServletResponse response, String newRefreshToken, Integer maxAge) {
+    public void setRefreshTokenCookie(HttpServletResponse response, String newRefreshToken, int maxAge) {
         String cookieValue = String.format(
                 "refreshToken=%s; Path=/api/auth/refresh; HttpOnly; SameSite=None; Secure; Max-Age=%d",
                 newRefreshToken != null ? newRefreshToken : "", maxAge
@@ -110,7 +114,7 @@ public class AuthenticationService {
         String refreshToken = extractCookie(request, "refreshToken");
 
         if (refreshToken == null)
-            throw new RefreshTokenNotFoundException("Refresh token not found");
+            throw new RefreshTokenNotFoundException("Refresh token is null");
 
         RefreshToken rt =  refreshTokenRepository.findByToken(refreshToken)
                 .orElseThrow(() -> new RefreshTokenNotFoundException("Refresh token not found"));
@@ -131,5 +135,22 @@ public class AuthenticationService {
         }
         logger.error("No refresh token");
         return null;
+    }
+
+    public User getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || authentication.getName() == null) {
+            throw new UnauthorizedException("Authentication or name war null");
+        }
+
+        String username = authentication.getName();
+        User user = userService.getUserByUsername(username);
+
+        if (user == null) {
+            throw new ResourceNotFoundException("User not found");
+        }
+
+        return user;
     }
 }

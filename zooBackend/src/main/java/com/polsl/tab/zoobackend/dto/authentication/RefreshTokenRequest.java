@@ -1,4 +1,4 @@
-package com.polsl.tab.zoobackend.dto;
+package com.polsl.tab.zoobackend.dto.authentication;
 
 import lombok.*;
 

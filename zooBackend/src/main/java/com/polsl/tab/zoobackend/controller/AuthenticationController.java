@@ -6,6 +6,7 @@ import com.polsl.tab.zoobackend.dto.authentication.AuthenticationRequest;
 import com.polsl.tab.zoobackend.dto.authentication.AuthenticationResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +15,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
+    private final int refreshTokenExpiration;
 
 
-    public AuthenticationController(AuthenticationService authenticationService) {
+    public AuthenticationController(AuthenticationService authenticationService,
+                                    @Value("${jwt.refresh-expiration}") int refreshTokenExpiration) {
         this.authenticationService = authenticationService;
+        this.refreshTokenExpiration = refreshTokenExpiration;
     }
 
     @PostMapping("/register")
@@ -28,7 +32,7 @@ public class AuthenticationController {
     @PostMapping("/login")
     public AuthenticationResponse login(@RequestBody AuthenticationRequest request, HttpServletResponse response) {
         AuthenticationResponse authResponse = authenticationService.login(request);
-        authenticationService.setRefreshTokenCookie(response, authResponse.getRefreshToken(), 3 * 24 * 60 * 60);
+        authenticationService.setRefreshTokenCookie(response, authResponse.getRefreshToken(), refreshTokenExpiration);
         return new AuthenticationResponse(authResponse.getAccessToken(), null);
     }
 
@@ -40,7 +44,7 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No refresh token");
         }
 
-        ResponseEntity<?> resp = authenticationService.refreshToken(refreshToken, response);
+        ResponseEntity<?> resp = authenticationService.refreshToken(refreshToken, response, refreshTokenExpiration);
         return resp;
     }
 

@@ -1,7 +1,7 @@
 package com.polsl.tab.zoobackend.service;
 
 
-import com.polsl.tab.zoobackend.dto.WorkScheduleDto;
+import com.polsl.tab.zoobackend.dto.workSchedule.WorkScheduleRequest;
 import com.polsl.tab.zoobackend.exception.ResourceNotFoundException;
 import com.polsl.tab.zoobackend.model.User;
 import com.polsl.tab.zoobackend.model.UserWorkSchedule;
@@ -15,8 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,7 +56,7 @@ public class WorkScheduleService {
         return workScheduleRepository.findAll(pageable);
     }
 
-    public WorkSchedule update(Long id, WorkScheduleDto dto) {
+    public WorkSchedule update(Long id, WorkScheduleRequest dto) {
         WorkSchedule existing = getById(id);
         existing.setShiftStart(dto.getShiftStart());
         existing.setShiftEnd(dto.getShiftEnd());

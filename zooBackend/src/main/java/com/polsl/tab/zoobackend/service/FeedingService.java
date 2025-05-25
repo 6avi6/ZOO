@@ -1,0 +1,89 @@
+package com.polsl.tab.zoobackend.service;
+
+import com.polsl.tab.zoobackend.dto.feeding.FeedingResponse;
+import com.polsl.tab.zoobackend.dto.feeding.FeedingRequest;
+import com.polsl.tab.zoobackend.model.Feeding;
+import com.polsl.tab.zoobackend.model.FoodType;
+import com.polsl.tab.zoobackend.model.Animal;
+import com.polsl.tab.zoobackend.model.User;
+import com.polsl.tab.zoobackend.exception.ResourceNotFoundException;
+import com.polsl.tab.zoobackend.mapper.FeedingMapper;
+import com.polsl.tab.zoobackend.repository.AnimalRepository;
+import com.polsl.tab.zoobackend.repository.FeedingRepository;
+import com.polsl.tab.zoobackend.repository.FoodTypeRepository;
+import com.polsl.tab.zoobackend.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class FeedingService {
+    private final FeedingRepository feedingRepo;
+    private final FoodTypeRepository foodTypeRepo;
+    private final AnimalRepository animalRepo;
+    private final UserRepository userRepo;
+    private final FeedingMapper feedingMapper;
+
+    public List<FeedingResponse> getAll() {
+        return feedingRepo.findAll().stream()
+                .map(feedingMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    public FeedingResponse getById(Long id) {
+        Feeding f = feedingRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Feeding not found " + id));
+        return feedingMapper.toResponse(f);
+    }
+
+    public FeedingResponse create(FeedingRequest dto) {
+        FoodType ft = foodTypeRepo.findById(dto.getFoodTypeId())
+                .orElseThrow(() -> new ResourceNotFoundException("FoodType not found " + dto.getFoodTypeId()));
+        Set<Animal> animals = dto.getAnimalIds().stream()
+                .map(aid -> animalRepo.findById(aid)
+                        .orElseThrow(() -> new ResourceNotFoundException("Animal not found " + aid)))
+                .collect(Collectors.toSet());
+        Set<User> users = dto.getUserIds().stream()
+                .map(uid -> userRepo.findById(uid)
+                        .orElseThrow(() -> new ResourceNotFoundException("User not found " + uid)))
+                .collect(Collectors.toSet());
+        Feeding feeding = feedingMapper.toEntity(dto);
+        feeding.setFoodType(ft);
+        feeding.setAnimals(animals);
+        feeding.setFeedingUsers(users);
+        return feedingMapper.toResponse(feedingRepo.save(feeding));
+    }
+
+    public FeedingResponse update(Long id, FeedingRequest dto) {
+        Feeding existing = feedingRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Feeding not found " + id));
+        feedingMapper.updateEntity(existing, dto);
+
+        FoodType ft = foodTypeRepo.findById(dto.getFoodTypeId())
+                .orElseThrow(() -> new ResourceNotFoundException("FoodType not found " + dto.getFoodTypeId()));
+        existing.setFoodType(ft);
+
+        Set<Animal> animals = dto.getAnimalIds().stream()
+                .map(aid -> animalRepo.findById(aid)
+                        .orElseThrow(() -> new ResourceNotFoundException("Animal not found " + aid)))
+                .collect(Collectors.toSet());
+        existing.setAnimals(animals);
+
+        Set<User> users = dto.getUserIds().stream()
+                .map(uid -> userRepo.findById(uid)
+                        .orElseThrow(() -> new ResourceNotFoundException("User not found " + uid)))
+                .collect(Collectors.toSet());
+        existing.setFeedingUsers(users);
+
+        return feedingMapper.toResponse(feedingRepo.save(existing));
+    }
+
+    public void delete(Long id) {
+        feedingRepo.deleteById(id);
+    }
+}

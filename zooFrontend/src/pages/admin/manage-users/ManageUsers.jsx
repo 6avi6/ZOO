@@ -48,13 +48,12 @@ const ManageUsers = () => {
     return (
         <div>
             <AdminNavbar />
-            <div className="bg-white mt-12 mx-auto min-h-[300px] w-[80%] rounded-lg border shadow-sm border-gray-300  p-8 relative">
-                <div className="flex flex-row items-center justify-between mb-6">
+            <div className="bg-white relative mt-12 mx-auto min-h-[300px] w-[80%] rounded-lg border shadow-sm border-gray-300  p-8">
+                <div className="flex-row items-center justify-between mb-6">
                     <h1 className="text-2xl font-semibold text-gray-800">Lista użytkowników</h1>
-                    <Link to="/admin/manage-users/add">
-                        <button className="hidden bg-[#526C43] hover:bg-[#234228] text-white py-2 px-4 rounded-md transition-all duration-150">
-                            Dodaj użytkownika
-                        </button>
+                    <Link to="/admin/manage-users/add" className="absolute right-0 top-0 mr-6 mt-6 bg-[#526C43] hover:bg-[#234228] text-white py-3 px-3 rounded-full transition-all duration-150">
+                        <IoPersonAddOutline className="inline-block w-6 sm:mr-4 h-6" />
+                        <span className="hidden sm:inline">Dodaj użytkownika</span>
                     </Link>
 
                 </div>
@@ -71,7 +70,6 @@ const ManageUsers = () => {
                             <th className="p-3">Login</th>
                             <th className="p-3">Rola</th>
                             <th className=""></th>
-                            <th className=""></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -86,26 +84,20 @@ const ManageUsers = () => {
                                     </td>
                                     <td className="p-3">{user.role}</td>
 
-                                <td className="">
+
+                                <td className="text-right">
                                     <Link to={`/admin/manage-users/edit/${user.id}`} className="text-black hover:text-[#08bf29] transition-all duration-150">
-                                        <AiOutlineEdit className="inline-block w-6 h-6" />
+                                        <AiOutlineEdit className="inline-block w-6 mr-4 h-6" />
                                     </Link>
-                                </td>
-                                <td className="">
-                                        <MdOutlineDelete className="inline-block w-6 h-6 hover:text-[#e30b1e] transition-all duration-150 cursor-pointer"
+                                        <MdOutlineDelete className="inline-block mr-3 w-6 h-6 hover:text-[#e30b1e] transition-all duration-150 cursor-pointer"
                                         onClick={() => handleDelete(user.id)}/>
+
                                 </td>
                             </tr>
                         ))}
                         </tbody>
                     </table>
                 )}
-                <Link to="/admin/manage-users/add">
-                    <IoPersonAddOutline
-                        size={32}
-                        className="absolute top-7 right-8 text-gray-800 rounded-md cursor-pointer hover:text-[#08bf29] transition-all duration-150"
-                    />
-                </Link>
 
                 <AppToast />
 

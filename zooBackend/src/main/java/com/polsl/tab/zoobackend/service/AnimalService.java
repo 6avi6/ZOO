@@ -95,13 +95,37 @@ public class AnimalService {
                 .collect(Collectors.toList());
     }
 
-    public void assignEmployees(Long animalId, List<Long> employeeIds) {
+    public void addCaretakers(Long animalId, List<Long> employeeIds) {
         Animal animal = animalRepository.findById(animalId)
-                .orElseThrow(() -> new RuntimeException("Animal not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Animal not found with id " + employeeIds));
 
         List<User> employees = userRepository.findAllById(employeeIds);
         animal.getAssignedUsers().addAll(employees);
         animalRepository.save(animal);
+    }
+
+    public String deleteCaretakers(Long animalId, List<Long> employeeIds) {
+        Animal animal = animalRepository.findById(animalId)
+                .orElseThrow(() -> new ResourceNotFoundException("Animal not found with id " + employeeIds));
+
+        Set<User> assignedUsers = animal.getAssignedUsers();
+        Set<Long> assignedUserIds = assignedUsers.stream()
+                .map(User::getId)
+                .collect(Collectors.toSet());
+
+        List<Long> notAssignedIds = employeeIds.stream()
+                .filter(id -> !assignedUserIds.contains(id))
+                .toList();
+
+        assignedUsers.removeIf(user -> employeeIds.contains(user.getId()));
+
+        animalRepository.save(animal);
+
+        if (notAssignedIds.isEmpty()) {
+            return "All caretakers successfully removed.";
+        } else {
+            return "Some IDs were not assigned as caretakers and were skipped: " + notAssignedIds;
+        }
     }
 
     public boolean transferAnimals(Long targetEnclosureId,

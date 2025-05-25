@@ -31,8 +31,11 @@ public class EnclosureService {
     }
 
     public EnclosureResponse getById(Long id) {
+        return enclosureMapper.toResponse(getEntityById(id));
+    }
+
+    public Enclosure getEntityById(Long id) {
         return enclosureRepository.findById(id)
-                .map(enclosureMapper::toResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("Enclosure not found with id " + id));
     }
 
@@ -42,15 +45,13 @@ public class EnclosureService {
     }
 
     public EnclosureResponse update(Long id, EnclosureRequest dto) {
-        Enclosure existing = enclosureRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Enclosure not found with id " + id));
+        Enclosure existing = getEntityById(id);
         enclosureMapper.updateEntity(existing, dto);
         return enclosureMapper.toResponse(enclosureRepository.save(existing));
     }
 
     public void delete(Long id) {
-        Enclosure enclosure = enclosureRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Enclosure not found with id: " + id));
+        Enclosure enclosure = getEntityById(id);
 
         if (enclosure.getAnimals() != null && !enclosure.getAnimals().isEmpty()) {
             throw new ConflictException("Cannot delete enclosure: it still contains animals.");
@@ -61,10 +62,8 @@ public class EnclosureService {
 
     @Transactional
     public boolean transferAnimals(Long sourceId, Long targetId) {
-        Enclosure source = enclosureRepository.findWithAnimalsById(sourceId)
-                .orElseThrow(() -> new ResourceNotFoundException("Source enclosure not found, id: " + sourceId));
-        Enclosure target = enclosureRepository.findById(targetId)
-                .orElseThrow(() -> new ResourceNotFoundException("Target enclosure not found, id: " + targetId));
+        Enclosure source = getEntityById(sourceId);
+        Enclosure target = getEntityById(targetId);
 
         List<Animal> animalsToTransfer = source.getAnimals();
 

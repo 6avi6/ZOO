@@ -37,9 +37,13 @@ public class AnimalService {
     }
 
     public AnimalResponse getById(Long id) {
-        Animal animal = animalRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Animal not found with id " + id));
+        Animal animal = getEntityById(id);
         return animalMapper.toResponse(animal);
+    }
+
+    public Animal getEntityById(Long id) {
+        return animalRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Animal not found with id " + id));
     }
 
     public AnimalResponse create(AnimalRequest dto) {
@@ -53,8 +57,7 @@ public class AnimalService {
     }
 
     public AnimalResponse update(Long id, AnimalRequest dto) {
-        Animal existing = animalRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Animal not found with id " + id));
+        Animal existing = getEntityById(id);
 
         animalMapper.updateEntity(existing, dto);
 
@@ -68,8 +71,7 @@ public class AnimalService {
     }
 
     public void delete(Long id) {
-        Animal animal = animalRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Animal not found with id " + id));
+        Animal animal = getEntityById(id);
 
         for (Feeding feeding : animal.getFeedings()) {
             feeding.getAnimals().remove(animal);
@@ -88,25 +90,21 @@ public class AnimalService {
 
 
     public List<UserSummaryDTO> getCaretakers(Long id) {
-        Animal animal = animalRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Animal not found with id " + id));
+        Animal animal = getEntityById(id);
         return animal.getAssignedUsers().stream()
                 .map(userMapper::toSummaryDto)
                 .collect(Collectors.toList());
     }
 
     public void addCaretakers(Long animalId, List<Long> employeeIds) {
-        Animal animal = animalRepository.findById(animalId)
-                .orElseThrow(() -> new ResourceNotFoundException("Animal not found with id " + employeeIds));
-
+        Animal animal = getEntityById(animalId);
         List<User> employees = userRepository.findAllById(employeeIds);
         animal.getAssignedUsers().addAll(employees);
         animalRepository.save(animal);
     }
 
     public String deleteCaretakers(Long animalId, List<Long> employeeIds) {
-        Animal animal = animalRepository.findById(animalId)
-                .orElseThrow(() -> new ResourceNotFoundException("Animal not found with id " + employeeIds));
+        Animal animal = getEntityById(animalId);
 
         Set<User> assignedUsers = animal.getAssignedUsers();
         Set<Long> assignedUserIds = assignedUsers.stream()

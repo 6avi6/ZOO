@@ -7,16 +7,17 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Set;
 
 @Data
 @AllArgsConstructor
 public class FeedingRequest {
-    @JsonFormat(pattern = "HH:mm")
-    @Schema(type = "string", example = "14:30", format = "HH:mm")
-    @NotNull(message = "feedingTime must not be null")
-    private LocalTime feedingTime;
+//    @JsonFormat(pattern = "HH:mm")
+//    @Schema(type = "string", example = "14:30", format = "HH:mm")
+    @NotNull(message = "feeding time and date must not be null")
+    private LocalDateTime feedingDateTime;
 
     @NotNull(message = "isCompleted must not be null")
     private Boolean isCompleted;

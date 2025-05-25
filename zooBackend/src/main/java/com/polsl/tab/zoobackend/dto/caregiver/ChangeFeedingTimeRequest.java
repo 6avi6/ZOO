@@ -7,18 +7,18 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
 @AllArgsConstructor
 public class ChangeFeedingTimeRequest {
     @NotNull
-    @Schema(type = "string", example = "14:30", format = "HH:mm")
-    private LocalTime oldFeedingTime;
+//    @Schema(type = "string", example = "14:30", format = "HH:mm")
+    private LocalDateTime oldFeedingDateTime;
     @NotNull
-    @Schema(type = "string", example = "14:30", format = "HH:mm")
-    private LocalTime newFeedingTime;
+//    @Schema(type = "string", example = "14:30", format = "HH:mm")
+    private LocalDateTime newFeedingDateTime;
     @NotEmpty
     private Set<Long> animalIDs;
 }

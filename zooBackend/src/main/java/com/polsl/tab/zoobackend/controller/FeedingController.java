@@ -1,7 +1,9 @@
 package com.polsl.tab.zoobackend.controller;
 
+import com.polsl.tab.zoobackend.dto.feeding.FeedingDeleteRequest;
 import com.polsl.tab.zoobackend.dto.feeding.FeedingRequest;
 import com.polsl.tab.zoobackend.dto.feeding.FeedingResponse;
+import com.polsl.tab.zoobackend.dto.feeding.FeedingTimeUpdateRequest;
 import com.polsl.tab.zoobackend.service.FeedingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,5 +45,26 @@ public class FeedingController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/repeat/{days}")
+    public ResponseEntity<Void> repeatFeeding(
+            @PathVariable Long id,
+            @PathVariable Integer days
+    ) {
+        service.repeatFeeding(id, days);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/update-time")
+    public ResponseEntity<String> updateByRange(@RequestBody @Valid FeedingTimeUpdateRequest request) {
+        Integer updatedRecords = service.updateFeedingTimeInRange(request);
+        return ResponseEntity.ok("Updated records: " + updatedRecords.toString());
+    }
+
+    @DeleteMapping("/by-range")
+    public ResponseEntity<String> deleteByRange(@RequestBody @Valid FeedingDeleteRequest request) {
+        Integer updatedRecords = service.deleteFeedingsInRange(request);
+        return ResponseEntity.ok("Deleted records: " + updatedRecords.toString());
     }
 }

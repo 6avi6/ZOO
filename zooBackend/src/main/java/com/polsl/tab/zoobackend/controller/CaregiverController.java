@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/caregiver")
 @RequiredArgsConstructor
-public class caregiverController {
+public class CaregiverController {
     private final CustomUserDetailsService userService;
     private final AuthenticationService authenticationService;
     private final caregiverService caregiverService;
@@ -34,6 +34,12 @@ public class caregiverController {
     public ResponseEntity<List<FeedingResponse>> getMyFeedings() {
         User user = authenticationService.getAuthenticatedUser();
         return ResponseEntity.ok(caregiverService.getMyFeedings(user));
+    }
+
+    @GetMapping("/my-Feedings/history")
+    public ResponseEntity<List<FeedingResponse>> getMyFeedingsHistory() {
+        User user = authenticationService.getAuthenticatedUser();
+        return ResponseEntity.ok(caregiverService.getMyFeedingsHistory(user));
     }
 
     @PutMapping("/update-enclosure")
@@ -57,9 +63,9 @@ public class caregiverController {
 
         return ResponseEntity.ok(
                 "Updated feeding time from "
-                        + request.getOldFeedingTime()
+                        + request.getOldFeedingDateTime()
                         + " to "
-                        + request.getNewFeedingTime()
+                        + request.getNewFeedingDateTime()
                         + " for " + count + " feeding entries."
         );
     }

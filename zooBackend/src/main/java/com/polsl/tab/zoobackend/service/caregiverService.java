@@ -4,7 +4,10 @@ import com.polsl.tab.zoobackend.dto.animal.AnimalResponse;
 import com.polsl.tab.zoobackend.dto.caregiver.ChangeEnclosureRequest;
 import com.polsl.tab.zoobackend.dto.caregiver.ChangeFeedingTimeRequest;
 import com.polsl.tab.zoobackend.dto.caregiver.ChangeFoodTypeRequest;
+import com.polsl.tab.zoobackend.dto.feeding.FeedingDeleteRequest;
 import com.polsl.tab.zoobackend.dto.feeding.FeedingResponse;
+import com.polsl.tab.zoobackend.dto.feeding.FeedingTimeUpdateRequest;
+import com.polsl.tab.zoobackend.dto.feeding.FeedingsCompletionRequest;
 import com.polsl.tab.zoobackend.exception.ResourceNotFoundException;
 import com.polsl.tab.zoobackend.exception.UnauthorizedException;
 import com.polsl.tab.zoobackend.mapper.AnimalMapper;
@@ -18,7 +21,10 @@ import com.polsl.tab.zoobackend.repository.FeedingRepository;
 import com.polsl.tab.zoobackend.repository.FoodTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -27,7 +33,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class caregiverService {
 
-    private final AnimalService animalService;
+    private final FeedingService feedingService;
     private final AnimalRepository animalRepository;
     private final FoodTypeRepository foodTypeRepository;
     private final FeedingRepository feedingRepository;
@@ -35,14 +41,14 @@ public class caregiverService {
     private final FeedingMapper feedingMapper;
 
     public void updateEnclosure(User user, ChangeEnclosureRequest request) {
-        validateOwnership(user, request.getAnimalIDs());
+        validateAnimalOwnership(user, request.getAnimalIDs());
         animalRepository.updateEnclosureForAnimals(request.getEnclosureID(), request.getAnimalIDs());
     }
 
     public void updateFoodType(User user, ChangeFoodTypeRequest request) {
-        validateOwnership(user, request.getAnimalIDs());
+        validateAnimalOwnership(user, request.getAnimalIDs());
         FoodType ft = foodTypeRepository.findById(request.getFoodTypeID())
-                .orElseThrow(() -> new ResourceNotFoundException("FoodType not found with id " + request.getFoodTypeID()));
+                .orElseThrow(() -> new ResourceNotFoundException("FoodType not found with id: " + request.getFoodTypeID()));
 
         int updated = feedingRepository.updateFoodTypeForAnimals(ft, request.getAnimalIDs());
         if (updated == 0) {
@@ -50,24 +56,19 @@ public class caregiverService {
         }
     }
 
-    public int updateFeedingTime(User user, ChangeFeedingTimeRequest req) {
-        validateOwnership(user, req.getAnimalIDs());
+    public void updateFeedingTime(User user, ChangeFeedingTimeRequest req) {
+        List<Feeding> feedings = feedingRepository
+                .findAllByIdInAndFeedingUsersContains(req.getFeedingIds(), user.getId());
 
-        int updated = feedingRepository.shiftFeedingTimeForAnimals(
-                req.getOldFeedingDateTime(),
-                req.getNewFeedingDateTime(),
-                req.getAnimalIDs()
-        );
+        validateFeedingsOwnership(feedings, req.getFeedingIds());
 
-        if (updated == 0) {
-            throw new ResourceNotFoundException("No feeding entries at "
-                    + req.getOldFeedingDateTime()
-                    + " for those animals");
+        for (Feeding f : feedings) {
+            f.setFeedingDateTime(req.getNewFeedingDateTime());
         }
-        return updated;
+        feedingRepository.saveAll(feedings);
     }
 
-    private void validateOwnership(User user, Set<Long> requestedIDs) {
+    private void validateAnimalOwnership(User user, Set<Long> requestedIDs) {
         Set<Long> actualIDs = user.getAssignedAnimals().stream()
                 .map(Animal::getId)
                 .collect(Collectors.toSet());
@@ -99,5 +100,77 @@ public class caregiverService {
         return feedings.stream()
                 .map(feedingMapper::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void repeatFeeding(Long userId, Long feedingId, int repeatDays) {
+        Feeding original = feedingRepository.findById(feedingId)
+                .orElseThrow(() -> new ResourceNotFoundException("Feeding not found with id: " + feedingId));
+
+        boolean hasAccess = original.getFeedingUsers().stream()
+                .anyMatch(u -> u.getId().equals(userId));
+
+        if (!hasAccess) {
+            throw new UnauthorizedException("You do not have access to feeding, ID: " + feedingId);
+        }
+
+        feedingService.repeatFeeding(original, repeatDays);
+    }
+
+    public Integer updateFeedingTimeInRange(Long userId, FeedingTimeUpdateRequest request) {
+        List<Feeding> feedings = feedingRepository
+                .findByUserIdAndFeedingDateTimeBetweenAndAnimals_IdIn(
+                        request.getStartDate().atStartOfDay(),
+                        request.getEndDate().atTime(23, 59),
+                        request.getAnimalIds(),
+                        userId
+                );
+
+        for (Feeding feeding : feedings) {
+            LocalDate date = feeding.getFeedingDateTime().toLocalDate();
+            feeding.setFeedingDateTime(LocalDateTime.of(date, request.getNewTime()));
+        }
+
+        feedingRepository.saveAll(feedings);
+        return feedings.size();
+    }
+
+    public Integer deleteFeedingsInRange(Long userId, FeedingDeleteRequest request) {
+        List<Feeding> feedings = feedingRepository
+                .findByUserIdAndFeedingDateTimeBetweenAndAnimals_IdIn(
+                        request.getStartDate().atStartOfDay(),
+                        request.getEndDate().atTime(23, 59),
+                        request.getAnimalIds(),
+                        userId
+                );
+
+        feedingRepository.deleteAll(feedings);
+        return feedings.size();
+    }
+
+    public void markFeedingsAsCompleted(Long userId, FeedingsCompletionRequest request) {
+        List<Feeding> feedings = feedingRepository.findAllByIdInAndFeedingUsersContains(request.getFeedingIds(), userId);
+
+        validateFeedingsOwnership(feedings, request.getFeedingIds());
+
+        for (Feeding feeding : feedings) {
+            feeding.setIsCompleted(request.getCompleted());
+        }
+
+        feedingRepository.saveAll(feedings);
+    }
+
+    private void validateFeedingsOwnership(List<Feeding> feedings , List<Long> feedingIds) {
+        if (feedings.size() != feedingIds.size()) {
+            Set<Long> foundIds = feedings.stream()
+                    .map(Feeding::getId)
+                    .collect(Collectors.toSet());
+
+            List<Long> unauthorizedIds = feedingIds.stream()
+                    .filter(id -> !foundIds.contains(id))
+                    .toList();
+
+            throw new UnauthorizedException("You do not have access to feedings with IDs: " + unauthorizedIds);
+        }
     }
 }

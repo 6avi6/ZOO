@@ -26,25 +26,24 @@ public interface FeedingRepository extends JpaRepository<Feeding, Long> {
         WHERE a.id IN :animalIds
       )
     """)
-    int updateFoodTypeForAnimals(@Param("foodType") FoodType foodType,
-                                 @Param("animalIds") Set<Long> animalIds);
+    int updateFoodTypeForAnimals(FoodType foodType,
+                                 Set<Long> animalIds);
 
     @Modifying
     @Transactional
     @Query("""
-      UPDATE Feeding f
-      SET f.feedingDateTime = :newTime
-      WHERE f.feedingDateTime = :oldTime
-        AND EXISTS (
-          SELECT 1 FROM Feeding f2
-          JOIN f2.animals a
-          WHERE f2 = f AND a.id IN :animalIds
-        )
+    UPDATE Feeding f
+    SET f.feedingDateTime = :newDateTime
+    WHERE f.id IN :feedingIds
+      AND EXISTS (
+        SELECT 1 FROM f.feedingUsers u
+        WHERE u.id = :userId
+      )
     """)
-    int shiftFeedingTimeForAnimals(
-            @Param("oldTime") LocalDateTime oldTime,
-            @Param("newTime") LocalDateTime newTime,
-            @Param("animalIds") Set<Long> animalIds
+    int shiftFeedingTime(
+            LocalDateTime newDateTime,
+            List<Long> feedingIds,
+            Long userId
     );
 
     @EntityGraph(attributePaths = {
@@ -72,4 +71,27 @@ public interface FeedingRepository extends JpaRepository<Feeding, Long> {
             LocalDateTime end,
             Set<Long> animalIds
     );
+
+    @Query("""
+    SELECT DISTINCT f FROM Feeding f
+    JOIN f.animals a
+    JOIN f.feedingUsers u
+    WHERE f.feedingDateTime BETWEEN :start AND :end
+    AND a.id IN :animalIds
+    AND u.id = :id
+    """)
+    List<Feeding> findByUserIdAndFeedingDateTimeBetweenAndAnimals_IdIn(
+            LocalDateTime start,
+            LocalDateTime end,
+            Set<Long> animalIds,
+            Long id
+    );
+    @Query("""
+    SELECT f FROM Feeding f
+    JOIN f.feedingUsers u
+    WHERE f.id IN :feedingIds
+    AND u.id = :userId
+    """)
+    List<Feeding> findAllByIdInAndFeedingUsersContains(List<Long> feedingIds,
+                                                       Long userId);
 }

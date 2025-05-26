@@ -13,6 +13,6 @@ public class AnimalTreatmentCardResponse {
     private String description;
     private LocalDateTime dateTime;
     private Long animalId;
-    private Long veterinarianId;
+    private Long assignedUserId;
     private Set<Long> symptomIds;
 }

@@ -99,6 +99,10 @@ public class FeedingService {
         Feeding original = feedingRepo.findById(feedingId)
                 .orElseThrow(() -> new RuntimeException("Feeding not found"));
 
+        repeatFeeding(original, repeatDays);
+    }
+
+    public void repeatFeeding(Feeding original, int repeatDays) {
         List<Feeding> copies = new ArrayList<>();
 
         for (int i = 1; i <= repeatDays; i++) {

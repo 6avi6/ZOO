@@ -66,6 +66,15 @@ public class AnimalController {
             @PathVariable Long animalId,
             @RequestBody List<Long> employeeIds) {
 
+        animalService.assignCaretakers(animalId, employeeIds);
+        return ResponseEntity.ok("Caretakers assigned to animal.");
+    }
+
+    @PatchMapping("/{animalId}/add-caretakers")
+    public ResponseEntity<?> addCaretakersToAnimal(
+            @PathVariable Long animalId,
+            @RequestBody List<Long> employeeIds) {
+
         animalService.addCaretakers(animalId, employeeIds);
         return ResponseEntity.ok("Caretakers assigned to animal.");
     }

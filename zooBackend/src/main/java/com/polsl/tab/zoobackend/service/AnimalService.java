@@ -16,6 +16,7 @@ import com.polsl.tab.zoobackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -94,6 +95,13 @@ public class AnimalService {
         return animal.getAssignedUsers().stream()
                 .map(userMapper::toSummaryDto)
                 .collect(Collectors.toList());
+    }
+
+    public void assignCaretakers(Long animalId, List<Long> employeeIds) {
+        Animal animal = getEntityById(animalId);
+        List<User> employees = userRepository.findAllById(employeeIds);
+        animal.setAssignedUsers(new HashSet<>(employees));
+        animalRepository.save(animal);
     }
 
     public void addCaretakers(Long animalId, List<Long> employeeIds) {

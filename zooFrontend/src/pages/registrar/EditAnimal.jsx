@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Trash2, Pencil, ArrowRight } from 'lucide-react';
 import RegistrarNavbar from '../../components/RegistrarNavbar';
 import { getAllAnimals, updateAnimal, deleteAnimal, addAnimal } from '../../services/animalService';
 import { getAllEnclosures , getEnclosureById } from '../../services/enclosureService';
@@ -62,13 +63,11 @@ const EditAnimal = () => {
             // Mapowanie ID zwierzęcia na obiekt wybiegu
             const enclosureMap = {};
 
-            // Warto pobrać wszystkie wybiegi i znaleźć odpowiedni wybieg po id, zamiast pobierać pojedynczo,
-            // ale jeśli chcesz pobierać osobno:
+            //Wybiegi dla każdego ze zwierząt
             await Promise.all(animals.map(async (animal) => {
 
                 if (animal && animal.enclosureId) {
                     try {
-                        // Możesz też szukać w allEnclosures jeśli masz je już pobrane
                         const enclosure = enclosures.find(e => e.id === animal.enclosureId);
                         if (enclosure) {
                             enclosureMap[animal.id] = enclosure;
@@ -260,8 +259,9 @@ const EditAnimal = () => {
                                     </td>
 
                                     <td className="flex gap-2">
-                                        <button onClick={() => handleEditClick(animal)} className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">Edytuj</button>
-                                        <button onClick={() => handleDeleteClick(animal.id)} className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600">Usuń</button>
+                                        <button onClick={() => handleEditClick(animal)} className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"><Pencil size={20} /></button>
+                                        <button onClick={() => handleDeleteClick(animal.id)} className="p-1 text-red-600 hover:text-red-800"><Trash2 size={20} /></button>
+                                        <button onClick={() => window.location.href = `animals/${animal.id}`} className="p-1 text-blue-600 hover:text-blue-800" title="Szczegóły"><ArrowRight size={20} /></button>
                                     </td>
                                 </>
                             )}

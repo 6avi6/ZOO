@@ -7,12 +7,14 @@ import Login from '../pages/login/Login';
 import AdminDashboard from '../pages/admin/dashboard/AdminDashboard';
 import DirectorDashboard from '../pages/director/dashboard/DirectorDashboard';
 import CaregiverDashboard from '../pages/caregiver/dashboard/CaregiverDashboard';
-import RegistrarDashboard from '../pages/registrar/dashboard/RegistrarDashboard';
 import VeterinarianDashboard from '../pages/veterinarian/dashboard/VeterinarianDashboard';
 
+//Registrar
+import RegistrarDashboard from '../pages/registrar/dashboard/RegistrarDashboard';
 import EditAnimal from '../pages/registrar/EditAnimal';
 import EditCaretaker from '../pages/registrar/EditCaretaker';
 import EditEnclosure from '../pages/registrar/EditEnclosure';
+import AnimalDetails from '../pages/registrar/AnimalDetails';
 
 import ManageUsers from '../pages/admin/manage-users/ManageUsers';
 import ManageDictionary from '../pages/admin/manage-dictionary/ManageDictionary';
@@ -58,6 +60,7 @@ const AppRouter = () => {
             <Route path="/registrar/edit-animal" element={<EditAnimal />} />
             <Route path="/registrar/edit-caretaker" element={<EditCaretaker />} />
             <Route path="/registrar/edit-enclosure" element={<EditEnclosure />} />
+            <Route path="/registrar/animals/:id" element={<AnimalDetails />} />
         </Route>
 
         <Route element={<PrivateRoute requiredRole="ADMIN" />}>

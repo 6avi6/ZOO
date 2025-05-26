@@ -61,6 +61,7 @@ const EditCaretaker = () => {
 
     const handleDeleteClick = async (id) => {
         try {
+            console.log(id)
             await deleteUser(id);
             setCaregivers(caregivers.filter(u => u.id !== id));
         } catch {

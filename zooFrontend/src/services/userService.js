@@ -48,6 +48,23 @@ export const deleteUser = async (id) => {
     }
 }
 
+//Pobieranie wszystkich użytkowników
+export const getAllUsersPaged = async (page = 0, size = 100) => {
+    try {
+        const response = await axiosInstance.get('/api/administration/users/search/paged', {
+            params: {
+                page,
+                size
+            }
+        });
+        return response.data.content;
+    } catch (error) {
+        console.error('Błąd przy pobieraniu wszystkich użytkowników:', error);
+        throw error;
+    }
+};
+
+
 
 
 

@@ -1,7 +1,9 @@
 package com.polsl.tab.zoobackend.service;
 
+import com.polsl.tab.zoobackend.dto.feeding.FeedingDeleteRequest;
 import com.polsl.tab.zoobackend.dto.feeding.FeedingResponse;
 import com.polsl.tab.zoobackend.dto.feeding.FeedingRequest;
+import com.polsl.tab.zoobackend.dto.feeding.FeedingTimeUpdateRequest;
 import com.polsl.tab.zoobackend.model.Feeding;
 import com.polsl.tab.zoobackend.model.FoodType;
 import com.polsl.tab.zoobackend.model.Animal;
@@ -15,6 +17,11 @@ import com.polsl.tab.zoobackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -85,5 +92,64 @@ public class FeedingService {
 
     public void delete(Long id) {
         feedingRepo.deleteById(id);
+    }
+
+    @Transactional
+    public void repeatFeeding(Long feedingId, int repeatDays) {
+        Feeding original = feedingRepo.findById(feedingId)
+                .orElseThrow(() -> new RuntimeException("Feeding not found"));
+
+        List<Feeding> copies = new ArrayList<>();
+
+        for (int i = 1; i <= repeatDays; i++) {
+            Feeding copy = new Feeding();
+            copy.setFeedingDateTime(original.getFeedingDateTime().plusDays(i));
+            copy.setIsCompleted(false);
+            copy.setFoodType(original.getFoodType());
+            copy.setAnimals(new HashSet<>(original.getAnimals()));
+            copy.setFeedingUsers(new HashSet<>(original.getFeedingUsers()));
+            copies.add(copy);
+        }
+
+        feedingRepo.saveAll(copies);
+    }
+
+    public Integer updateFeedingTimeInRange(FeedingTimeUpdateRequest request) {
+        List<Feeding> feedings = feedingRepo
+                .findByFeedingDateTimeBetweenAndAnimals_IdIn(
+                        request.getStartDate().atStartOfDay(),
+                        request.getEndDate().atTime(23, 59),
+                        request.getAnimalIds()
+                );
+
+        for (Feeding feeding : feedings) {
+            LocalDate date = feeding.getFeedingDateTime().toLocalDate();
+            feeding.setFeedingDateTime(LocalDateTime.of(date, request.getNewTime()));
+        }
+
+        feedingRepo.saveAll(feedings);
+        return feedings.size();
+    }
+
+    public Integer deleteFeedingsInRange(FeedingDeleteRequest request) {
+        List<Feeding> feedings = feedingRepo
+                .findByFeedingDateTimeBetweenAndAnimals_IdIn(
+                        request.getStartDate().atStartOfDay(),
+                        request.getEndDate().atTime(23, 59),
+                        request.getAnimalIds()
+                );
+
+        feedingRepo.deleteAll(feedings);
+        return feedings.size();
+    }
+
+    public void markFeedingsAsCompleted(List<Long> feedingIds) {
+        List<Feeding> feedings = feedingRepo.findAllById(feedingIds);
+
+        for (Feeding feeding : feedings) {
+            feeding.setIsCompleted(true);
+        }
+
+        feedingRepo.saveAll(feedings);
     }
 }

@@ -54,14 +54,14 @@ public class caregiverService {
         validateOwnership(user, req.getAnimalIDs());
 
         int updated = feedingRepository.shiftFeedingTimeForAnimals(
-                req.getOldFeedingTime(),
-                req.getNewFeedingTime(),
+                req.getOldFeedingDateTime(),
+                req.getNewFeedingDateTime(),
                 req.getAnimalIDs()
         );
 
         if (updated == 0) {
             throw new ResourceNotFoundException("No feeding entries at "
-                    + req.getOldFeedingTime()
+                    + req.getOldFeedingDateTime()
                     + " for those animals");
         }
         return updated;
@@ -88,7 +88,14 @@ public class caregiverService {
     }
 
     public List<FeedingResponse> getMyFeedings(User user) {
-        List<Feeding> feedings = feedingRepository.findAllByFeedingUsers_Id(user.getId());
+        List<Feeding> feedings = feedingRepository.findAllByFeedingUsers_IdAndIsCompletedFalse(user.getId());
+        return feedings.stream()
+                .map(feedingMapper::toResponse)
+                .collect(Collectors.toList());
+    }
+
+    public List<FeedingResponse> getMyFeedingsHistory(User user) {
+        List<Feeding> feedings = feedingRepository.findAllByFeedingUsers_IdAndIsCompletedTrue(user.getId());
         return feedings.stream()
                 .map(feedingMapper::toResponse)
                 .collect(Collectors.toList());

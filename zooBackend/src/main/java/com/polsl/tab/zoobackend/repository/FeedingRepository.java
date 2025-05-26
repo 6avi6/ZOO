@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Set;
@@ -32,8 +33,8 @@ public interface FeedingRepository extends JpaRepository<Feeding, Long> {
     @Transactional
     @Query("""
       UPDATE Feeding f
-      SET f.feedingTime = :newTime
-      WHERE f.feedingTime = :oldTime
+      SET f.feedingDateTime = :newTime
+      WHERE f.feedingDateTime = :oldTime
         AND EXISTS (
           SELECT 1 FROM Feeding f2
           JOIN f2.animals a
@@ -41,8 +42,8 @@ public interface FeedingRepository extends JpaRepository<Feeding, Long> {
         )
     """)
     int shiftFeedingTimeForAnimals(
-            @Param("oldTime") LocalTime oldTime,
-            @Param("newTime") LocalTime newTime,
+            @Param("oldTime") LocalDateTime oldTime,
+            @Param("newTime") LocalDateTime newTime,
             @Param("animalIds") Set<Long> animalIds
     );
 
@@ -51,5 +52,24 @@ public interface FeedingRepository extends JpaRepository<Feeding, Long> {
             "animals.species",
             "animals.enclosure"
     })
-    List<Feeding> findAllByFeedingUsers_Id(Long userId);
+    List<Feeding> findAllByFeedingUsers_IdAndIsCompletedFalse(Long userId);
+
+    @EntityGraph(attributePaths = {
+            "animals",
+            "animals.species",
+            "animals.enclosure"
+    })
+    List<Feeding> findAllByFeedingUsers_IdAndIsCompletedTrue(Long userId);
+
+    @Query("""
+    SELECT DISTINCT f FROM Feeding f
+    JOIN f.animals a
+    WHERE f.feedingDateTime BETWEEN :start AND :end
+    AND a.id IN :animalIds
+    """)
+    List<Feeding> findByFeedingDateTimeBetweenAndAnimals_IdIn(
+            LocalDateTime start,
+            LocalDateTime end,
+            Set<Long> animalIds
+    );
 }

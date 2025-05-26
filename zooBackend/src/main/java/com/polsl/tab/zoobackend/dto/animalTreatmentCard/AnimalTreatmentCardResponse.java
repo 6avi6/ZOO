@@ -1,5 +1,6 @@
 package com.polsl.tab.zoobackend.dto.animalTreatmentCard;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

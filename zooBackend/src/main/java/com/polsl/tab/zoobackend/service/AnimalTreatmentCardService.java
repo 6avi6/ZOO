@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -48,11 +49,10 @@ public class AnimalTreatmentCardService {
         Animal animal = animalRepository.findById(dto.getAnimalId())
                 .orElseThrow(() -> new ResourceNotFoundException("Animal not found with id: " + dto.getAnimalId()));
 
-        User vet = userRepository.findById(dto.getVeterinarianId())
-                .orElseThrow(() -> new ResourceNotFoundException("Veterinarian not found with id: " + dto.getVeterinarianId()));
+        User vet = userRepository.findById(dto.getAssignedUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("AssignedUser not found with id: " + dto.getAssignedUserId()));
 
-        Set<Symptom> symptoms = symptomRepository.findAllById(dto.getSymptomIds())
-                .stream().collect(Collectors.toSet());
+        Set<Symptom> symptoms = new HashSet<>(symptomRepository.findAllById(dto.getSymptomIds()));
 
         AnimalTreatmentCard animalTreatmentCard = animalTreatmentCardMapper.toEntity(dto);
         animalTreatmentCard.setAnimal(animal);
@@ -76,15 +76,15 @@ public class AnimalTreatmentCardService {
             animalTreatmentCard.setAnimal(animal);
         }
 
-        if (dto.getVeterinarianId() != null) {
-            User vet = userRepository.findById(dto.getVeterinarianId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Veterinarian not found with id: " + dto.getVeterinarianId()));
+        if (dto.getAssignedUserId() != null) {
+            User vet = userRepository.findById(dto.getAssignedUserId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Veterinarian not found with id: " + dto.getAssignedUserId()));
             animalTreatmentCard.setAssignedUser(vet);
         }
 
         if (dto.getSymptomIds() != null) {
-            Set<Symptom> symptoms = symptomRepository.findAllById(dto.getSymptomIds())
-                    .stream().collect(Collectors.toSet());
+            Set<Symptom> symptoms = new HashSet<>(symptomRepository.findAllById(dto.getSymptomIds()));
+
             animalTreatmentCard.setSymptoms(symptoms);
         }
 

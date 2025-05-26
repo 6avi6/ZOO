@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Trash2, Pencil,Plus} from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { FaEdit } from 'react-icons/fa';
 import RegistrarNavbar from '../../components/RegistrarNavbar';
@@ -221,17 +222,10 @@ const AnimalDetails = () => {
                         <div><strong>Płeć:</strong> {animal.sex}</div>
                         <div><strong>Waga:</strong> {animal.weight} kg</div>
                         <div><strong>Wybieg:</strong> {enclosure ? `${enclosure.id} | ${enclosure.terrainType}` : 'No data'}</div>
-
-                        {animal.condition === 'INJURED' && animal.assignedVet && (
-                            <div className="mt-4">
-                                <h2 className="text-lg font-semibold">Przypisz weterynarza:</h2>
-                                <p>{animal.assignedVet.name}</p>
-                            </div>
-                        )}
                     </div>
                 </div>
 
-                {isEditing && (
+                {isEditing && ( //Edycja opiekunów
                     <div className="mt-4 border-t pt-4">
                         <h2 className="text-lg font-semibold mb-2">Przypisz opiekuna:</h2>
                         <div className="max-h-64 overflow-y-auto border p-2 rounded">
@@ -263,11 +257,12 @@ const AnimalDetails = () => {
                             onClick={() => setShowAddForm(true)}
                             className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
                         >
-                            +
+                            <Plus size={20}/>
                         </button>
                     </div>
 
-                    {showAddForm && (
+
+                    {showAddForm && (  //Pop up do dodawania nowych pór karmień
                         <div className="border p-4 rounded mb-4 bg-gray-50">
                             <h3 className="text-lg font-semibold mb-2">New Feeding</h3>
                             <div className="mb-2">
@@ -410,13 +405,13 @@ const AnimalDetails = () => {
                                                     onClick={() => startEditFeeding(f)}
                                                     className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
                                                 >
-                                                    Edytuj
+                                                    <Pencil size={20} />
                                                 </button>
                                                 <button
                                                     onClick={() => handleDeleteFeeding(f.id)}
                                                     className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700"
                                                 >
-                                                    Usuń
+                                                    <Trash2 size={20} />
                                                 </button>
                                             </td>
                                         </>

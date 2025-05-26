@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Trash2, Pencil, ArrowRight } from 'lucide-react';
+import {Trash2, Pencil, ArrowRight, Plus} from 'lucide-react';
 import RegistrarNavbar from '../../components/RegistrarNavbar';
 import { getAllAnimals, updateAnimal, deleteAnimal, addAnimal } from '../../services/animalService';
 import { getAllEnclosures , getEnclosureById } from '../../services/enclosureService';
-
+import { getAllVeterinarians } from '../../services/veterinarianService';
+import { createAnimalTreatmentCard } from '../../services/animalTreatmentCardService';
+import { getAllSymptoms } from '../../services/symptomService';
 const EditAnimal = () => {
     const [animals, setAnimals] = useState([]);
     const [editingAnimal, setEditingAnimal] = useState(null);
@@ -20,9 +22,15 @@ const EditAnimal = () => {
     });
     const [enclosures, setEnclosures] = useState([]);
     const [animalEnclosures, setAnimalEnclosures] = useState({});
+    const [showVetDialog, setShowVetDialog] = useState(false);
+    const [symptoms, setSymptoms] = useState([]);
+    const [selectedSymptomIds, setSelectedSymptomIds] = useState([]);
+    const [treatmentDescription, setTreatmentDescription] = useState('Domyślny opis przypadłośći');
+    const [treatmentDateTime, setTreatmentDateTime] = useState(new Date().toISOString().slice(0, 16));
+    const [veterinarianId, setVeterinarianId] = useState(1);
+    const [veterinarians, setVeterinarians] = useState([]);
 
-
-    // Get aall animals
+    // Get all animals
     useEffect(() => {
         const fetchAnimals = async () => {
             const data = await getAllAnimals();
@@ -38,7 +46,6 @@ const EditAnimal = () => {
     ];
     // TO DO it should be dynamically downloaded
     const conditionOptions = ['GOOD', 'INJURED', 'DEAD'];
-
 
     // Pobierz wszystkie wybiegi
     useEffect(() => {
@@ -96,23 +103,28 @@ const EditAnimal = () => {
         setEditedAnimal({ ...animal });
     };
 
-    const handleEditChange = (e) => {
+    const handleEditChange = async (e) => {
         const { name, value } = e.target;
-        console.log(name, value);
-        console.log("Before",editedAnimal);
-        if (name === 'enclosureId') {
 
-            setEditedAnimal(prev => ({
-                ...prev,
-                [name]: value  // <- KONWERSJA
-            }));
-        } else {
-            setEditedAnimal(prev => ({
-                ...prev,
-                [name]: value
-            }));
+        // Aktualizacja pola
+        setEditedAnimal(prev => ({
+            ...prev,
+            [name]: value
+        }));
+
+        // Otwórz dialog, jeśli condition == INJURED
+        if (name === 'condition' && value === 'INJURED') {
+            try {
+                const symptomsData = await getAllSymptoms();
+                setSymptoms(symptomsData);
+                const vets = await getAllVeterinarians();
+                setVeterinarians(vets);
+                setShowVetDialog(true);
+            } catch (error) {
+                console.error("Błąd przy pobieraniu danych do formularza leczenia:", error);
+            }
         }
-        //console.log("After",editedAnimal);
+
     };
 
     const handleSaveClick = async (id) => {
@@ -125,6 +137,17 @@ const EditAnimal = () => {
         const updated = await getAllAnimals();
         setAnimals(updated);
         setEditingAnimal(null);
+
+        if (editedAnimal.condition === 'INJURED') {
+            await createAnimalTreatmentCard({
+                description: treatmentDescription,
+                dateTime: new Date(treatmentDateTime).toISOString(),
+                animalId: id,
+                veterinarianId: veterinarianId,
+                symptomIds: selectedSymptomIds.map(Number)
+            });
+        }
+
     };
 
     const handleDeleteClick = async (id) => {
@@ -139,7 +162,6 @@ const EditAnimal = () => {
             [name]: (name === "weight" || name === "enclosureId") ? Number(value) : value
         }));
     };
-
 
     const handleAddAnimalSubmit = async (e) => {
         e.preventDefault();
@@ -167,6 +189,15 @@ const EditAnimal = () => {
         }
     };
 
+    const fetchVeterinarians = async () => {
+        try {
+            const vets = await getAllVeterinarians();
+            setVeterinarians(vets);
+        } catch (err) {
+            console.error("Błąd przy pobieraniu weterynarzy:", err);
+        }
+    };
+
     return (
 
         <div className="relative p-6 min-h-screen bg-gray-100">
@@ -176,7 +207,7 @@ const EditAnimal = () => {
                 onClick={() => setIsAdding(true)}
                 className="fixed bottom-6 right-6 z-50 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all text-sm"
             >
-                +
+                <Plus size={20}/>
             </button>
 
             {/* Animal Table */}
@@ -327,6 +358,73 @@ const EditAnimal = () => {
                     </div>
                 </div>
             )}
+
+            {showVetDialog && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded shadow-md w-96">
+                        <h2 className="text-lg font-semibold mb-4">Uzupełnij kartę leczenia</h2>
+                        <label className="block mb-2 text-sm font-medium text-gray-700">Opis</label>
+                        <textarea
+                            value={treatmentDescription}
+                            onChange={(e) => setTreatmentDescription(e.target.value)}
+                            className="w-full p-2 border rounded mb-4"
+                            rows="3"
+                        />
+                        <label className="block mb-2 text-sm font-medium text-gray-700">Data i godzina</label>
+                        <input
+                            type="datetime-local"
+                            value={treatmentDateTime}
+                            onChange={(e) => setTreatmentDateTime(e.target.value)}
+                            className="w-full p-2 border rounded mb-4"
+                        />
+                        <label className="block mb-2 text-sm font-medium text-gray-700">Symptomy</label>
+                        <select
+                            multiple
+                            value={selectedSymptomIds}
+                            onChange={(e) =>
+                                setSelectedSymptomIds(
+                                    Array.from(e.target.selectedOptions, (option) => option.value)
+                                )
+                            }
+                            className="w-full p-2 border rounded mb-4"
+                        >
+                            {symptoms.map((symptom) => (
+                                <option key={symptom.id} value={symptom.id}>
+                                    {symptom.name}
+                                </option>
+                            ))}
+                        </select>
+                        <label className="block mb-2 text-sm font-medium text-gray-700">Weterynarz</label>
+                        <select
+                            value={veterinarianId}
+                            onChange={(e) => setVeterinarianId(Number(e.target.value))}
+                            className="w-full p-2 border rounded mb-4"
+                        >
+                            <option value="">Wybierz weterynarza</option>
+                            {veterinarians.map(vet => (
+                                <option key={vet.id} value={vet.id}>
+                                    {vet.name} {vet.firstName}
+                                </option>
+                            ))}
+                        </select>
+                        <div className="flex justify-end gap-2">
+                            <button
+                                onClick={() => setShowVetDialog(false)}
+                                className="px-4 py-2 bg-gray-300 rounded"
+                            >
+                                Anuluj
+                            </button>
+                            <button
+                                onClick={() => setShowVetDialog(false)}
+                                className="px-4 py-2 bg-blue-600 text-white rounded"
+                            >
+                                Zapisz kartę
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 };

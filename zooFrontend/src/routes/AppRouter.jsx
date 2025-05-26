@@ -30,7 +30,7 @@ import ReportsOverview from '../pages/director/ReportsOverview';
 import BuyAnimal from '../pages/director/BuyAnimal';
 import EmployeesReport from '../pages/director/EmployeesReport';
 import EnclosuresReport from '../pages/director/EnclosuresReport';
-import AssignmentsReport from '../pages/director/AssignmentsReport';
+import AnimalsCaregiversReport from '../pages/director/AnimalsCaregiversReport';
 import SickAnimalsReport from '../pages/director/SickAnimalsReport';
 
 import AnimalUpdate from '../pages/caregiver/AnimalUpdate';
@@ -82,7 +82,7 @@ const AppRouter = () => {
             <Route path="/director/buy-animal" element={<BuyAnimal />} />
             <Route path="/director/reports/employees" element={<EmployeesReport />} />
             <Route path="/director/reports/enclosures" element={<EnclosuresReport />} />
-            <Route path="/director/reports/assignments" element={<AssignmentsReport />} />
+            <Route path="/director/reports/assignments" element={<AnimalsCaregiversReport />} />
             <Route path="/director/reports/sick-animals" element={<SickAnimalsReport />} />
         </Route>
 

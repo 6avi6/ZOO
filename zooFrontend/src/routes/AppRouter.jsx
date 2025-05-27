@@ -14,7 +14,7 @@ import RegistrarDashboard from '../pages/registrar/dashboard/RegistrarDashboard'
 import EditAnimal from '../pages/registrar/EditAnimal';
 import EditCaretaker from '../pages/registrar/EditCaretaker';
 import EditEnclosure from '../pages/registrar/EditEnclosure';
-import AnimalDetails from '../pages/registrar/AnimalDetails';
+import AnimalDetailsRegistrar from '../pages/registrar/AnimalDetails';
 
 import ManageUsers from '../pages/admin/manage-users/ManageUsers';
 import ManageDictionary from '../pages/admin/manage-dictionary/ManageDictionary';
@@ -33,8 +33,11 @@ import EnclosuresReport from '../pages/director/EnclosuresReport';
 import AnimalsCaregiversReport from '../pages/director/AnimalsCaregiversReport';
 import SickAnimalsReport from '../pages/director/SickAnimalsReport';
 
-import AnimalUpdate from '../pages/caregiver/AnimalUpdate';
-import FeedingUpdate from '../pages/caregiver/FeedingUpdate';
+//Caregiver
+import CaregiverAnimals from '../pages/caregiver/CaregiverAnimals';
+import CaregiverFeedings from '../pages/caregiver/CaregiverFeedings';
+import CaregiverSchedule from '../pages/caregiver/CaregiverSchedule';
+import AnimalDetailsCaregiver     from '../pages/caregiver/AnimalDetails';
 
 import RegisterTreatment from '../pages/veterinarian/RegisterTreatment';
 import ViewReports from '../pages/veterinarian/ViewReports';
@@ -60,7 +63,7 @@ const AppRouter = () => {
             <Route path="/registrar/edit-animal" element={<EditAnimal />} />
             <Route path="/registrar/edit-caretaker" element={<EditCaretaker />} />
             <Route path="/registrar/edit-enclosure" element={<EditEnclosure />} />
-            <Route path="/registrar/animals/:id" element={<AnimalDetails />} />
+            <Route path="/registrar/animals/:id" element={<AnimalDetailsRegistrar />} />
         </Route>
 
         <Route element={<PrivateRoute requiredRole="ADMIN" />}>
@@ -88,9 +91,12 @@ const AppRouter = () => {
 
         <Route element={<PrivateRoute requiredRole="CAREGIVER" />}>
             <Route path="/caregiver/dashboard" element={<CaregiverDashboard />} />
-            <Route path="/caregiver/update-animal" element={<AnimalUpdate />} />
-            <Route path="/caregiver/update-feeding" element={<FeedingUpdate />} />
+            <Route path="/caregiver/animals" element={<CaregiverAnimals />} />
+            <Route path="/caregiver/feedings" element={<CaregiverFeedings />} />
+            <Route path="/caregiver/schedule" element={<CaregiverSchedule />} />
+            <Route path="/caregiver/animal/:id" element={<AnimalDetailsCaregiver/>} />
         </Route>
+
 
         <Route element={<PrivateRoute requiredRole="VETERINARIAN" />}>
             <Route path="/veterinarian/dashboard" element={<VeterinarianDashboard />} />

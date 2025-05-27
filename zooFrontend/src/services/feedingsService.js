@@ -28,6 +28,7 @@ export const createFeeding = async (feedingData) => {
 
 export const updateFeeding = async (feedingId, updatedData) => {
     try {
+        console.log(updatedData);
         if (updatedData.feedingTime && updatedData.feedingTime.length >= 5) {
             updatedData.feedingTime = updatedData.feedingTime.slice(0, 5);
         }

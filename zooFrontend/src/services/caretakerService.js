@@ -28,15 +28,69 @@ export const getCaretakersByAnimalId = async (animalId) => {
     }
 };
 
+// Przypisz opiekunów do zwierzęcia
 export const assignCaretakersToAnimal = async (animalId, userIds) => {
     try {
-        console.log("Animal", animalId);
-        console.log(userIds);
-        console.log(userIds.map(id => typeof id));
         const response = await axiosInstance.put(`/api/animals/${animalId}/employees`, userIds);
         return response.data;
     } catch (error) {
         console.error(`Błąd podczas przypisywania opiekunów do zwierzęcia ${animalId}:`, error);
+        throw error;
+    }
+};
+
+
+// Update typu karmienia
+export const updateFoodType = async (data) => {
+    try {
+        const response = await axiosInstance.put('/api/caregiver/update-food-type', data);
+        return response.data;
+    } catch (error) {
+        console.error('Błąd podczas aktualizacji rodzaju pożywienia:', error);
+        throw error;
+    }
+};
+
+// Update czasu karmienia
+export const updateFeedingTime = async (data) => {
+    try {
+        const response = await axiosInstance.put('/api/caregiver/update-feeding-time', data);
+        return response.data;
+    } catch (error) {
+        console.error('Błąd podczas aktualizacji czasu karmienia:', error);
+        throw error;
+    }
+};
+
+//Update wybiegu karmienia
+export const updateEnclosure = async (data) => {
+    try {
+        const response = await axiosInstance.put('/api/caregiver/update-enclosure', data);
+        return response.data;
+    } catch (error) {
+        console.error('Błąd podczas aktualizacji wybiegu:', error);
+        throw error;
+    }
+};
+
+// Pobiearnie zwierząt przypisanych do opiekowania sie
+export const getMyAnimals = async () => {
+    try {
+        const response = await axiosInstance.get('/api/caregiver/my-animals');
+        return response.data;
+    } catch (error) {
+        console.error('Błąd podczas pobierania przypisanych zwierząt:', error);
+        throw error;
+    }
+};
+
+// Pobieranie karmień dla aktualnie zalogowanego opiekuna
+export const getMyFeedings = async () => {
+    try {
+        const response = await axiosInstance.get('/api/caregiver/my-Feedings');
+        return response.data;
+    } catch (error) {
+        console.error('Błąd podczas pobierania harmonogramu karmienia:', error);
         throw error;
     }
 };

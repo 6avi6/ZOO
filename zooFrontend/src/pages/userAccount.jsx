@@ -1,10 +1,13 @@
-import React, {useEffect, useState} from 'react';
-import AdminNavbar from "../../../components/AdminNavbar";
-import {getCurrentUser, updateCurrentUser} from "../../../services/userService";
-import {toast} from "react-toastify";
-import AppToast from "../../../components/AppToast";
+import React, { useEffect, useState } from 'react';
+import AdminNavbar from "../components/AdminNavbar";
+import CaregiverNavbar from "../components/CaregiverNavbar";
+import RegistrarNavbar from "../components/RegistrarNavbar";
+import { getCurrentUser, updateCurrentUser } from "../services/userService";
+import { toast } from "react-toastify";
+import AppToast from "../components/AppToast";
+import DirectorNavbar from "../components/DirectorNavbar";
 
-const AdminAccount = () => {
+const UserAccount = () => {
     const [user, setUser] = useState({
         firstName: '',
         lastName: '',
@@ -13,6 +16,7 @@ const AdminAccount = () => {
         hireDate: '',
         role: ''
     });
+
     const handleSave = async () => {
         try {
             const updatedUser = await updateCurrentUser(user);
@@ -21,10 +25,8 @@ const AdminAccount = () => {
         } catch (error) {
             console.error("Błąd zapisu danych:", error);
             toast.error("Błąd zapisu danych");
-
         }
     };
-
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -45,42 +47,54 @@ const AdminAccount = () => {
         };
 
         fetchUser();
-
     }, []);
+
+    const renderNavbar = () => {
+        switch (user.role) {
+            case 'ADMIN':
+                return <AdminNavbar />;
+            case 'DIRECTOR':
+                return <DirectorNavbar />;
+            case 'REGISTRAR':
+                return <RegistrarNavbar />;
+            default:
+                return <CaregiverNavbar />;
+        }
+    };
 
     return (
         <div>
-            <AdminNavbar />
+            {renderNavbar()}
             <div className="bg-white my-12 mx-auto h-[550px] max-w-lg rounded-lg border shadow-sm border-gray-300">
                 <h1 className="mx-auto ml-12 font-semibold text-2xl text-gray-800 my-6">Konto</h1>
-                <div className="mx-12  flex flex-col justify-between gap-2">
+                <div className="mx-12 flex flex-col justify-between gap-2">
                     <div>
                         <label className="block text-gray-700 text-md">Imię</label>
                         <input type="text"
                                className="border w-full p-1 border-gray-300 rounded-lg"
                                value={user.firstName}
-                               onChange={(e) => setUser({...user, firstName: e.target.value})} />
+                               onChange={(e) => setUser({ ...user, firstName: e.target.value })} />
                     </div>
                     <div>
                         <label className="block text-gray-700 text-md">Nazwisko</label>
                         <input type="text"
                                className="border w-full p-1 border-gray-300 rounded-lg"
                                value={user.lastName}
-                               onChange={(e) => setUser({...user, lastName: e.target.value})}/>
+                               onChange={(e) => setUser({ ...user, lastName: e.target.value })} />
                     </div>
                     <div>
                         <label className="block text-gray-700 text-md">Nazwa użytkownika</label>
                         <input type="text"
                                className="border w-full p-1 border-gray-300 rounded-lg"
                                value={user.username}
-                               onChange={(e) => setUser({...user, username: e.target.value})} />
+                               onChange={(e) => setUser({ ...user, username: e.target.value })} />
                     </div>
                     <div>
                         <label className="block text-gray-700 text-md">E-mail</label>
                         <input type="text"
                                className="border w-full p-1 border-gray-300 rounded-lg"
                                value={user.email}
-                               onChange={(e) => setUser({...user, email: e.target.value})} />
+                               onChange={(e) => setUser({ ...user, email: e.target.value })} />
                     </div>
                     <div>
                         <label className="block text-gray-700 text-md">Data zatrudnienia</label>
@@ -105,4 +119,4 @@ const AdminAccount = () => {
     );
 };
 
-export default AdminAccount;
+export default UserAccount;

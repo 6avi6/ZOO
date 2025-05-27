@@ -43,10 +43,10 @@ import RegisterTreatment from '../pages/veterinarian/RegisterTreatment';
 import ViewReports from '../pages/veterinarian/ViewReports';
 import SickAnimals from '../pages/veterinarian/SickAnimals';
 import PrivateRoute from "./PrivateRoute";
-import AdminAccount from "../pages/admin/account/AdminAccount";
 import HomeRedirect from "./HomeRedirect";
 
 
+import UserAccount from '../pages/userAccount';
 
 
 
@@ -57,6 +57,7 @@ const AppRouter = () => {
         {/*<Route path="/" element={<Home />} />*/}
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<HomeRedirect />} />
+        <Route path="/:role/account" element={<UserAccount />} />
 
         <Route element={<PrivateRoute requiredRole="REGISTRAR" />}>
             <Route path="/registrar/dashboard" element={<RegistrarDashboard />} />
@@ -68,7 +69,6 @@ const AppRouter = () => {
 
         <Route element={<PrivateRoute requiredRole="ADMIN" />}>
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route path="/admin/account" element={<AdminAccount />} />
             <Route path="/admin/manage-users" element={<ManageUsers />} />
             <Route path="/admin/manage-dictionary" element={<ManageDictionary />} />
             <Route path="/admin/manage-users/add" element={<AddUser />} />

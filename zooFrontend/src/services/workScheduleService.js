@@ -56,14 +56,30 @@ export const getAllWorkSchedules = async () => {
     }
 };
 
-// Pobierz stronicowane harmonogramy pracy
+// Pobierz stronicowane harmonogramy pracy i przefiltruj po userId (lokalnie)
 export const getPagedWorkSchedules = async (page, size, userId) => {
     try {
-        //Endpoint nie używa userId jako parametra
         const response = await axiosInstance.get('/api/work-schedules/paged', {
-            params: { page, size, userId }
+            params: { page, size }
         });
-        return response.data;
+
+        const allSchedules = response.data.content;
+
+        // Filtrowanie po stronie klienta na podstawie userId xd
+        const filteredSchedules = allSchedules.filter(schedule =>
+            schedule.userIds.includes(userId)
+        );
+
+        return {
+            ...response.data,
+            content: filteredSchedules,
+            page: {
+                ...response.data.page,
+                totalElements: filteredSchedules.length,
+                totalPages: 1,
+                size: filteredSchedules.length
+            }
+        };
     } catch (error) {
         console.error('Błąd podczas pobierania stronicowanych harmonogramów pracy:', error);
         throw error;

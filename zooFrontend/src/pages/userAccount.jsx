@@ -6,6 +6,7 @@ import { getCurrentUser, updateCurrentUser } from "../services/userService";
 import { toast } from "react-toastify";
 import AppToast from "../components/AppToast";
 import DirectorNavbar from "../components/DirectorNavbar";
+import VeterinarianNavbar from "../components/VeterinarianNavbar"; 
 
 const UserAccount = () => {
     const [user, setUser] = useState({
@@ -57,6 +58,8 @@ const UserAccount = () => {
                 return <DirectorNavbar />;
             case 'REGISTRAR':
                 return <RegistrarNavbar />;
+                case 'VETERINARIAN':
+                 return <VeterinarianNavbar />;
             default:
                 return <CaregiverNavbar />;
         }

@@ -51,6 +51,11 @@ const RegistrarNavbar = () => {
                             Zarządzanie wybiegami
                         </p>
                     </Link>
+                    <Link to={generateLink('work-schedule')}>
+                        <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
+                            Godziny prac
+                        </p>
+                    </Link>
                     <Link to={generateLink('account')}>
                         <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
                             Konto

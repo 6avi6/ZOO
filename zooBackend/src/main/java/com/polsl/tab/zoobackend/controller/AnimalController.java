@@ -61,13 +61,44 @@ public class AnimalController {
         return ResponseEntity.ok(animalService.getCaretakers(id));
     }
 
-    @PutMapping("/{animalId}/employees")
-    public ResponseEntity<?> assignEmployeesToAnimal(
+    @PutMapping("/{animalId}/caretakers")
+    public ResponseEntity<?> assignCaretakersToAnimal(
             @PathVariable Long animalId,
             @RequestBody List<Long> employeeIds) {
 
-        animalService.assignEmployees(animalId, employeeIds);
-        return ResponseEntity.ok("Employees assigned to animal.");
+        animalService.assignCaretakers(animalId, employeeIds);
+        return ResponseEntity.ok("Caretakers assigned to animal.");
+    }
+
+    @PatchMapping("/{animalId}/add-caretakers")
+    public ResponseEntity<?> addCaretakersToAnimal(
+            @PathVariable Long animalId,
+            @RequestBody List<Long> employeeIds) {
+
+        animalService.addCaretakers(animalId, employeeIds);
+        return ResponseEntity.ok("Caretakers assigned to animal.");
+    }
+
+    @DeleteMapping("/{animalId}/caretakers")
+    public ResponseEntity<?> removeCaretakersFromAnimal(
+            @PathVariable Long animalId,
+            @RequestBody List<Long> employeeIds) {
+
+        return ResponseEntity.ok(animalService.deleteCaretakers(animalId, employeeIds));
+    }
+
+    @PostMapping("/transfer")
+    public ResponseEntity<String> transferAnimals(
+            @RequestParam Long targetEnclosureId,
+            @RequestBody List<Long> animalIds) {
+        boolean exceedsMax = animalService.transferAnimals(targetEnclosureId, animalIds);
+
+        String message = "Transfer successful.";
+        if (exceedsMax) {
+            message += " Warning: maxAnimals limit exceeded.";
+        }
+
+        return ResponseEntity.ok(message);
     }
 
     @GetMapping("/species")

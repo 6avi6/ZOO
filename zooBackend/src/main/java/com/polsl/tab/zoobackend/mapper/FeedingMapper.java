@@ -40,7 +40,6 @@ public interface FeedingMapper {
         if (ids == null) return Set.of();
         return ids.stream().map(i -> { User u = new User(); u.setId(i); return u; }).collect(Collectors.toSet());
     }
-    default Long mapFoodTypeId(FoodType f) { return f == null ? null : f.getId(); }
     default Set<Long> mapAnimalIds(Set<Animal> set) {
         if (set == null) return Set.of();
         return set.stream().map(Animal::getId).collect(Collectors.toSet());

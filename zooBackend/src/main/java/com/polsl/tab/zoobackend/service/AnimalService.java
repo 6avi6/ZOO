@@ -2,13 +2,13 @@ package com.polsl.tab.zoobackend.service;
 
 import com.polsl.tab.zoobackend.dto.animal.AnimalRequest;
 import com.polsl.tab.zoobackend.dto.animal.AnimalResponse;
-import com.polsl.tab.zoobackend.dto.user.UserProfileDTO;
 import com.polsl.tab.zoobackend.dto.user.UserSummaryDTO;
 import com.polsl.tab.zoobackend.exception.ResourceNotFoundException;
 import com.polsl.tab.zoobackend.mapper.AnimalMapper;
 import com.polsl.tab.zoobackend.mapper.UserMapper;
 import com.polsl.tab.zoobackend.model.Animal;
 import com.polsl.tab.zoobackend.model.Enclosure;
+import com.polsl.tab.zoobackend.model.Feeding;
 import com.polsl.tab.zoobackend.model.User;
 import com.polsl.tab.zoobackend.repository.AnimalRepository;
 import com.polsl.tab.zoobackend.repository.EnclosureRepository;
@@ -16,8 +16,8 @@ import com.polsl.tab.zoobackend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,9 +38,13 @@ public class AnimalService {
     }
 
     public AnimalResponse getById(Long id) {
-        Animal animal = animalRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Animal not found with id " + id));
+        Animal animal = getEntityById(id);
         return animalMapper.toResponse(animal);
+    }
+
+    public Animal getEntityById(Long id) {
+        return animalRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Animal not found with id " + id));
     }
 
     public AnimalResponse create(AnimalRequest dto) {
@@ -54,8 +58,7 @@ public class AnimalService {
     }
 
     public AnimalResponse update(Long id, AnimalRequest dto) {
-        Animal existing = animalRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Animal not found with id " + id));
+        Animal existing = getEntityById(id);
 
         animalMapper.updateEntity(existing, dto);
 
@@ -69,7 +72,14 @@ public class AnimalService {
     }
 
     public void delete(Long id) {
-        animalRepository.deleteById(id);
+        Animal animal = getEntityById(id);
+
+        for (Feeding feeding : animal.getFeedings()) {
+            feeding.getAnimals().remove(animal);
+        }
+        animal.getFeedings().clear();
+
+        animalRepository.delete(animal);
     }
 
     public List<AnimalResponse> getAnimalsByIds(Set<Long> ids) {
@@ -81,19 +91,63 @@ public class AnimalService {
 
 
     public List<UserSummaryDTO> getCaretakers(Long id) {
-        Animal animal = animalRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Animal not found with id " + id));
+        Animal animal = getEntityById(id);
         return animal.getAssignedUsers().stream()
                 .map(userMapper::toSummaryDto)
                 .collect(Collectors.toList());
     }
 
-    public void assignEmployees(Long animalId, List<Long> employeeIds) {
-        Animal animal = animalRepository.findById(animalId)
-                .orElseThrow(() -> new RuntimeException("Animal not found"));
+    public void assignCaretakers(Long animalId, List<Long> employeeIds) {
+        Animal animal = getEntityById(animalId);
+        List<User> employees = userRepository.findAllById(employeeIds);
+        animal.setAssignedUsers(new HashSet<>(employees));
+        animalRepository.save(animal);
+    }
 
+    public void addCaretakers(Long animalId, List<Long> employeeIds) {
+        Animal animal = getEntityById(animalId);
         List<User> employees = userRepository.findAllById(employeeIds);
         animal.getAssignedUsers().addAll(employees);
         animalRepository.save(animal);
+    }
+
+    public String deleteCaretakers(Long animalId, List<Long> employeeIds) {
+        Animal animal = getEntityById(animalId);
+
+        Set<User> assignedUsers = animal.getAssignedUsers();
+        Set<Long> assignedUserIds = assignedUsers.stream()
+                .map(User::getId)
+                .collect(Collectors.toSet());
+
+        List<Long> notAssignedIds = employeeIds.stream()
+                .filter(id -> !assignedUserIds.contains(id))
+                .toList();
+
+        assignedUsers.removeIf(user -> employeeIds.contains(user.getId()));
+
+        animalRepository.save(animal);
+
+        if (notAssignedIds.isEmpty()) {
+            return "All caretakers successfully removed.";
+        } else {
+            return "Some IDs were not assigned as caretakers and were skipped: " + notAssignedIds;
+        }
+    }
+
+    public boolean transferAnimals(Long targetEnclosureId,
+                                  List<Long> animalIds) {
+        Enclosure targetEnclosure = enclosureRepository.findWithAnimalsById(targetEnclosureId)
+                .orElseThrow(() -> new ResourceNotFoundException("Enclosure not found with id " + targetEnclosureId));
+
+        List<Animal> animalsToTransfer = animalRepository.findAllById(animalIds);
+
+        int newTotal = targetEnclosure.getMaxAnimals() + animalsToTransfer.size();
+
+        for (Animal animal : animalsToTransfer) {
+            animal.setEnclosure(targetEnclosure);
+        }
+
+        animalRepository.saveAll(animalsToTransfer);
+        return newTotal > targetEnclosure.getMaxAnimals();
     }
 }

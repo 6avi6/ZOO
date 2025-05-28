@@ -180,7 +180,7 @@ public class TestDataInitializer implements ApplicationRunner {
 
             for (int i = 0; i < 10; i++) {
                 Feeding f = new Feeding();
-                f.setFeedingTime(LocalTime.of(8 + i, 0));
+                f.setFeedingDateTime(LocalDateTime.now().minusDays(i).minusHours(i));
                 f.setIsCompleted(false);
                 f.setFoodType(fts.get(i % fts.size()));
 

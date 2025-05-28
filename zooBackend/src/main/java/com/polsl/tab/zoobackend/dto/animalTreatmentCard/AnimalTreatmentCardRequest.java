@@ -21,7 +21,7 @@ public class AnimalTreatmentCardRequest {
     private Long animalId;
 
     @NotNull
-    private Long veterinarianId;
+    private Long assignedUserId;
 
     private Set<@NotNull Long> symptomIds;
 }

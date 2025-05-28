@@ -30,7 +30,7 @@ public class Enclosure {
     @Column(nullable = false)
     private Integer maxAnimals;
 
-    @OneToMany(mappedBy = "enclosure", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "enclosure")
     @JsonManagedReference
     private List<Animal> animals;
 }

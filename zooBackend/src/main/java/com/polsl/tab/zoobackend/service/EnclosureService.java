@@ -2,21 +2,27 @@ package com.polsl.tab.zoobackend.service;
 
 import com.polsl.tab.zoobackend.dto.enclosure.EnclosureRequest;
 import com.polsl.tab.zoobackend.dto.enclosure.EnclosureResponse;
+import com.polsl.tab.zoobackend.dto.enclosure.EnclosureSummary;
+import com.polsl.tab.zoobackend.exception.ConflictException;
 import com.polsl.tab.zoobackend.exception.ResourceNotFoundException;
 import com.polsl.tab.zoobackend.mapper.EnclosureMapper;
+import com.polsl.tab.zoobackend.model.Animal;
 import com.polsl.tab.zoobackend.model.Enclosure;
+import com.polsl.tab.zoobackend.repository.AnimalRepository;
 import com.polsl.tab.zoobackend.repository.EnclosureRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
 public class EnclosureService {
     private final EnclosureRepository enclosureRepository;
     private final EnclosureMapper enclosureMapper;
+    private final AnimalRepository animalRepository;
 
     public List<EnclosureResponse> getAll() {
         return enclosureRepository.findAll().stream()
@@ -25,8 +31,11 @@ public class EnclosureService {
     }
 
     public EnclosureResponse getById(Long id) {
+        return enclosureMapper.toResponse(getEntityById(id));
+    }
+
+    public Enclosure getEntityById(Long id) {
         return enclosureRepository.findById(id)
-                .map(enclosureMapper::toResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("Enclosure not found with id " + id));
     }
 
@@ -36,13 +45,40 @@ public class EnclosureService {
     }
 
     public EnclosureResponse update(Long id, EnclosureRequest dto) {
-        Enclosure existing = enclosureRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Enclosure not found with id " + id));
+        Enclosure existing = getEntityById(id);
         enclosureMapper.updateEntity(existing, dto);
         return enclosureMapper.toResponse(enclosureRepository.save(existing));
     }
 
     public void delete(Long id) {
-        enclosureRepository.deleteById(id);
+        Enclosure enclosure = getEntityById(id);
+
+        if (enclosure.getAnimals() != null && !enclosure.getAnimals().isEmpty()) {
+            throw new ConflictException("Cannot delete enclosure: it still contains animals.");
+        }
+
+        enclosureRepository.delete(enclosure);
+    }
+
+    @Transactional
+    public boolean transferAnimals(Long sourceId, Long targetId) {
+        Enclosure source = getEntityById(sourceId);
+        Enclosure target = getEntityById(targetId);
+
+        List<Animal> animalsToTransfer = source.getAnimals();
+
+        for (Animal animal : animalsToTransfer) {
+            animal.setEnclosure(target);
+        }
+
+        animalRepository.saveAll(animalsToTransfer);
+
+        int totalAnimalsInTarget = target.getAnimals().size() + animalsToTransfer.size();
+
+        return totalAnimalsInTarget > target.getMaxAnimals();
+    }
+
+    public List<EnclosureSummary> getFreeEnclosureSummaries() {
+        return enclosureRepository.findFreeEnclosures();
     }
 }

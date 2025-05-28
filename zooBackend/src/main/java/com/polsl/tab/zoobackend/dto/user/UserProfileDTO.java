@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 public class UserProfileDTO {
+    private Integer id;
     private String username;
     private Role role;
     private String firstName;

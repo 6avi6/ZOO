@@ -7,12 +7,16 @@ import Login from '../pages/login/Login';
 import AdminDashboard from '../pages/admin/dashboard/AdminDashboard';
 import DirectorDashboard from '../pages/director/dashboard/DirectorDashboard';
 import CaregiverDashboard from '../pages/caregiver/dashboard/CaregiverDashboard';
-import RegistrarDashboard from '../pages/registrar/dashboard/RegistrarDashboard';
 import VeterinarianDashboard from '../pages/veterinarian/dashboard/VeterinarianDashboard';
 
+//Registrar
+import RegistrarDashboard from '../pages/registrar/dashboard/RegistrarDashboard';
 import EditAnimal from '../pages/registrar/EditAnimal';
 import EditCaretaker from '../pages/registrar/EditCaretaker';
 import EditEnclosure from '../pages/registrar/EditEnclosure';
+import AnimalDetailsRegistrar from '../pages/registrar/AnimalDetails';
+import WorkSchedule  from '../pages/registrar/WorkSchedule';
+import UserSchedule from '../pages/registrar/UserSchedule';
 
 import ManageUsers from '../pages/admin/manage-users/ManageUsers';
 import ManageDictionary from '../pages/admin/manage-dictionary/ManageDictionary';
@@ -28,20 +32,23 @@ import ReportsOverview from '../pages/director/ReportsOverview';
 import BuyAnimal from '../pages/director/BuyAnimal';
 import EmployeesReport from '../pages/director/EmployeesReport';
 import EnclosuresReport from '../pages/director/EnclosuresReport';
-import AssignmentsReport from '../pages/director/AssignmentsReport';
+import AnimalsCaregiversReport from '../pages/director/AnimalsCaregiversReport';
 import SickAnimalsReport from '../pages/director/SickAnimalsReport';
 
-import AnimalUpdate from '../pages/caregiver/AnimalUpdate';
-import FeedingUpdate from '../pages/caregiver/FeedingUpdate';
+//Caregiver
+import CaregiverAnimals from '../pages/caregiver/CaregiverAnimals';
+import CaregiverFeedings from '../pages/caregiver/CaregiverFeedings';
+import CaregiverSchedule from '../pages/caregiver/CaregiverSchedule';
+import AnimalDetailsCaregiver     from '../pages/caregiver/AnimalDetails';
 
 import RegisterTreatment from '../pages/veterinarian/RegisterTreatment';
 import ViewReports from '../pages/veterinarian/ViewReports';
 import SickAnimals from '../pages/veterinarian/SickAnimals';
 import PrivateRoute from "./PrivateRoute";
-import AdminAccount from "../pages/admin/account/AdminAccount";
 import HomeRedirect from "./HomeRedirect";
 
 
+import UserAccount from '../pages/userAccount';
 
 
 
@@ -52,17 +59,20 @@ const AppRouter = () => {
         {/*<Route path="/" element={<Home />} />*/}
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<HomeRedirect />} />
+        <Route path="/:role/account" element={<UserAccount />} />
 
         <Route element={<PrivateRoute requiredRole="REGISTRAR" />}>
             <Route path="/registrar/dashboard" element={<RegistrarDashboard />} />
             <Route path="/registrar/edit-animal" element={<EditAnimal />} />
             <Route path="/registrar/edit-caretaker" element={<EditCaretaker />} />
             <Route path="/registrar/edit-enclosure" element={<EditEnclosure />} />
+            <Route path="/registrar/animals/:id" element={<AnimalDetailsRegistrar />} />
+            <Route path="/registrar/work-schedule" element={<WorkSchedule />} />
+            <Route path="/registrar/work-schedule/:id" element={<UserSchedule />} />
         </Route>
 
         <Route element={<PrivateRoute requiredRole="ADMIN" />}>
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
-            <Route path="/admin/account" element={<AdminAccount />} />
             <Route path="/admin/manage-users" element={<ManageUsers />} />
             <Route path="/admin/manage-dictionary" element={<ManageDictionary />} />
             <Route path="/admin/manage-users/add" element={<AddUser />} />
@@ -79,15 +89,18 @@ const AppRouter = () => {
             <Route path="/director/buy-animal" element={<BuyAnimal />} />
             <Route path="/director/reports/employees" element={<EmployeesReport />} />
             <Route path="/director/reports/enclosures" element={<EnclosuresReport />} />
-            <Route path="/director/reports/assignments" element={<AssignmentsReport />} />
+            <Route path="/director/reports/assignments" element={<AnimalsCaregiversReport />} />
             <Route path="/director/reports/sick-animals" element={<SickAnimalsReport />} />
         </Route>
 
         <Route element={<PrivateRoute requiredRole="CAREGIVER" />}>
             <Route path="/caregiver/dashboard" element={<CaregiverDashboard />} />
-            <Route path="/caregiver/update-animal" element={<AnimalUpdate />} />
-            <Route path="/caregiver/update-feeding" element={<FeedingUpdate />} />
+            <Route path="/caregiver/animals" element={<CaregiverAnimals />} />
+            <Route path="/caregiver/feedings" element={<CaregiverFeedings />} />
+            <Route path="/caregiver/schedule" element={<CaregiverSchedule />} />
+            <Route path="/caregiver/animal/:id" element={<AnimalDetailsCaregiver/>} />
         </Route>
+
 
         <Route element={<PrivateRoute requiredRole="VETERINARIAN" />}>
             <Route path="/veterinarian/dashboard" element={<VeterinarianDashboard />} />

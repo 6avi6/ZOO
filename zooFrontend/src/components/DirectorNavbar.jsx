@@ -40,6 +40,11 @@ const DirectorNavbar = () => {
                             Kup zwierzę
                         </p>
                     </Link>
+                    <Link to="/director/account">
+                        <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-[#F4E7CB] transition-all duration-200">
+                            Konto
+                        </p>
+                    </Link>
                     
                 </div>
                 <IoLogOutOutline
@@ -74,7 +79,11 @@ const DirectorNavbar = () => {
                             Kup zwierzę
                         </li>
                     </Link>
-                    
+                    <Link to="/director/account">
+                        <li className="p-3 mb-2 text-gray-800 border-b-2 border-gray-200 hover:pl-2 hover:border-green-300 duration-200">
+                            Konto
+                        </li>
+                    </Link>
                 </ul>
                 <IoLogOutOutline
                     onClick={handleLogout}

@@ -4,10 +4,10 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { logout } from '../services/authService';
 import logo from '../assets/logo.png';
 
-const RegistrarNavbar = () => {
+const CaregiverNavbar = () => {
     const [menu, setMenu] = useState(false);
     const navigate = useNavigate();
-    const location = useLocation();  // Pobierz aktualną lokalizację
+    const location = useLocation();
 
     const toggleMenu = () => setMenu(!menu);
 
@@ -20,9 +20,8 @@ const RegistrarNavbar = () => {
         }
     };
 
-    // Funkcja generująca dynamiczne ścieżki w zależności od lokalizacji
     const generateLink = (path) => {
-        return location.pathname.startsWith('/registrar') ? `/registrar/${path}` : `/${path}`;
+        return location.pathname.startsWith('/caregiver') ? `/caregiver/${path}` : `/${path}`;
     };
 
     return (
@@ -36,24 +35,19 @@ const RegistrarNavbar = () => {
             {/* Desktop navigation */}
             <div className="hidden sm:flex flex-row items-center justify-between w-full ml-auto">
                 <div className="flex flex-row gap-4 ml-12">
-                    <Link to={generateLink('edit-animal')}>
+                    <Link to={generateLink('animals')}>
                         <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
-                            Rejestracja zwierząt
+                            Moje zwierzęta
                         </p>
                     </Link>
-                    <Link to={generateLink('edit-caretaker')}>
+                    <Link to={generateLink('schedule')}>
                         <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
-                            Rejestracja opiekunów
+                            Mój grafik pracy
                         </p>
                     </Link>
-                    <Link to={generateLink('edit-enclosure')}>
+                    <Link to={generateLink('feedings')}>
                         <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
-                            Zarządzanie wybiegami
-                        </p>
-                    </Link>
-                    <Link to={generateLink('work-schedule')}>
-                        <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
-                            Godziny prac
+                            Moje karmienia
                         </p>
                     </Link>
                     <Link to={generateLink('account')}>
@@ -82,19 +76,19 @@ const RegistrarNavbar = () => {
                 className={`fixed sm:hidden top-0 w-[60%] h-full bg-white ease-in-out duration-300 transition-all z-50 ${menu ? 'left-0' : 'left-[-100%]'}`}
             >
                 <ul className="pt-4 mx-4">
-                    <Link to={generateLink('edit-animal')}>
+                    <Link to={generateLink('animals')}>
                         <li className="p-3 mb-2 text-gray-800 border-b-2 border-gray-200 hover:pl-2 hover:border-green-300 duration-200">
-                            Zwierzęta
+                            Moje zwierzęta
                         </li>
                     </Link>
-                    <Link to={generateLink('edit-caretaker')}>
+                    <Link to={generateLink('schedule')}>
                         <li className="p-3 mb-2 text-gray-800 border-b-2 border-gray-200 hover:pl-2 hover:border-green-300 duration-200">
-                            Opiekunowie
+                            Mój grafik pracy
                         </li>
                     </Link>
-                    <Link to={generateLink('edit-enclosure')}>
+                    <Link to={generateLink('feedings')}>
                         <li className="p-3 mb-2 text-gray-800 border-b-2 border-gray-200 hover:pl-2 hover:border-green-300 duration-200">
-                            Rejestracja
+                            Moje karmienia
                         </li>
                     </Link>
                     <Link to={generateLink('account')}>
@@ -112,4 +106,4 @@ const RegistrarNavbar = () => {
     );
 };
 
-export default RegistrarNavbar;
+export default CaregiverNavbar;

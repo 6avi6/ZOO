@@ -20,6 +20,16 @@ export const updateCurrentUser = async (data) => {
     }
 }
 
+export const updateUserById = async (id, userData) => {
+    try {
+        const response = await axiosInstance.put(`/api/administration/user/${id}`, userData);
+        return response.data;
+    } catch (error) {
+        console.error(`Błąd podczas aktualizacji użytkownika o ID ${id}:`, error);
+        throw error;
+    }
+};
+
 export const getUser = async (id) => {
     try {
         const response = await axiosInstance.get(`api/administration/user/${id}`);
@@ -37,6 +47,23 @@ export const deleteUser = async (id) => {
         throw error;
     }
 }
+
+//Pobieranie wszystkich użytkowników
+export const getAllUsersPaged = async (page = 0, size = 100) => {
+    try {
+        const response = await axiosInstance.get('/api/administration/users/search/paged', {
+            params: {
+                page,
+                size
+            }
+        });
+        return response.data.content;
+    } catch (error) {
+        console.error('Błąd przy pobieraniu wszystkich użytkowników:', error);
+        throw error;
+    }
+};
+
 
 
 

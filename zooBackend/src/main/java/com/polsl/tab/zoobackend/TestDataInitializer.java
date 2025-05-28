@@ -204,10 +204,10 @@ public class TestDataInitializer implements ApplicationRunner {
     private void seedAnimalTreatmentCardsAndSymptoms() {
         if (symptomRepository.count() == 0 || treatmentCardRepository.count() == 0) {
             List<User> caregiver = administrationService.searchUsers(
-                    new UserSearchCriteriaDTO(null, Role.CAREGIVER,null,null,null,null,null),
+                    new UserSearchCriteriaDTO(null,null, Role.CAREGIVER,null,null,null,null,null),
                     PageRequest.of(0, 2)).getContent();
             List<User> veterinarian = administrationService.searchUsers(
-                    new UserSearchCriteriaDTO(null, Role.VETERINARIAN,null,null,null,null,null),
+                    new UserSearchCriteriaDTO(null,null, Role.VETERINARIAN,null,null,null,null,null),
                     PageRequest.of(0, 2)).getContent();
 
             List<Animal> animals = animalRepository.findAll();

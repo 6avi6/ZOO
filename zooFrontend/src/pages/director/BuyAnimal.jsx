@@ -1,137 +1,132 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import DirectorNavbar from '../../components/DirectorNavbar';
-import axiosInstance from '../../services/axiosInstance';  // Używamy instancji axiosa
-import { toast } from 'react-toastify'; // Komunikaty toast
+import {
+  createAnimal,
+  assignCaregivers,
+  getSpecies,
+  getAvailableEnclosures,
+  getAllUsers
+} from '../../services/animalService';
 
 const BuyAnimal = () => {
-  //const [animals, setAnimals] = useState([]);
- // const [loading, setLoading] = useState(false);
-
-  //zwierze na sztywno do testowania
-  const [animalData, setAnimalData] = useState({
-    id: 1,
-    name: 'Zwierzę 1',
-    species: 'Tygrys',
-    condition: 'Zdrowe',
-    sex: 'Samiec',
-    weight: 100,
-    enclosure: 'Wybieg A',
+  const [formData, setFormData] = useState({
+    name: '',
+    birthDate: '',
+    condition: '',
+    sex: '',
+    weight: '',
+    species: '',
+    enclosureId: '',
   });
 
-  const [loading, setLoading] = useState(false); 
+  const [customCondition, setCustomCondition] = useState('');
+  const [speciesOptions, setSpeciesOptions] = useState([]);
+  const [enclosures, setEnclosures] = useState([]);
+  const [caregivers, setCaregivers] = useState([]);
+  const [selectedCaregivers, setSelectedCaregivers] = useState([]);
 
-  // Pobieranie dostępnych zwierząt
-  // useEffect(() => {
-  //   const fetchAnimals = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const response = await axiosInstance.get('/api/animals/available');
-  //       setAnimals(response.data);
-  //     } catch (error) {
-  //       toast.error('Błąd podczas pobierania dostępnych zwierząt');
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+  const sexOptions = ['MALE', 'FEMALE'];
+  const conditionOptions = ['GOOD', 'COUGHING', 'FATIGUE', 'LOSS_OF_APPETITE', 'OTHER'];
 
-  //   fetchAnimals();
-  // }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const species = await getSpecies();
+        const encl = await getAvailableEnclosures();
+        const users = await getAllUsers();
+        const filteredCaregivers = users.filter(user => user.role === 'CAREGIVER');
 
-  //   // Pobieranie wszystkich zwierząt
-  // useEffect(() => {
-  //   const fetchAnimals = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const response = await axiosInstance.get('/api/animals');
-  //       // Filtruj zwierzęta, które są dostępne do zakupu
-  //       const availableAnimals = response.data.filter(animal => animal.status === 'available');
-  //       setAnimals(availableAnimals);
-  //     } catch (error) {
-  //       toast.error('Błąd podczas pobierania dostępnych zwierząt');
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+        setSpeciesOptions(species);
+        setEnclosures(encl);
+        setCaregivers(filteredCaregivers);
+      } catch (error) {
+        console.error('Błąd podczas pobierania danych:', error);
+      }
+    };
+    fetchData();
+  }, []);
 
-  //   fetchAnimals();
-  // }, []);
+  const handleChange = (e) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
 
-  // Funkcja do "zakupu" zwierzęcia
-  const handleBuy = async () => {
-    setLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (selectedCaregivers.length === 0) {
+      alert('Zwierzę musi mieć przypisanego co najmniej jednego opiekuna.');
+      return;
+    }
+
+    const condition = formData.condition === 'OTHER' ? customCondition : formData.condition;
+
     try {
-      // Symulacja wysyłania zapytania do backendu
-      toast.success('Zwierzę zostało zakupione!');
-    } catch (error) {
-      toast.error('Wystąpił błąd podczas zakupu zwierzęcia');
-    } finally {
-      setLoading(false);
+      const created = await createAnimal({ ...formData, condition });
+      await assignCaregivers(created.id, selectedCaregivers);
+      alert('Zwierzę zostało dodane.');
+    } catch (err) {
+      console.error('Błąd dodawania zwierzęcia:', err);
+      alert('Wystąpił błąd podczas dodawania zwierzęcia.');
     }
   };
 
-//   return (
-//     <div>
-//       <DirectorNavbar />
-//       <div className="max-w-4xl mx-auto p-8">
-//         <h2 className="text-2xl font-semibold text-center mb-6">Dostępne zwierzęta do kupienia</h2>
-
-//         {loading ? (
-//           <p>Ładowanie dostępnych zwierząt...</p>
-//         ) : (
-//           <div>
-//             {animals.length === 0 ? (
-//               <p>Brak dostępnych zwierząt do kupienia.</p>
-//             ) : (
-//               <div>
-//                 {animals.map((animal) => (
-//                   <div key={animal.id} className="flex items-center justify-between p-4 border-b">
-//                     <div>
-//                       <h3 className="text-lg font-semibold">{animal.name}</h3>
-//                       <p>{animal.species}</p>
-//                     </div>
-//                     <button
-//                       onClick={() => handleBuy(animal.id)}
-//                       className="bg-[#526C43] hover:bg-[#234228] text-white py-2 px-4 rounded-md"
-//                     >
-//                       Kup
-//                     </button>
-//                   </div>
-//                 ))}
-//               </div>
-//             )}
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-
-// export default BuyAnimal;
-return (
+  return (
     <div>
-      <DirectorNavbar /> {/* Dodajemy DirectorNavbar */}
-      
-      <div className="p-8 max-w-lg mx-auto bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold text-center mb-6">Dostępne zwierzęta do kupienia</h2>
+      <DirectorNavbar />
+      <div className="max-w-xl mx-auto mt-10 bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold mb-4">Kup nowe zwierzę</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input type="text" name="name" placeholder="Imię" className="w-full border px-3 py-2" required onChange={handleChange} />
+          <input type="date" name="birthDate" className="w-full border px-3 py-2" required onChange={handleChange} />
 
-        {/* Wyświetlanie twardo wprowadzonego zwierzęcia */}
-        <div className="flex items-center justify-between p-4 border-b">
-          <div>
-            <h3 className="text-lg font-semibold">{animalData.name}</h3>
-            <p>Gatunek: {animalData.species}</p>
-            <p>Stan: {animalData.condition}</p>
-            <p>Płeć: {animalData.sex}</p>
-            <p>Waga: {animalData.weight} kg</p>
-            <p>Wybieg: {animalData.enclosure}</p>
-          </div>
-          <button
-            onClick={handleBuy}
-            className="bg-[#526C43] hover:bg-[#234228] text-white py-2 px-4 rounded-md"
-          >
-            {loading ? 'Zakup...' : 'Kup'}
-          </button>
-        </div>
+          <select name="condition" className="w-full border px-3 py-2" required onChange={handleChange}>
+            <option value="">Wybierz stan zdrowia</option>
+            {conditionOptions.map(option => (
+              <option key={option} value={option}>{option}</option>
+            ))}
+          </select>
+
+          {formData.condition === 'OTHER' && (
+            <input type="text" placeholder="Wpisz chorobę" className="w-full border px-3 py-2" required onChange={(e) => setCustomCondition(e.target.value)} />
+          )}
+
+          <select name="sex" className="w-full border px-3 py-2" required onChange={handleChange}>
+            <option value="">Wybierz płeć</option>
+            {sexOptions.map(option => (
+              <option key={option} value={option}>{option}</option>
+            ))}
+          </select>
+
+          <input type="number" name="weight" placeholder="Waga" className="w-full border px-3 py-2" required step="1" onChange={handleChange} />
+
+          <select name="species" className="w-full border px-3 py-2" required onChange={handleChange}>
+            <option value="">Wybierz gatunek</option>
+            {speciesOptions.map(sp => (
+              <option key={sp} value={sp}>{sp}</option>
+            ))}
+          </select>
+
+          <select name="enclosureId" className="w-full border px-3 py-2" required onChange={handleChange}>
+            <option value="">Wybierz wybieg</option>
+            {enclosures.map(e => (
+              <option key={e.id} value={e.id}>{e.id} - {e.terrainType}</option>
+            ))}
+          </select>
+
+          <label className="font-semibold">Opiekunowie:</label>
+          <select multiple className="w-full border px-3 py-2 h-32" required value={selectedCaregivers} onChange={(e) => {
+            const selected = Array.from(e.target.selectedOptions).map(opt => opt.value);
+            setSelectedCaregivers(selected);
+          }}>
+            {caregivers.map(c => (
+              <option key={c.id} value={c.id}>{c.firstName} {c.lastName}</option>
+            ))}
+          </select>
+
+          <button type="submit" className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition">Kup zwierzę</button>
+        </form>
       </div>
     </div>
   );

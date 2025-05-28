@@ -27,7 +27,6 @@ export const addAnimal = async (animalData) => {
 // Pobierz wszystkie zwierzęta
 export const getAllAnimals = async () => {
   try {
-
     const response = await axiosInstance.get('/api/animals');
     return response.data;
   } catch (error) {
@@ -58,24 +57,31 @@ export const updateAnimal = async (id, animalData) => {
   }
 };
 
-// Funkcja do pobierania dostępnych zwierząt
-export const getAvailableAnimals = async () => {
-  try {
-    const response = await axiosInstance.get('/api/animals/available');
-    return response.data;
-  } catch (error) {
-    console.error('Błąd podczas pobierania dostępnych zwierząt:', error);
-    throw error;
-  }
+// Pobierz dostępne wybiegi
+export const getAvailableEnclosures = async () => {
+  const response = await axiosInstance.get('/api/enclosures');
+  return response.data;
 };
 
-// Funkcja do zakupu zwierzęcia
-export const buyAnimal = async (id) => {
-  try {
-    const response = await axiosInstance.post(`/api/animals/${id}/buy`);
-    return response.data;
-  } catch (error) {
-    console.error('Błąd podczas zakupu zwierzęcia:', error);
-    throw error;
-  }
+// Dyrektor: dodaj zwierzę
+export const createAnimal = async (animalData) => {
+  const response = await axiosInstance.post('/api/animals', animalData);
+  return response.data;
+};
+
+// Dyrektor: przypisz opiekunów
+export const assignCaregivers = async (animalId, caregiverIds) => {
+  await axiosInstance.put(`/api/animals/${animalId}/employees`, caregiverIds);
+};
+
+// Pobierz listę gatunków
+export const getSpecies = async () => {
+  const response = await axiosInstance.get('/api/animals/species');
+  return response.data;
+};
+
+// Pobierz wszystkich użytkowników
+export const getAllUsers = async () => {
+  const response = await axiosInstance.get('/api/user/all');
+  return response.data;
 };

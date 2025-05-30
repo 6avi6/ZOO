@@ -7,6 +7,8 @@ import {
   getAvailableEnclosures,
   getAllUsers
 } from '../../services/animalService';
+import { getAllCaregivers } from '../../services/caretakerService';
+
 
 const BuyAnimal = () => {
   const [formData, setFormData] = useState({
@@ -28,21 +30,30 @@ const BuyAnimal = () => {
   const sexOptions = ['MALE', 'FEMALE'];
   const conditionOptions = ['GOOD', 'COUGHING', 'FATIGUE', 'LOSS_OF_APPETITE', 'OTHER'];
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const species = await getSpecies();
-        const encl = await getAvailableEnclosures();
-        const users = await getAllUsers();
-        const filteredCaregivers = users.filter(user => user.role === 'CAREGIVER');
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const species = await getSpecies();
+      console.log('Species pobrane:', species);
+      setSpeciesOptions(species);
+    } catch (error) {
+      console.error('Błąd podczas pobierania gatunków:', error);
+    }
 
-        setSpeciesOptions(species);
-        setEnclosures(encl);
-        setCaregivers(filteredCaregivers);
-      } catch (error) {
-        console.error('Błąd podczas pobierania danych:', error);
-      }
-    };
+    try {
+      const encl = await getAvailableEnclosures();
+      setEnclosures(encl);
+    } catch (error) {
+      console.error('Błąd podczas pobierania wybiegów:', error);
+    }
+
+    try {
+      const caregivers = await getAllCaregivers();
+      setCaregivers(caregivers);
+    } catch (error) {
+      console.error('Błąd podczas pobierania opiekunów:', error);
+    }
+  };
     fetchData();
   }, []);
 
@@ -109,21 +120,34 @@ const BuyAnimal = () => {
           </select>
 
           <select name="enclosureId" className="w-full border px-3 py-2" required onChange={handleChange}>
-            <option value="">Wybierz wybieg</option>
+         <option value="">Wybierz wybieg</option>
             {enclosures.map(e => (
-              <option key={e.id} value={e.id}>{e.id} - {e.terrainType}</option>
+            <option key={e.id} value={e.id}>
+              {e.terrainType}
+            </option>
             ))}
           </select>
 
           <label className="font-semibold">Opiekunowie:</label>
-          <select multiple className="w-full border px-3 py-2 h-32" required value={selectedCaregivers} onChange={(e) => {
-            const selected = Array.from(e.target.selectedOptions).map(opt => opt.value);
-            setSelectedCaregivers(selected);
-          }}>
-            {caregivers.map(c => (
-              <option key={c.id} value={c.id}>{c.firstName} {c.lastName}</option>
-            ))}
-          </select>
+<label className="font-semibold">Opiekunowie:</label>
+<select
+  multiple
+  className="w-full border px-3 py-2 h-32"
+  value={selectedCaregivers.map(id => String(id))}
+  onChange={(e) => {
+    const selected = Array.from(e.target.selectedOptions).map(opt => Number(opt.value));
+    setSelectedCaregivers(selected);
+  }}
+>
+  {caregivers.map(c => (
+    <option key={c.id} value={String(c.id)}>
+      {c.firstName} {c.lastName}
+    </option>
+  ))}
+</select>
+
+
+
 
           <button type="submit" className="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700 transition">Kup zwierzę</button>
         </form>

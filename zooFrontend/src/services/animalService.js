@@ -71,14 +71,24 @@ export const createAnimal = async (animalData) => {
 
 // Dyrektor: przypisz opiekunów
 export const assignCaregivers = async (animalId, caregiverIds) => {
-  await axiosInstance.put(`/api/animals/${animalId}/employees`, caregiverIds);
+  await axiosInstance.put(`/api/animals/${animalId}/caretakers`, caregiverIds, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
 };
+
+
 
 // Pobierz listę gatunków
 export const getSpecies = async () => {
   const response = await axiosInstance.get('/api/animals/species');
-  return response.data;
+  console.log('Response z /species:', response.data); 
+   return response.data;
+ 
 };
+
+
 
 // Pobierz wszystkich użytkowników
 export const getAllUsers = async () => {

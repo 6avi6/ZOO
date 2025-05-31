@@ -31,7 +31,7 @@ export const getCaretakersByAnimalId = async (animalId) => {
 // Przypisz opiekunów do zwierzęcia
 export const assignCaretakersToAnimal = async (animalId, userIds) => {
     try {
-        const response = await axiosInstance.put(`/api/animals/${animalId}/employees`, userIds);
+        const response = await axiosInstance.put(`/api/animals/${animalId}/caretakers`, userIds);
         return response.data;
     } catch (error) {
         console.error(`Błąd podczas przypisywania opiekunów do zwierzęcia ${animalId}:`, error);

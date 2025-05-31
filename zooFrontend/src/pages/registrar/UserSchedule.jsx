@@ -257,15 +257,16 @@ const UserSchedule = () => {
 
                     </table>
 
-                    {/* Floating Add Button */}
-                    <button
-                        onClick={() => setDialogVisible(true)}
-                        className="fixed bottom-8 right-8 bg-blue-600 text-white p-4 rounded-full shadow-lg z-50 hover:bg-blue-700 transition-all"
-                    >
-                        <Plus size={24} />
-                    </button>
+
                 </div>
             )}
+            {/* Floating Add Button */}
+            <button
+                onClick={() => setDialogVisible(true)}
+                className="fixed bottom-8 right-8 bg-blue-600 text-white p-4 rounded-full shadow-lg z-50 hover:bg-blue-700 transition-all"
+            >
+                <Plus size={24} />
+            </button>
         </div>
     );
 };

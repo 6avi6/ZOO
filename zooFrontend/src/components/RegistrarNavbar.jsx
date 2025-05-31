@@ -27,12 +27,13 @@ const RegistrarNavbar = () => {
 
     return (
         <div className="bg-white h-[80px] w-full flex items-center border-b-2 border-gray-200 mb-5">
+            <Link to={generateLink('dashboard')}>
             <img
                 src={logo}
                 alt="logo"
                 className="size-16 ml-3 rounded-md hover:scale-[1.05] cursor-pointer transition-all duration-300"
             />
-
+            </Link>
             {/* Desktop navigation */}
             <div className="hidden sm:flex flex-row items-center justify-between w-full ml-auto">
                 <div className="flex flex-row gap-4 ml-12">

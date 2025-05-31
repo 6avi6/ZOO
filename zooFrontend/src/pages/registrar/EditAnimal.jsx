@@ -143,7 +143,7 @@ const EditAnimal = () => {
                 description: treatmentDescription,
                 dateTime: new Date(treatmentDateTime).toISOString(),
                 animalId: id,
-                veterinarianId: veterinarianId,
+                assignedUserId: veterinarianId,
                 symptomIds: selectedSymptomIds.map(Number)
             });
         }

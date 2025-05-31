@@ -57,6 +57,16 @@ const RegistrarNavbar = () => {
                             Godziny prac
                         </p>
                     </Link>
+                    <Link to={generateLink('edit-food-types')}>
+                        <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
+                            Typy jedzenia
+                        </p>
+                    </Link>
+                    <Link to={generateLink('edit-symptom-types')}>
+                        <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
+                            Typy objawów
+                        </p>
+                    </Link>
                     <Link to={generateLink('account')}>
                         <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
                             Konto
@@ -97,6 +107,16 @@ const RegistrarNavbar = () => {
                         <li className="p-3 mb-2 text-gray-800 border-b-2 border-gray-200 hover:pl-2 hover:border-green-300 duration-200">
                             Rejestracja
                         </li>
+                    </Link>
+                    <Link to={generateLink('edit-food-types')}>
+                        <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
+                            Typy jedzenia
+                        </p>
+                    </Link>
+                    <Link to={generateLink('edit-symptom-types')}>
+                        <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
+                            Typy objawów
+                        </p>
                     </Link>
                     <Link to={generateLink('account')}>
                         <li className="p-3 mb-2 text-gray-800 border-b-2 border-gray-200 hover:pl-2 hover:border-green-300 duration-200">

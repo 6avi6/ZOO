@@ -8,6 +8,7 @@ import { getEnclosureById } from '../../services/enclosureService';
 import { getFeedingsByAnimalId, createFeeding, updateFeeding, deleteFeeding } from '../../services/feedingsService';
 import { getCaretakersByAnimalId, assignCaretakersToAnimal } from '../../services/caretakerService';
 import { getAllUsersPaged } from '../../services/userService';
+import { getAllFoodTypes } from '../../services/foodTypeService';
 
 const AnimalDetails = () => {
     const { id } = useParams();
@@ -22,6 +23,7 @@ const AnimalDetails = () => {
     const [feedingDateTime, setFeedingTime] = useState('');
     const [foodTypeId, setFoodTypeId] = useState(1);
     const [newFeedingUsers, setNewFeedingUsers] = useState([]);
+    const [foodTypes, setFoodTypes] = useState([]);
 
     const formatDateTime = (isoString) => {
         const options = {
@@ -50,6 +52,9 @@ const AnimalDetails = () => {
                 setFeedings(Array.isArray(feedingsData) ? feedingsData : [feedingsData]);
                 const caretakersData = await getCaretakersByAnimalId(id);
                 setCaretakers(caretakersData);
+
+                const foodTypesData = await getAllFoodTypes();
+                setFoodTypes(foodTypesData);
             } catch (error) {
                 console.error("Error loading data:", error);
             }
@@ -57,6 +62,31 @@ const AnimalDetails = () => {
 
         fetchData();
     }, [id]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const animalData = await getAnimalById(id);
+                setAnimal(animalData);
+
+                if (animalData.enclosureId != null || animalData.enclosure?.id != null) {
+                    const enclosureId = animalData.enclosureId || animalData.enclosure.id;
+                    const enclosureData = await getEnclosureById(enclosureId);
+                    setEnclosure(enclosureData);
+                }
+
+                const feedingsData = await getFeedingsByAnimalId(id);
+                setFeedings(Array.isArray(feedingsData) ? feedingsData : [feedingsData]);
+                const caretakersData = await getCaretakersByAnimalId(id);
+                setCaretakers(caretakersData);
+            } catch (error) {
+                console.error("Error loading data:", error);
+            }
+        };
+
+        fetchData();
+    }, [id]);
+
 
     const handleEditClick = async () => {
         try {
@@ -286,15 +316,18 @@ const AnimalDetails = () => {
                                 />
                             </div>
                             <div className="mb-2">
-                                <label className="block text-sm font-medium">Typ jedzenia (1-5):</label>
-                                <input
-                                    type="number"
-                                    min={1}
-                                    max={5}
+                                <label className="block text-sm font-medium">Typ jedzenia:</label>
+                                <select
                                     value={foodTypeId}
                                     onChange={(e) => setFoodTypeId(e.target.value)}
                                     className="mt-1 block w-full border rounded px-2 py-1"
-                                />
+                                >
+                                    {foodTypes.map(type => (
+                                        <option key={type.id} value={type.id} title={type.description}>
+                                            {type.id} | {type.name}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                             <div className="mb-2">
                                 <label className="block text-sm font-medium">Przypisz opiekunów:</label>
@@ -331,7 +364,6 @@ const AnimalDetails = () => {
                             <tr className="bg-gray-200">
                                 <th className="border p-2">Czas</th>
                                 <th className="border p-2">Typ jedzenia</th>
-                                <th className="border p-2">Wybieg</th>
                                 <th className="border p-2">Status karmienia</th>
                                 <th className="border p-2">Opiekunowie</th>
                                 <th className="border p-2">Akcje</th>
@@ -351,16 +383,18 @@ const AnimalDetails = () => {
                                                 />
                                             </td>
                                             <td className="border p-2">
-                                                <input
-                                                    type="number"
-                                                    min={1}
-                                                    max={5}
+                                                <select
                                                     value={editingFeedingData.foodTypeId}
-                                                    onChange={e => handleEditingChange('foodTypeId', e.target.value)}
-                                                    className="border rounded px-1 py-0.5 w-16"
-                                                />
-                                            </td>
-                                            <td className="border p-2">{f.enclosureId}</td>
+                                                    onChange={(e) => handleEditingChange('foodTypeId', e.target.value)}
+                                                    className="border rounded px-1 py-0.5 w-full"
+                                                    >
+                                                    {foodTypes.map(type => (
+                                                        <option key={type.id} value={type.id} title={type.description}>
+                                                            {type.id} | {type.name}
+                                                        </option>
+                                                    ))}
+                                            </select>
+                                        </td>
                                             <td className="border p-2">
                                                 <select
                                                     value={editingFeedingData.isCompleted ? 'completed' : 'not_completed'}
@@ -402,8 +436,11 @@ const AnimalDetails = () => {
                                     ) : (
                                         <>
                                             <td className="border p-2">{formatDateTime(f.feedingDateTime)}</td>
-                                            <td className="border p-2">{f.foodTypeId}</td>
-                                            <td className="border p-2">{f.enclosureId}</td>
+                                            <td className="border p-2" title={
+                                                foodTypes.find(ft => ft.id === f.foodTypeId)?.description || 'Brak opisu'
+                                            }>
+                                                {foodTypes.find(ft => ft.id === f.foodTypeId) ? `${f.foodTypeId} | ${foodTypes.find(ft => ft.id === f.foodTypeId).name}` : `ID ${f.foodTypeId}`}
+                                            </td>
                                             <td className="border p-2">{f.isCompleted ? 'Nakarmione' : 'Nie nakarmione'}</td>
                                             <td className="border p-2">
                                                 {f.userIds.map((uid) => {

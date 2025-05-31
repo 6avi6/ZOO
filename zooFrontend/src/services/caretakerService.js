@@ -87,7 +87,7 @@ export const getMyAnimals = async () => {
 // Pobieranie karmień dla aktualnie zalogowanego opiekuna
 export const getMyFeedings = async () => {
     try {
-        const response = await axiosInstance.get('/api/caregiver/my-Feedings');
+        const response = await axiosInstance.get('/api/caregiver/my-feedings');
         return response.data;
     } catch (error) {
         console.error('Błąd podczas pobierania harmonogramu karmienia:', error);

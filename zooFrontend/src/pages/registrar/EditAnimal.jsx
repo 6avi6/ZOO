@@ -378,22 +378,29 @@ const EditAnimal = () => {
                             className="w-full p-2 border rounded mb-4"
                         />
                         <label className="block mb-2 text-sm font-medium text-gray-700">Symptomy</label>
-                        <select
-                            multiple
-                            value={selectedSymptomIds}
-                            onChange={(e) =>
-                                setSelectedSymptomIds(
-                                    Array.from(e.target.selectedOptions, (option) => option.value)
-                                )
-                            }
-                            className="w-full p-2 border rounded mb-4"
-                        >
+                        <label className="block mb-2 text-sm font-medium text-gray-700">Symptomy</label>
+                        <div className="border p-2 rounded mb-4 max-h-40 overflow-y-auto">
                             {symptoms.map((symptom) => (
-                                <option key={symptom.id} value={symptom.id}>
-                                    {symptom.name}
-                                </option>
+                                <div key={symptom.id} className="flex items-center mb-1">
+                                    <input
+                                        type="checkbox"
+                                        id={`symptom-${symptom.id}`}
+                                        checked={selectedSymptomIds.includes(symptom.id)}
+                                        onChange={() => {
+                                            setSelectedSymptomIds(prev =>
+                                                prev.includes(symptom.id)
+                                                    ? prev.filter(id => id !== symptom.id)
+                                                    : [...prev, symptom.id]
+                                            );
+                                        }}
+                                        className="mr-2"
+                                    />
+                                    <label htmlFor={`symptom-${symptom.id}`} className="text-sm text-gray-700">
+                                        {symptom.name}
+                                    </label>
+                                </div>
                             ))}
-                        </select>
+                        </div>
                         <label className="block mb-2 text-sm font-medium text-gray-700">Weterynarz</label>
                         <select
                             value={veterinarianId}

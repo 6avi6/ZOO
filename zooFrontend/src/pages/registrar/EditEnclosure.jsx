@@ -106,7 +106,7 @@ const EditEnclosure = () => {
     };
 
     return (
-        <div className="relative p-6 min-h-screen bg-gray-100">
+        <div className="relative p-6 min-h-screen bg-gray-100" >
             <RegistrarNavbar />
             <button
                 onClick={() => setIsAdding(true)}

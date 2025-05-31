@@ -14,6 +14,7 @@ export const getAllAnimalTreatmentCards = async () => {
 // Utwórz nową kartę leczenia zwierzęcia
 export const createAnimalTreatmentCard = async (cardData) => {
     try {
+        console.log("createAnimalTreatmentCard", cardData);
         const response = await axiosInstance.post('/api/animal-treatment-card', cardData);
         return response.data;
     } catch (error) {

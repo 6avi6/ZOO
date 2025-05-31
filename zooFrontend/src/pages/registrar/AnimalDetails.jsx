@@ -19,9 +19,20 @@ const AnimalDetails = () => {
     const [selectedCaretakers, setSelectedCaretakers] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
     const [showAddForm, setShowAddForm] = useState(false);
-    const [feedingTime, setFeedingTime] = useState('');
+    const [feedingDateTime, setFeedingTime] = useState('');
     const [foodTypeId, setFoodTypeId] = useState(1);
     const [newFeedingUsers, setNewFeedingUsers] = useState([]);
+
+    const formatDateTime = (isoString) => {
+        const options = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        };
+        return new Date(isoString).toLocaleString('pl-PL', options).replace(',', '');
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -80,7 +91,7 @@ const AnimalDetails = () => {
 
     const handleAddFeedingSubmit = async () => {
         const newFeeding = {
-            feedingTime,
+            feedingDateTime,
             isCompleted: false,
             foodTypeId: Number(foodTypeId),
             animalIds: [parseInt(id)],
@@ -112,7 +123,7 @@ const AnimalDetails = () => {
 
     const [editingFeedingId, setEditingFeedingId] = useState(null);
     const [editingFeedingData, setEditingFeedingData] = useState({
-        feedingTime: '',
+        feedingDateTime: '',
         foodTypeId: 1,
         isCompleted: false,
         userIds: []
@@ -122,7 +133,7 @@ const AnimalDetails = () => {
     const startEditFeeding = (feeding) => {
         setEditingFeedingId(feeding.id);
         setEditingFeedingData({
-            feedingTime: feeding.feedingTime,
+            feedingDateTime: feeding.feedingDateTime,
             foodTypeId: feeding.foodTypeId,
             isCompleted: feeding.isCompleted,
             userIds: [...feeding.userIds]
@@ -151,7 +162,7 @@ const AnimalDetails = () => {
     const handleUpdateFeeding = async () => {
         try {
             await updateFeeding(editingFeedingId, {
-                feedingTime: editingFeedingData.feedingTime,
+                feedingDateTime: editingFeedingData.feedingDateTime,
                 foodTypeId: Number(editingFeedingData.foodTypeId),
                 isCompleted: editingFeedingData.isCompleted,
                 userIds: editingFeedingData.userIds,
@@ -165,7 +176,7 @@ const AnimalDetails = () => {
             // Zamknij edycję
             setEditingFeedingId(null);
             setEditingFeedingData({
-                feedingTime: '',
+                feedingDateTime: '',
                 foodTypeId: 1,
                 isCompleted: false,
                 userIds: []
@@ -179,7 +190,7 @@ const AnimalDetails = () => {
     const cancelEditFeeding = () => {
         setEditingFeedingId(null);
         setEditingFeedingData({
-            feedingTime: '',
+            feedingDateTime: '',
             foodTypeId: 1,
             isCompleted: false,
             userIds: []
@@ -252,7 +263,7 @@ const AnimalDetails = () => {
 
                 <div className="mt-6">
                     <div className="flex justify-between items-center mb-2">
-                        <h2 className="text-xl font-semibold">Feedings:</h2>
+                        <h2 className="text-xl font-semibold">Karmienia:</h2>
                         <button
                             onClick={() => setShowAddForm(true)}
                             className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
@@ -264,18 +275,18 @@ const AnimalDetails = () => {
 
                     {showAddForm && (  //Pop up do dodawania nowych pór karmień
                         <div className="border p-4 rounded mb-4 bg-gray-50">
-                            <h3 className="text-lg font-semibold mb-2">New Feeding</h3>
+                            <h3 className="text-lg font-semibold mb-2">Nowe karmienie</h3>
                             <div className="mb-2">
-                                <label className="block text-sm font-medium">Feeding Time:</label>
+                                <label className="block text-sm font-medium">Data i godzina karmienia:</label>
                                 <input
-                                    type="time"
-                                    value={feedingTime}
+                                    type="datetime-local"
+                                    value={feedingDateTime}
                                     onChange={(e) => setFeedingTime(e.target.value)}
                                     className="mt-1 block w-full border rounded px-2 py-1"
                                 />
                             </div>
                             <div className="mb-2">
-                                <label className="block text-sm font-medium">Food Type (1-5):</label>
+                                <label className="block text-sm font-medium">Typ jedzenia (1-5):</label>
                                 <input
                                     type="number"
                                     min={1}
@@ -286,7 +297,7 @@ const AnimalDetails = () => {
                                 />
                             </div>
                             <div className="mb-2">
-                                <label className="block text-sm font-medium">Assign Caretakers:</label>
+                                <label className="block text-sm font-medium">Przypisz opiekunów:</label>
                                 {caretakers.map(c => (
                                     <div key={c.id} className="flex items-center">
                                         <input
@@ -309,7 +320,7 @@ const AnimalDetails = () => {
                                 onClick={handleAddFeedingSubmit}
                                 className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-2"
                             >
-                                Submit Feeding
+                                Dodaj karmienie
                             </button>
                         </div>
                     )}
@@ -333,9 +344,9 @@ const AnimalDetails = () => {
                                         <>
                                             <td className="border p-2">
                                                 <input
-                                                    type="time"
-                                                    value={editingFeedingData.feedingTime}
-                                                    onChange={e => handleEditingChange('feedingTime', e.target.value)}
+                                                    type="datetime-local"
+                                                    value={editingFeedingData.feedingDateTime}
+                                                    onChange={e => handleEditingChange('feedingDateTime', e.target.value)}
                                                     className="border rounded px-1 py-0.5"
                                                 />
                                             </td>
@@ -390,7 +401,7 @@ const AnimalDetails = () => {
                                         </>
                                     ) : (
                                         <>
-                                            <td className="border p-2">{f.feedingTime}</td>
+                                            <td className="border p-2">{formatDateTime(f.feedingDateTime)}</td>
                                             <td className="border p-2">{f.foodTypeId}</td>
                                             <td className="border p-2">{f.enclosureId}</td>
                                             <td className="border p-2">{f.isCompleted ? 'Nakarmione' : 'Nie nakarmione'}</td>

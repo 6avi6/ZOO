@@ -4,6 +4,7 @@ import axios from "axios";
 // Usuń zwierzę po ID
 export const deleteAnimal = async (id) => {
   try {
+    console.log("deleteAnimal", id);
     const response = await axiosInstance.delete(`/api/animals/${id}`);
     return response.data;
   } catch (error) {

@@ -10,12 +10,9 @@ const EditCaretaker = () => {
     const [editedUser, setEditedUser] = useState({});
     const [isAdding, setIsAdding] = useState(false);
     const [newUser, setNewUser] = useState({
-        firstName: '',
-        lastName: '',
         username: '',
-        email: '',
         password: '',
-        role: 'CARETAKER'
+        role: 'CAREGIVER'
     });
 
     useEffect(() => {
@@ -61,7 +58,6 @@ const EditCaretaker = () => {
 
     const handleDeleteClick = async (id) => {
         try {
-            console.log(id)
             await deleteUser(id);
             setCaregivers(caregivers.filter(u => u.id !== id));
         } catch {
@@ -83,47 +79,27 @@ const EditCaretaker = () => {
             const updated = await getAllCaregivers();
             setCaregivers(updated);
             setIsAdding(false);
-            setNewUser({ firstName: '', lastName: '', email: '', password: '', role: 'CARETAKER' });
-
+            setNewUser({ username: '', password: '', role: 'CAREGIVER' });
         } catch (error) {
             alert('Błąd podczas rejestracji nowego opiekuna.');
         }
     };
 
+    const displayOrPlaceholder = (value) => value ? value : <span className="text-gray-400 italic">Brak wartości</span>;
+
     return (
         <div className="p-6 bg-gray-100 min-h-screen">
             <RegistrarNavbar />
             <h1 className="text-2xl font-bold mb-4">Opiekunowie</h1>
-            <stron className="bg-red-800"> Nie ma dodawania</stron>
+
             {isAdding && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white shadow-lg rounded-lg p-6 w-full max-w-md">
                         <h2 className="text-xl font-semibold mb-4">Dodaj nowego opiekuna</h2>
                         <input
-                            name="firstName"
-                            placeholder="Imię"
-                            value={newUser.firstName}
-                            onChange={handleAddChange}
-                            className="border p-2 rounded w-full mb-2"
-                        />
-                        <input
-                            name="lastName"
-                            placeholder="Nazwisko"
-                            value={newUser.lastName}
-                            onChange={handleAddChange}
-                            className="border p-2 rounded w-full mb-2"
-                        />
-                        <input
                             name="username"
-                            placeholder="Username"
+                            placeholder="Nazwa użytkownika"
                             value={newUser.username}
-                            onChange={handleAddChange}
-                            className="border p-2 rounded w-full mb-2"
-                        />
-                        <input
-                            name="email"
-                            placeholder="Email"
-                            value={newUser.email}
                             onChange={handleAddChange}
                             className="border p-2 rounded w-full mb-2"
                         />
@@ -145,7 +121,7 @@ const EditCaretaker = () => {
                             <button
                                 onClick={() => {
                                     setIsAdding(false);
-                                    setNewUser({ firstName: '', lastName: '', email: '', password: '', role: 'CARETAKER' });
+                                    setNewUser({ username: '', password: '', role: 'CAREGIVER' });
                                 }}
                                 className="bg-gray-500 text-white px-4 py-2 rounded"
                             >
@@ -156,10 +132,10 @@ const EditCaretaker = () => {
                 </div>
             )}
 
-
             <table className="w-full bg-white rounded shadow-md">
                 <thead className="bg-gray-200">
                 <tr>
+                    <th className="p-2">Nazwa użytkownika</th>
                     <th className="p-2">Imię</th>
                     <th className="p-2">Nazwisko</th>
                     <th className="p-2">Email</th>
@@ -172,6 +148,14 @@ const EditCaretaker = () => {
                     <tr key={user.id} className="text-sm text-left">
                         {editingUser === user.id ? (
                             <>
+                                <td className="p-2">
+                                    <input
+                                        name="username"
+                                        value={user.username || ''}
+                                        className="border p-1 rounded w-full"
+                                        onChange={handleChange}
+                                    />
+                                </td>
                                 <td className="p-2">
                                     <input
                                         name="firstName"
@@ -196,7 +180,15 @@ const EditCaretaker = () => {
                                         className="border p-1 rounded w-full"
                                     />
                                 </td>
-                                <td className="p-2">{editedUser.hireDate}</td>
+                                <td className="p-2">
+                                    <input
+                                        type="date"
+                                        name="hireDate"
+                                        value={editedUser.hireDate || ''}
+                                        onChange={handleChange}
+                                        className="border p-1 rounded w-full"
+                                    />
+                                </td>
                                 <td className="p-2 flex justify-center gap-2">
                                     <button
                                         onClick={handleSaveClick}
@@ -214,10 +206,11 @@ const EditCaretaker = () => {
                             </>
                         ) : (
                             <>
-                                <td className="p-2">{user.firstName}</td>
-                                <td className="p-2">{user.lastName}</td>
-                                <td className="p-2">{user.email}</td>
-                                <td className="p-2">{user.hireDate}</td>
+                                <td className="p-2">{displayOrPlaceholder(user.username)}</td>
+                                <td className="p-2">{displayOrPlaceholder(user.firstName)}</td>
+                                <td className="p-2">{displayOrPlaceholder(user.lastName)}</td>
+                                <td className="p-2">{displayOrPlaceholder(user.email)}</td>
+                                <td className="p-2">{displayOrPlaceholder(user.hireDate)}</td>
                                 <td className="p-2 flex justify-center gap-2">
                                     <button
                                         onClick={() => handleEditClick(user)}
@@ -236,10 +229,7 @@ const EditCaretaker = () => {
                         )}
                     </tr>
                 ))}
-
-
                 </tbody>
-
             </table>
 
             <button

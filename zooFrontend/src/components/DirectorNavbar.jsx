@@ -4,6 +4,8 @@ import { IoClose, IoLogOutOutline, IoMenu } from 'react-icons/io5';
 import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../services/authService';
 
+// [ ... importy bez zmian ]
+
 const DirectorNavbar = () => {
     const [menu, setMenu] = useState(false);
     const navigate = useNavigate();
@@ -12,7 +14,7 @@ const DirectorNavbar = () => {
 
     const handleLogout = async () => {
         try {
-            await logout(); // funkcja identyczna jak w adminie
+            await logout();
             navigate('/login');
         } catch (error) {
             console.error('Błąd podczas wylogowania:', error);
@@ -40,12 +42,17 @@ const DirectorNavbar = () => {
                             Kup zwierzę
                         </p>
                     </Link>
+                    {/* NOWA OPCJA */}
+                    <Link to="/director/manage-assignments">
+                        <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-[#F4E7CB] transition-all duration-200">
+                            Przypisz opiekunów
+                        </p>
+                    </Link>
                     <Link to="/director/account">
                         <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-[#F4E7CB] transition-all duration-200">
                             Konto
                         </p>
                     </Link>
-                    
                 </div>
                 <IoLogOutOutline
                     onClick={handleLogout}
@@ -77,6 +84,12 @@ const DirectorNavbar = () => {
                     <Link to="/director/buy-animal">
                         <li className="p-3 mb-2 text-gray-800 border-b-2 border-gray-200 hover:pl-2 hover:border-[#F4E7CB] duration-200">
                             Kup zwierzę
+                        </li>
+                    </Link>
+                    {/* NOWA OPCJA */}
+                    <Link to="/director/manage-assignments">
+                        <li className="p-3 mb-2 text-gray-800 border-b-2 border-gray-200 hover:pl-2 hover:border-[#F4E7CB] duration-200">
+                            Przypisz opiekunów
                         </li>
                     </Link>
                     <Link to="/director/account">

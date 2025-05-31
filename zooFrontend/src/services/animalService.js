@@ -47,6 +47,12 @@ export const getAnimalById = async (id) => {
   }
 };
 
+// Pobierz wszystkich opiekunów danego zwierzęcia
+export const getAnimalCaretakers = async (animalId) => {
+  const response = await axiosInstance.get(`/api/animals/${animalId}/caretakers`);
+  return response.data;
+};
+
 // Zaktualizuj dane zwierzęcia
 export const updateAnimal = async (id, animalData) => {
   try {
@@ -79,6 +85,29 @@ export const assignCaregivers = async (animalId, caregiverIds) => {
   });
 };
 
+export const removeCaretakers = async (animalId, employeeIds) => {
+  const token = localStorage.getItem('accessToken');
+  
+  const response = await axiosInstance.delete(`/api/animals/${animalId}/caretakers`, {
+    data: employeeIds,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  return response.data;
+};
+
+
+// PATCH - dodawanie opiekunów
+export const addCaretakers = async (animalId, employeeIds) => {
+  const response = await axiosInstance.patch(`/api/animals/${animalId}/add-caretakers`, employeeIds, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  return response.data;
+};
 
 
 // Pobierz listę gatunków

@@ -4,14 +4,27 @@ import { getMyFeedings } from '../../services/caretakerService';
 import { updateFeeding } from '../../services/feedingsService';
 import { getAllEnclosures, getEnclosureById } from '../../services/enclosureService';
 import { getAnimalById } from '../../services/animalService';
+import { getAllFoodTypes } from '../../services/foodTypeService';
 import { Pencil, Save, X } from 'lucide-react';
 
 const CaregiverFeedings = () => {
     const [feedings, setFeedings] = useState([]);
     const [editingId, setEditingId] = useState(null);
-    const [editData, setEditData] = useState({ feedingTime: '', foodTypeId: 1, isCompleted: false });
+    const [editData, setEditData] = useState({ feedingDateTime: '', foodTypeId: 1, isCompleted: false });
     const [animalMap, setAnimalMap] = useState({});
     const [enclosureMap, setEnclosureMap] = useState({});
+    const [foodTypes, setFoodTypes] = useState([]);
+
+    const formatDateTime = (isoString) => {
+        const options = {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        };
+        return new Date(isoString).toLocaleString('pl-PL', options).replace(',', '');
+    };
 
     useEffect(() => {
         const fetchFeedings = async () => {
@@ -24,6 +37,8 @@ const CaregiverFeedings = () => {
 
                 const animals = await Promise.all(animalIds.map(id => getAnimalById(id)));
                 const enclosures = await Promise.all(enclosureIds.map(id => getEnclosureById(id)));
+                const foodTypesData = await getAllFoodTypes();
+                setFoodTypes(foodTypesData);
 
                 const animalMapData = {};
                 animals.forEach(animal => { animalMapData[animal.id] = animal; });
@@ -43,7 +58,7 @@ const CaregiverFeedings = () => {
     const handleEditClick = (feeding) => {
         setEditingId(feeding.id);
         setEditData({
-            feedingTime: feeding.feedingTime,
+            feedingDateTime: feeding.feedingDateTime,
             foodTypeId: feeding.foodTypeId,
             isCompleted: feeding.isCompleted,
             enclosureId: feeding.enclosureId,
@@ -55,7 +70,7 @@ const CaregiverFeedings = () => {
     const handleSave = async (id) => {
         try {
             await updateFeeding(id, {
-                feedingTime: editData.feedingTime,
+                feedingDateTime: editData.feedingDateTime,
                 foodTypeId: Number(editData.foodTypeId),
                 isCompleted: editData.isCompleted,
                 enclosureId: editData.enclosureId,
@@ -93,24 +108,31 @@ const CaregiverFeedings = () => {
                                 <td className="border p-2">
                                     {editingId === f.id ? (
                                         <input
-                                            type="time"
-                                            value={editData.feedingTime}
-                                            onChange={e => setEditData({ ...editData, feedingTime: e.target.value })}
+                                            type="datetime-local"
+                                            value={editData.feedingDateTime}
+                                            onChange={e => setEditData({ ...editData, feedingDateTime: e.target.value })}
                                             className="border rounded p-1"
                                         />
-                                    ) : f.feedingTime}
+                                    ) : formatDateTime(f.feedingDateTime)}
                                 </td>
                                 <td className="border p-2">
                                     {editingId === f.id ? (
-                                        <input
-                                            type="number"
-                                            min={1}
-                                            max={5}
+                                        <select
                                             value={editData.foodTypeId}
                                             onChange={e => setEditData({ ...editData, foodTypeId: e.target.value })}
-                                            className="border rounded p-1 w-20"
-                                        />
-                                    ) : f.foodTypeId}
+                                            className="border rounded p-1 w-full"
+                                        >
+                                            {foodTypes.map(type => (
+                                                <option key={type.id} value={type.id} title={type.description}>
+                                                    {type.id} | {type.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    ) : (
+                                        <span title={foodTypes.find(ft => ft.id === f.foodTypeId)?.description || ''}>
+                                           {foodTypes.find(ft => ft.id === f.foodTypeId) ? `${f.foodTypeId} | ${foodTypes.find(ft => ft.id === f.foodTypeId).name}` : `ID ${f.foodTypeId}`}
+                                        </span>
+                                    )}
                                 </td>
                                 <td className="border p-2">
                                     {editingId === f.id ? (
@@ -122,7 +144,11 @@ const CaregiverFeedings = () => {
                                             <option value="completed">Nakarmione</option>
                                             <option value="not_completed">Nie nakarmione</option>
                                         </select>
-                                    ) : f.isCompleted ? 'Nakarmione' : 'Nie nakarmione'}
+                                    ) : (
+                                        <span>
+                                            {f.isCompleted ? 'Nakarmione' : 'Nie nakarmione'}
+                                        </span>
+                                    )}
                                 </td>
                                 <td className="border p-2">
                                     {enclosureMap[f.enclosureId] ? `${f.enclosureId} | ${enclosureMap[f.enclosureId].terrainType}` : 'N/A'}

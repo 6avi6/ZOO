@@ -23,7 +23,7 @@ const MyAnimals = () => {
     const [treatmentDescription, setTreatmentDescription] = useState('Opis leczenia');
     const [treatmentDateTime, setTreatmentDateTime] = useState(new Date().toISOString().slice(0, 16));
     const [veterinarians, setVeterinarians] = useState([]);
-    const [veterinarianId, setVeterinarianId] = useState(1);
+    const [assignedUserId, setVeterinarianId] = useState(1);
 
     const navigate = useNavigate();
 
@@ -93,7 +93,7 @@ const MyAnimals = () => {
                 description: treatmentDescription,
                 dateTime: new Date(treatmentDateTime).toISOString(),
                 animalId: editedAnimal.id,
-                veterinarianId: veterinarianId,
+                assignedUserId: assignedUserId,
                 symptomIds: selectedSymptomIds.map(Number)
             });
         }
@@ -186,11 +186,30 @@ const MyAnimals = () => {
                         <label className="block mb-2">Data i godzina</label>
                         <input type="datetime-local" value={treatmentDateTime} onChange={e => setTreatmentDateTime(e.target.value)} className="w-full p-2 border rounded mb-4" />
                         <label className="block mb-2">Symptomy</label>
-                        <select multiple value={selectedSymptomIds} onChange={e => setSelectedSymptomIds(Array.from(e.target.selectedOptions, o => o.value))} className="w-full p-2 border rounded mb-4">
-                            {symptoms.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
-                        </select>
+                        <div className="border p-2 rounded mb-4 max-h-40 overflow-y-auto">
+                            {symptoms.map((s) => (
+                                <div key={s.id} className="flex items-center mb-1">
+                                    <input
+                                        type="checkbox"
+                                        id={`symptom-${s.id}`}
+                                        checked={selectedSymptomIds.includes(s.id)}
+                                        onChange={() => {
+                                            setSelectedSymptomIds(prev =>
+                                                prev.includes(s.id)
+                                                    ? prev.filter(id => id !== s.id)
+                                                    : [...prev, s.id]
+                                            );
+                                        }}
+                                        className="mr-2"
+                                    />
+                                    <label htmlFor={`symptom-${s.id}`} className="text-sm text-gray-700">
+                                        {s.name}
+                                    </label>
+                                </div>
+                            ))}
+                        </div>
                         <label className="block mb-2">Weterynarz</label>
-                        <select value={veterinarianId} onChange={e => setVeterinarianId(Number(e.target.value))} className="w-full p-2 border rounded mb-4">
+                        <select value={assignedUserId} onChange={e => setVeterinarianId(Number(e.target.value))} className="w-full p-2 border rounded mb-4">
                             {veterinarians.map(v => <option key={v.id} value={v.id}>{v.name} {v.firstName}</option>)}
                         </select>
                         <div className="flex justify-end gap-2">

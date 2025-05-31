@@ -39,7 +39,7 @@ const EnclosuresReport = () => {
       enclosure.id,
       enclosure.terrainType,
       enclosure.maxAnimals,
-      enclosure.animalsCount,
+      enclosure.animalCount, // <-- poprawione
     ]);
 
     autoTable(doc, {
@@ -62,10 +62,10 @@ const EnclosuresReport = () => {
       <DirectorNavbar />
       <div className="p-8 max-w-4xl mx-auto bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold text-center mb-2">
-          Wykaz wybiegów i liczby zwierzat
+          Wykaz wybiegów i liczby zwierząt
         </h2>
         <p className="text-center text-gray-600 mb-6">
-          Raport na dzien: {today}
+          Raport na dzień: {today}
         </p>
 
         {loading ? (
@@ -77,8 +77,8 @@ const EnclosuresReport = () => {
                 <tr className="bg-gray-100">
                   <th className="px-4 py-2">ID</th>
                   <th className="px-4 py-2">Typ terenu</th>
-                  <th className="px-4 py-2">Maks. zwierzat</th>
-                  <th className="px-4 py-2">Liczba zwierzat</th>
+                  <th className="px-4 py-2">Maks. zwierząt</th>
+                  <th className="px-4 py-2">Liczba zwierząt</th>
                 </tr>
               </thead>
               <tbody>
@@ -87,7 +87,7 @@ const EnclosuresReport = () => {
                     <td className="px-4 py-2">{enclosure.id}</td>
                     <td className="px-4 py-2">{enclosure.terrainType}</td>
                     <td className="px-4 py-2">{enclosure.maxAnimals}</td>
-                    <td className="px-4 py-2">{enclosure.animalsCount}</td>
+                    <td className="px-4 py-2">{enclosure.animalCount}</td> {/* <-- poprawione */}
                   </tr>
                 ))}
               </tbody>

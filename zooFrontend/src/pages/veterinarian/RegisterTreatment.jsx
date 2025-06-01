@@ -53,8 +53,8 @@ const RegisterTreatment = () => {
       description: newCard.description,
       dateTime: dayjs(newCard.dateTime).format('YYYY-MM-DDTHH:mm:ss'),
       symptomIds: newCard.symptomIds,
-      veterinarianId: 5// <-- Sztywne przypisanie weterynarza
-      //assignedUserId: 5
+      //veterinarianId: 5// <-- Sztywne przypisanie weterynarza
+      assignedUserId: 5
     };
     console.log('Payload do CREATE:', payload);
 
@@ -76,8 +76,8 @@ const RegisterTreatment = () => {
       description: editingCard.description,
       dateTime: dayjs(editingCard.dateTime).format('YYYY-MM-DDTHH:mm:ss'),
       symptomIds: editingCard.symptomIds,
-      veterinarianId: 5 // <-- Sztywne przypisanie weterynarza
-      //assignedUserId: 5
+      //veterinarianId: 5 // <-- Sztywne przypisanie weterynarza
+      assignedUserId: 5
     };
     console.log('Payload do UPDATE:', payload);
 

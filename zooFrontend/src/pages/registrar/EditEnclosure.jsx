@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import {Trash2, Pencil,Save, X,Plus} from 'lucide-react';
 import RegistrarNavbar from '../../components/RegistrarNavbar';
 import {
     getAllEnclosures,
@@ -106,17 +107,19 @@ const EditEnclosure = () => {
     };
 
     return (
-        <div className="relative p-6 min-h-screen bg-gray-100" >
+        <div className="p-8">
             <RegistrarNavbar />
+            <h1 className="text-2xl font-bold mb-4">Wybiegi</h1>
+
             <button
                 onClick={() => setIsAdding(true)}
-                className="fixed bottom-6 right-6 z-50 p-3 bg-green-700 text-white rounded-full shadow-lg hover:bg-green-800"
+                className="fixed bottom-6 right-6 z-50 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all text-sm"
             >
-                +
+                <Plus size={20}/>
             </button>
 
-            <div className="w-full flex mx-auto overflow-x-auto bg-white rounded-lg shadow-md p-6">
-                <table className="w-full table-auto text-sm text-left text-gray-600">
+            <div className="overflow-x-auto">
+                <table className="min-w-full border border-gray-300 bg-white shadow-md rounded-lg overflow-hidden">
                     <thead className="bg-gray-200 text-gray-700">
                     <tr>
                         <th className="px-4 py-2">ID</th>
@@ -156,8 +159,8 @@ const EditEnclosure = () => {
                                         </select>
                                     </td>
                                     <td className="flex gap-2">
-                                        <button onClick={() => handleSaveClick(enc.id)} className="px-2 py-1 bg-green-600 text-white rounded">Zapisz</button>
-                                        <button onClick={() => setEditingEnclosure(null)} className="px-2 py-1 bg-gray-500 text-white rounded">Anuluj</button>
+                                        <button onClick={() => handleSaveClick(enc.id)} className="px-2 py-1 text-green-600 hover:text-green-400 rounded"><Save size={16}/></button>
+                                        <button onClick={() => setEditingEnclosure(null)} className="px-2 py-1 text-gray-600 hover:text-gray-400 rounded"><X size={16}/></button>
                                     </td>
                                 </>
                             ) : (
@@ -168,8 +171,8 @@ const EditEnclosure = () => {
                                     <td className="px-4 py-2">{enc.temperature}</td>
                                     <td className="px-4 py-2">{enc.terrainType}</td>
                                     <td className="flex gap-2">
-                                        <button onClick={() => handleEditClick(enc)} className="px-2 py-1 bg-blue-600 text-white rounded">Edytuj</button>
-                                        <button onClick={() => handleDeleteClick(enc.id)} className="px-2 py-1 bg-red-600 text-white rounded">Usuń</button>
+                                        <button onClick={() => handleEditClick(enc)} className="px-2 py-1 text-blue-600 hover:text-blue-400"><Pencil size={16} /></button>
+                                        <button onClick={() => handleDeleteClick(enc.id)} className="px-2 py-1 text-red-600 hover:red-blue-400"><Trash2 size={16} /></button>
                                     </td>
                                 </>
                             )}

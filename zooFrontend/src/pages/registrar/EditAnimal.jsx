@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {Trash2, Pencil, ArrowRight, Plus} from 'lucide-react';
+import {Trash2, Pencil, ArrowRight, Plus,Save,X} from 'lucide-react';
 import RegistrarNavbar from '../../components/RegistrarNavbar';
 import { getAllAnimals, updateAnimal, deleteAnimal, addAnimal } from '../../services/animalService';
 import { getAllEnclosures , getEnclosureById } from '../../services/enclosureService';
@@ -200,19 +200,19 @@ const EditAnimal = () => {
 
     return (
 
-        <div className="relative p-6 min-h-screen bg-gray-100">
+        <div className="p-8">
             <RegistrarNavbar/>
+            <h1 className="text-2xl font-bold mb-6">Zwierzęta</h1>
             {/* Floating Add Button */}
             <button
                 onClick={() => setIsAdding(true)}
                 className="fixed bottom-6 right-6 z-50 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all text-sm"
             >
-                <Plus size={20}/>
+                <Plus size={16}/>
             </button>
-
+            <div className="overflow-x-auto">
             {/* Animal Table */}
-            <div className="w-full flex mx-auto overflow-x-auto bg-white rounded-lg shadow-md p-6">
-            <table className="w-full table-auto text-sm text-left text-gray-600">
+            <table className="min-w-full border border-gray-300 bg-white shadow-md rounded-lg overflow-hidden">
                     <thead className="bg-gray-200 text-gray-700">
                     <tr>
                         <th className="px-4 py-2">ID</th>
@@ -271,8 +271,8 @@ const EditAnimal = () => {
 
 
                                     <td className="flex gap-2">
-                                        <button onClick={() => handleSaveClick(animal.id)} className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600">Zapisz</button>
-                                        <button onClick={() => setEditingAnimal(null)} className="px-2 py-1 bg-gray-400 text-white rounded hover:bg-gray-500">Anuluj</button>
+                                        <button onClick={() => handleSaveClick(animal.id)} className="px-2 py-1 text-green-600  rounded hover:text-green-400"><Save size={16}/></button>
+                                        <button onClick={() => setEditingAnimal(null)} className="px-2 py-1 text-gray-600 rounded hover:text-gray-400"><X size={16}/></button>
                                     </td>
                                 </>
                             ) : (
@@ -290,9 +290,9 @@ const EditAnimal = () => {
                                     </td>
 
                                     <td className="flex gap-2">
-                                        <button onClick={() => handleEditClick(animal)} className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"><Pencil size={20} /></button>
-                                        <button onClick={() => handleDeleteClick(animal.id)} className="p-1 text-red-600 hover:text-red-800"><Trash2 size={20} /></button>
-                                        <button onClick={() => window.location.href = `animals/${animal.id}`} className="p-1 text-blue-600 hover:text-blue-800" title="Szczegóły"><ArrowRight size={20} /></button>
+                                        <button onClick={() => handleEditClick(animal)} className="px-2 py-1 text-blue-600 hover:text-blue-400"><Pencil size={16} /></button>
+                                        <button onClick={() => handleDeleteClick(animal.id)} className="p-1 text-red-600 hover:text-red-400"><Trash2 size={16} /></button>
+                                        <button onClick={() => window.location.href = `animals/${animal.id}`} className="p-1 text-gray-600 hover:text-gray-400" title="Szczegóły"><ArrowRight size={16} /></button>
                                     </td>
                                 </>
                             )}
@@ -431,8 +431,8 @@ const EditAnimal = () => {
                     </div>
                 </div>
             )}
+            </div>
 
-        </div>
     );
 };
 

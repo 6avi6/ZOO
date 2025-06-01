@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Trash2, Pencil,Plus} from 'lucide-react';
+import { Pencil, Plus, Save, X,Trash2 } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { FaEdit } from 'react-icons/fa';
 import RegistrarNavbar from '../../components/RegistrarNavbar';
 import { getAnimalById } from '../../services/animalService';
 import { getEnclosureById } from '../../services/enclosureService';
 import { getFeedingsByAnimalId, createFeeding, updateFeeding, deleteFeeding } from '../../services/feedingsService';
-import { getCaretakersByAnimalId, assignCaretakersToAnimal } from '../../services/caretakerService';
+import { getCaretakersByAnimalId, assignCaretakersToAnimal,getAllCaregivers } from '../../services/caretakerService';
 import { getAllUsersPaged } from '../../services/userService';
 import { getAllFoodTypes } from '../../services/foodTypeService';
+import {getAllUsers} from "../../services/adminService";
 
 const AnimalDetails = () => {
     const { id } = useParams();
@@ -17,6 +18,8 @@ const AnimalDetails = () => {
     const [feedings, setFeedings] = useState([]);
     const [caretakers, setCaretakers] = useState([]);
     const [allUsers, setAllUsers] = useState([]);
+    const [careGivers, setAllCaregiver] = useState([]);
+    const [assignCaretakers, setAssignedCaregiver] = useState([]);
     const [selectedCaretakers, setSelectedCaretakers] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
     const [showAddForm, setShowAddForm] = useState(false);
@@ -24,6 +27,8 @@ const AnimalDetails = () => {
     const [foodTypeId, setFoodTypeId] = useState(1);
     const [newFeedingUsers, setNewFeedingUsers] = useState([]);
     const [foodTypes, setFoodTypes] = useState([]);
+    const modalBackdrop = "fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50";
+    const modalContent = "bg-white rounded-xl shadow-md p-6 w-full max-w-md";
 
     const formatDateTime = (isoString) => {
         const options = {
@@ -55,30 +60,22 @@ const AnimalDetails = () => {
 
                 const foodTypesData = await getAllFoodTypes();
                 setFoodTypes(foodTypesData);
-            } catch (error) {
-                console.error("Error loading data:", error);
-            }
-        };
+                const caregivers = await getAllCaregivers();
+                const caretakersOfAnimal = await getCaretakersByAnimalId(id);
 
-        fetchData();
-    }, [id]);
+                const combinedSet = new Map();
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const animalData = await getAnimalById(id);
-                setAnimal(animalData);
+                [...caregivers, ...caretakersOfAnimal].forEach(user => {
+                    combinedSet.set(user.id, user);
+                });
 
-                if (animalData.enclosureId != null || animalData.enclosure?.id != null) {
-                    const enclosureId = animalData.enclosureId || animalData.enclosure.id;
-                    const enclosureData = await getEnclosureById(enclosureId);
-                    setEnclosure(enclosureData);
-                }
+                const uniqueCaregivers = Array.from(combinedSet.values());
 
-                const feedingsData = await getFeedingsByAnimalId(id);
-                setFeedings(Array.isArray(feedingsData) ? feedingsData : [feedingsData]);
-                const caretakersData = await getCaretakersByAnimalId(id);
-                setCaretakers(caretakersData);
+                console.log("Unikalni opiekunowie:", uniqueCaregivers);
+                setAssignedCaregiver(caretakersOfAnimal)
+                setAllCaregiver(uniqueCaregivers);
+                const allUsers= await getAllUsers();
+                setAllUsers(allUsers);
             } catch (error) {
                 console.error("Error loading data:", error);
             }
@@ -90,8 +87,7 @@ const AnimalDetails = () => {
 
     const handleEditClick = async () => {
         try {
-            const users = await getAllUsersPaged();
-            setAllUsers(users);
+
             const currentIds = caretakers.map((c) => c.id);
             setSelectedCaretakers(currentIds);
             setIsEditing(true);
@@ -111,7 +107,9 @@ const AnimalDetails = () => {
     const handleAssignCaretakers = async () => {
         try {
             await assignCaretakersToAnimal(id, selectedCaretakers);
-            const updatedCaretakers = allUsers.filter(user => selectedCaretakers.includes(user.id));
+            const caretakersOfAnimal = await getCaretakersByAnimalId(id);
+            setAssignedCaregiver(caretakersOfAnimal)
+            const updatedCaretakers = careGivers.filter(user => selectedCaretakers.includes(user.id));
             setCaretakers(updatedCaretakers);
             setIsEditing(false);
         } catch (err) {
@@ -230,7 +228,7 @@ const AnimalDetails = () => {
     if (!animal) return <div className="p-8 text-center">Loading animal data...</div>;
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-gray-100 relative">
             <RegistrarNavbar />
             <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg mt-8 rounded-xl">
                 <h1 className="text-3xl font-bold mb-6">Szczegóły : {animal.name}</h1>
@@ -250,7 +248,7 @@ const AnimalDetails = () => {
 
                         {caretakers.length > 0 ? (
                             <ul className="list-disc list-inside">
-                                {caretakers.map((c) => (
+                                {assignCaretakers.map((c) => (
                                     <li key={c.id}>{c.username}</li>
                                 ))}
                             </ul>
@@ -270,7 +268,7 @@ const AnimalDetails = () => {
                     <div className="mt-4 border-t pt-4">
                         <h2 className="text-lg font-semibold mb-2">Przypisz opiekuna:</h2>
                         <div className="max-h-64 overflow-y-auto border p-2 rounded">
-                            {allUsers.map(user => (
+                            {careGivers.map(user => (
                                 <div key={user.id} className="flex items-center mb-2">
                                     <input
                                         type="checkbox"
@@ -284,9 +282,10 @@ const AnimalDetails = () => {
                         </div>
                         <button
                             onClick={handleAssignCaretakers}
-                            className="mt-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+
+                            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-400 flex items-center gap-1"
                         >
-                            Save
+                            <Save size={16} /> Zapisz
                         </button>
                     </div>
                 )}
@@ -294,69 +293,8 @@ const AnimalDetails = () => {
                 <div className="mt-6">
                     <div className="flex justify-between items-center mb-2">
                         <h2 className="text-xl font-semibold">Karmienia:</h2>
-                        <button
-                            onClick={() => setShowAddForm(true)}
-                            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-                        >
-                            <Plus size={20}/>
-                        </button>
                     </div>
 
-
-                    {showAddForm && (  //Pop up do dodawania nowych pór karmień
-                        <div className="border p-4 rounded mb-4 bg-gray-50">
-                            <h3 className="text-lg font-semibold mb-2">Nowe karmienie</h3>
-                            <div className="mb-2">
-                                <label className="block text-sm font-medium">Data i godzina karmienia:</label>
-                                <input
-                                    type="datetime-local"
-                                    value={feedingDateTime}
-                                    onChange={(e) => setFeedingTime(e.target.value)}
-                                    className="mt-1 block w-full border rounded px-2 py-1"
-                                />
-                            </div>
-                            <div className="mb-2">
-                                <label className="block text-sm font-medium">Typ jedzenia:</label>
-                                <select
-                                    value={foodTypeId}
-                                    onChange={(e) => setFoodTypeId(e.target.value)}
-                                    className="mt-1 block w-full border rounded px-2 py-1"
-                                >
-                                    {foodTypes.map(type => (
-                                        <option key={type.id} value={type.id} title={type.description}>
-                                            {type.id} | {type.name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className="mb-2">
-                                <label className="block text-sm font-medium">Przypisz opiekunów:</label>
-                                {caretakers.map(c => (
-                                    <div key={c.id} className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            checked={newFeedingUsers.includes(c.id)}
-                                            onChange={() => {
-                                                setNewFeedingUsers(prev =>
-                                                    prev.includes(c.id)
-                                                        ? prev.filter(id => id !== c.id)
-                                                        : [...prev, c.id]
-                                                );
-                                            }}
-                                            className="mr-2"
-                                        />
-                                        <span>{c.username}</span>
-                                    </div>
-                                ))}
-                            </div>
-                            <button
-                                onClick={handleAddFeedingSubmit}
-                                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-2"
-                            >
-                                Dodaj karmienie
-                            </button>
-                        </div>
-                    )}
 
                     {feedings.length > 0 ? (
                         <table className="w-full mt-2 table-auto border border-gray-300 text-sm">
@@ -418,18 +356,18 @@ const AnimalDetails = () => {
                                                     </label>
                                                 ))}
                                             </td>
-                                            <td className="border p-2 space-x-2">
+                                            <td className="border p-2 space-x-1">
                                                 <button
                                                     onClick={handleUpdateFeeding}
-                                                    className="bg-green-600 text-white px-2 py-1 rounded hover:bg-green-700"
+                                                    className="text-green-600  px-2 py-1 rounded hover:text-green-400"
                                                 >
-                                                    Save
+                                                    <Save size={16} />
                                                 </button>
                                                 <button
                                                     onClick={cancelEditFeeding}
-                                                    className="bg-gray-400 text-white px-2 py-1 rounded hover:bg-gray-500"
+                                                    className="text-gray-600 px-2 py-1 rounded hover:text-gray-400"
                                                 >
-                                                    Cancel
+                                                    <X size={16} />
                                                 </button>
                                             </td>
                                         </>
@@ -444,22 +382,22 @@ const AnimalDetails = () => {
                                             <td className="border p-2">{f.isCompleted ? 'Nakarmione' : 'Nie nakarmione'}</td>
                                             <td className="border p-2">
                                                 {f.userIds.map((uid) => {
-                                                    const user = caretakers.find((c) => c.id === uid);
+                                                    const user = allUsers.find((c) => c.id === uid);
                                                     return user ? user.username : `ID ${uid}`;
                                                 }).join(', ')}
                                             </td>
                                             <td className="border p-2 space-x-2">
                                                 <button
                                                     onClick={() => startEditFeeding(f)}
-                                                    className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
+                                                    className=" text-blue-600 px-2 py-1 rounded hover:text-blue-400"
                                                 >
-                                                    <Pencil size={20} />
+                                                    <Pencil size={16} />
                                                 </button>
                                                 <button
                                                     onClick={() => handleDeleteFeeding(f.id)}
-                                                    className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700"
+                                                    className="text-red-600 px-2 py-1 rounded hover:text-red-400"
                                                 >
-                                                    <Trash2 size={20} />
+                                                    <Trash2 size={16} />
                                                 </button>
                                             </td>
                                         </>
@@ -472,6 +410,81 @@ const AnimalDetails = () => {
                         <p>No feeding data.</p>
                     )}
                 </div>
+                {/* FAB Button */}
+                <button
+                    onClick={() => setShowAddForm(true)}
+                    className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-md hover:bg-blue-700 z-50"
+                >
+                    <Plus size={24} />
+                </button>
+
+                {/* Modal Dialog for Adding Feeding */}
+                {showAddForm && (
+                    <div className={modalBackdrop}>
+                        <div className={modalContent}>
+                            <h3 className="text-lg font-semibold mb-4">Nowe karmienie</h3>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium">Data i godzina karmienia:</label>
+                                <input
+                                    type="datetime-local"
+                                    value={feedingDateTime}
+                                    onChange={(e) => setFeedingTime(e.target.value)}
+                                    className="mt-1 w-full border rounded px-2 py-1"
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium">Typ jedzenia:</label>
+                                <select
+                                    value={foodTypeId}
+                                    onChange={(e) => setFoodTypeId(e.target.value)}
+                                    className="mt-1 w-full border rounded px-2 py-1"
+                                >
+                                    {foodTypes.map(type => (
+                                        <option key={type.id} value={type.id} title={type.description}>
+                                            {type.id} | {type.name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-sm font-medium">Przypisz opiekunów:</label>
+                                <div className="max-h-40 overflow-y-auto border p-2 rounded">
+                                    {careGivers.map(c => (
+                                        <div key={c.id} className="flex items-center mb-1">
+                                            <input
+                                                type="checkbox"
+                                                checked={newFeedingUsers.includes(c.id)}
+                                                onChange={() => {
+                                                    setNewFeedingUsers(prev =>
+                                                        prev.includes(c.id)
+                                                            ? prev.filter(id => id !== c.id)
+                                                            : [...prev, c.id]
+                                                    );
+                                                }}
+                                                className="mr-2"
+                                            />
+                                            <span>{c.username}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="flex justify-end gap-2 mt-4">
+                                <button
+                                    onClick={() => setShowAddForm(false)}
+                                    className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 flex items-center gap-1"
+                                >
+                                    <X size={16} /> Anuluj
+                                </button>
+                                <button
+                                    onClick={handleAddFeedingSubmit}
+                                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-1"
+                                >
+                                    <Save size={16} /> Zapisz
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

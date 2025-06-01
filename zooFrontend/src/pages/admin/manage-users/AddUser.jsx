@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import AdminNavbar from "../../../components/AdminNavbar";
-import { Slide, ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { registerUser } from "../../../services/adminService";
 import { IoMdClose } from "react-icons/io";
-import App from "../../../App";
-import AppToast from "../../../components/AppToast";
+import {FaSave} from "react-icons/fa";
 
 
 
-const AddUser = () => {
+const AddUser = ({ onClose, onUserAdded }) => {
   const [formData, setFormData] = useState({
     username: '',
     password: '',
@@ -34,11 +32,9 @@ const AddUser = () => {
 
       if (response === "Registration successfully completed") {
         toast.success('Użytkownik został dodany!');
-        setFormData({
-          username: '',
-          password: '',
-          role: ''
-        });
+        setFormData({ username: '', password: '', role: '' });
+        onUserAdded(); // odśwież listę użytkowników
+        onClose();     // zamknij modal
       } else {
         toast.error(response);
       }
@@ -49,62 +45,62 @@ const AddUser = () => {
   };
 
   return (
-      <div>
-        <AdminNavbar />
-        <div className="bg-white mt-12 mx-auto min-h-[300px] w-[80%] rounded-lg border shadow-sm border-gray-300 p-8 relative">
-          <h1 className="mb-6 mx-auto font-semibold text-2xl text-gray-800">Dodaj użytkownika</h1>
-          <form className="flex flex-col justify-between gap-2" onSubmit={handleRegisterUser}>
+      <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center">
+        <div className="bg-white w-full max-w-md rounded-lg p-6 relative shadow-lg">
+          <IoMdClose
+              onClick={onClose}
+              size={36}
+              className="absolute top-5 right-5 text-gray-800 cursor-pointer underline hover:text-[#e30b1e] rounded-full p-1 hover:bg-red-100 transition-all duration-150"/>
+
+          <h2 className="text-xl font-semibold mb-4">Dodaj użytkownika</h2>
+
+          <form className="flex flex-col gap-3" onSubmit={handleRegisterUser}>
             <div>
-              <label className="block text-gray-700 text-md">Nazwa użytkownika</label>
+              <label className="block text-gray-700">Nazwa użytkownika</label>
               <input
                   type="text"
                   name="username"
                   value={formData.username}
                   onChange={handleChange}
-                  className="border w-full p-1 border-gray-300 rounded-lg"
+                  className="border w-full p-2 rounded"
               />
             </div>
             <div>
-              <label className="block text-gray-700 text-md">Hasło</label>
+              <label className="block text-gray-700">Hasło</label>
               <input
                   type="password"
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="border w-full p-1 border-gray-300 rounded-lg"
+                  className="border w-full p-2 rounded"
               />
             </div>
             <div>
-              <label className="block text-gray-700 text-md">Rola</label>
+              <label className="block text-gray-700">Rola</label>
               <select
                   name="role"
                   value={formData.role}
                   onChange={handleChange}
-                  className="border w-full p-1 border-gray-300 rounded-lg"
+                  className="border w-full p-2 rounded"
               >
-                <option value="">Wybierz rolę</option>
-                {roles.map((role, index) => (
-                    <option key={index} value={role}>{role}</option>
-                ))}
+                <option value="ADMIN">Administrator</option>
+                <option value="DIRECTOR">Dyrektor</option>
+                <option value="VETERINARIAN">Weterynarz</option>
+                <option value="REGISTRAR">Rejestrator</option>
+                <option value="CAREGIVER">Opiekun</option>
               </select>
             </div>
             <button
                 type="submit"
-                className="mt-4 mx-auto w-1/3 bg-[#526C43] hover:bg-[#234228] text-white py-2 px-4 rounded-md transition-all duration-150"
+                className="bg-[#526C43] text-white w-[50%] mx-auto py-2 rounded-full hover:bg-[#234228] transition-colors flex items-center justify-center gap-2"
             >
+              <FaSave />
+
               Zapisz
             </button>
 
           </form>
 
-          <IoMdClose
-              onClick={() => window.history.back()}
-              size={36}
-              className="absolute top-6 right-7 text-gray-800 rounded-md cursor-pointer underline hover:text-[#e30b1e] transition-all duration-150"/>
-
-
-
-          <AppToast />
         </div>
       </div>
   );

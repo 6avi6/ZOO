@@ -52,10 +52,10 @@ const WorkSchedule = () => {
                             <td className="px-4 py-2">
                                 <button
                                     onClick={() => navigate(`/registrar/work-schedule/${user.id}`)}
-                                    className="text-gray-600 font-semibold flex items-center gap-1"
+                                    className="text-gray-600 hover:text-gray-400 font-semibold flex items-center gap-1"
                                     title="Zobacz harmonogram"
                                 >
-                                    <ArrowRight size={18} />
+                                    <ArrowRight size={16} />
                                 </button>
                             </td>
                         </tr>

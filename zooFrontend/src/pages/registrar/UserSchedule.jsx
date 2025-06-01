@@ -8,7 +8,7 @@ import {
     deleteWorkSchedule
 } from '../../services/workScheduleService';
 import RegistrarNavbar from "../../components/RegistrarNavbar";
-import { Pencil, Plus, Save, X,ArrowRight } from 'lucide-react';
+import { Pencil, Plus, Trash2, Save, X } from 'lucide-react';
 
 
 const UserSchedule = () => {
@@ -230,23 +230,23 @@ const UserSchedule = () => {
                                     )}
                                 </td>
 
-                                <td className={`p-2 flex flex-col gap-2 items-start`}>
+                                <td className={`p-2 flex justify-center gap-2`}>
                                     {editingId === schedule.id ? (
                                         <>
-                                            <button onClick={handleSaveClick} className="text-green-600 font-semibold flex items-center gap-1">
-                                                <Save size={16} /> Zapisz
+                                            <button onClick={handleSaveClick} className="text-green-600 hover:text-green-400 px-2 py-2">
+                                                <Save size={16} />
                                             </button>
-                                            <button onClick={handleCancelEdit} className="text-gray-600 flex items-center gap-1">
-                                                <X size={16} /> Anuluj
+                                            <button onClick={handleCancelEdit} className="text-gray-600 hover:text-gray-400 px-2 py-2">
+                                                <X size={16} />
                                             </button>
                                         </>
                                     ) : (
                                         <>
-                                            <button onClick={() => handleEdit(schedule)} className="text-blue-600 font-semibold flex items-center gap-1">
-                                                <Pencil size={16} /> Edytuj
+                                            <button onClick={() => handleEdit(schedule)} className="text-blue-600 hover:text-blue-400 px-2 py-">
+                                                <Pencil size={16} />
                                             </button>
-                                            <button onClick={() => handleDelete(schedule.id)} className="text-red-600 font-semibold flex items-center gap-1">
-                                                <X size={16} /> Usuń
+                                            <button onClick={() => handleDelete(schedule.id)} className="text-red-600 hover:text-red-400 px-2 py-">
+                                                <Trash2 size={16} />
                                             </button>
                                         </>
                                     )}

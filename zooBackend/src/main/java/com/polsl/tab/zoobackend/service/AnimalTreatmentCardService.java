@@ -60,6 +60,9 @@ public class AnimalTreatmentCardService {
         animalTreatmentCard.setSymptoms(symptoms);
 
         animalTreatmentCard = animalTreatmentCardRepository.save(animalTreatmentCard);
+
+        animalTreatmentCard = animalTreatmentCardRepository.findById(animalTreatmentCard.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Card not found after save"));
         return animalTreatmentCardMapper.toDto(animalTreatmentCard);
     }
 

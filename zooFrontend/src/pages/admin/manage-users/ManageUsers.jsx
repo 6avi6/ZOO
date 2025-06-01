@@ -2,18 +2,33 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import AdminNavbar from "../../../components/AdminNavbar";
 import { getAllUsers } from '../../../services/adminService';
-import { MdDriveFileRenameOutline } from "react-icons/md";
 import { MdOutlineDelete } from "react-icons/md";
 import { IoPersonAddOutline } from "react-icons/io5";
 import {deleteUser} from "../../../services/userService";
 import { toast } from "react-toastify";
-import AppToast from "../../../components/AppToast";
 import { AiOutlineEdit } from "react-icons/ai";
+import EditUser from './EditUser';
+import AddUserModal from './AddUser';
+
+
 
 const ManageUsers = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [editingUserId, setEditingUserId] = useState(null);
+    const [showAddModal, setShowAddModal] = useState(false);
+
+
+    const refreshUsers = async () => {
+        try {
+            const data = await getAllUsers();
+            setUsers(data);
+        } catch {
+            toast.error("Nie udało się odświeżyć listy użytkowników.");
+        }
+    };
+
 
     const handleDelete = async (id) => {
         setLoading(true);
@@ -51,10 +66,14 @@ const ManageUsers = () => {
             <div className="bg-white relative mt-12 mx-auto min-h-[300px] w-[80%] rounded-lg border shadow-sm border-gray-300  p-8">
                 <div className="flex-row items-center justify-between mb-6">
                     <h1 className="text-2xl font-semibold text-gray-800">Lista użytkowników</h1>
-                    <Link to="/admin/manage-users/add" className="absolute right-0 top-0 mr-6 mt-6 bg-[#526C43] hover:bg-[#234228] text-white py-3 px-3 rounded-full transition-all duration-150">
+                    <button
+                        onClick={() => setShowAddModal(true)}
+                        className="absolute right-0 top-0 mr-6 mt-6 bg-[#526C43] hover:bg-[#234228] text-white py-3 px-3 rounded-full transition-all duration-150"
+                    >
                         <IoPersonAddOutline className="inline-block w-6 sm:mr-4 h-6" />
                         <span className="hidden sm:inline">Dodaj użytkownika</span>
-                    </Link>
+                    </button>
+
 
                 </div>
 
@@ -86,10 +105,12 @@ const ManageUsers = () => {
 
 
                                 <td className="text-right">
-                                    <Link to={`/admin/manage-users/edit/${user.id}`} className="text-black hover:text-[#08bf29] transition-all duration-150">
-                                        <AiOutlineEdit className="inline-block w-6 mr-4 h-6" />
-                                    </Link>
-                                        <MdOutlineDelete className="inline-block mr-3 w-6 h-6 hover:text-[#e30b1e] transition-all duration-150 cursor-pointer"
+                                    <AiOutlineEdit
+                                        className="inline-block w-6 mr-4 h-6 cursor-pointer hover:text-[#08bf29] transition-all duration-150"
+                                        onClick={() => setEditingUserId(user.id)}
+                                    />
+
+                                    <MdOutlineDelete className="inline-block mr-3 w-6 h-6 hover:text-[#e30b1e] transition-all duration-150 cursor-pointer"
                                         onClick={() => handleDelete(user.id)}/>
 
                                 </td>
@@ -98,8 +119,20 @@ const ManageUsers = () => {
                         </tbody>
                     </table>
                 )}
+                {editingUserId && (
+                    <EditUser
+                        userId={editingUserId}
+                        onClose={() => setEditingUserId(null)}
+                        onUserUpdated={refreshUsers}
+                    />
+                )}
+                {showAddModal && (
+                    <AddUserModal
+                        onClose={() => setShowAddModal(false)}
+                        onUserAdded={refreshUsers}
+                    />
+                )}
 
-                <AppToast />
 
 
             </div>

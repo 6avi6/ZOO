@@ -36,8 +36,6 @@ import EmployeesReport from '../pages/director/EmployeesReport';
 import EnclosuresReport from '../pages/director/EnclosuresReport';
 import AnimalsCaregiversReport from '../pages/director/AnimalsCaregiversReport';
 import SickAnimalsReport from '../pages/director/SickAnimalsReport';
-import ManageAnimalCaregivers from '../pages/director/ManageAnimalCaregivers'; 
-
 
 //Caregiver
 import CaregiverAnimals from '../pages/caregiver/CaregiverAnimals';
@@ -99,7 +97,7 @@ const AppRouter = () => {
             <Route path="/director/reports/enclosures" element={<EnclosuresReport />} />
             <Route path="/director/reports/assignments" element={<AnimalsCaregiversReport />} />
             <Route path="/director/reports/sick-animals" element={<SickAnimalsReport />} />
-            <Route path="/director/manage-assignments" element={<ManageAnimalCaregivers />} />
+          
 
         </Route>
 

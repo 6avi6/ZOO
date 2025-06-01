@@ -26,6 +26,7 @@ export const createAnimalTreatmentCard = async (cardData) => {
 // Aktualizuj kartę leczenia
 export const updateAnimalTreatmentCard = async (id, cardData) => {
     try {
+        console.log('Update payload wysyłany do backendu:', cardData);
         const response = await axiosInstance.put(`/api/animal-treatment-card/${id}`, cardData);
         return response.data;
     } catch (error) {

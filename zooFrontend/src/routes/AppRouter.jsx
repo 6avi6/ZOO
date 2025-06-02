@@ -25,9 +25,8 @@ import ManageDictionary from '../pages/admin/manage-dictionary/ManageDictionary'
 import AddUser from '../pages/admin/manage-users/AddUser';
 import EditUser from '../pages/admin/manage-users/EditUser';
 import UserDetails from '../pages/admin/manage-users/UserDetails';
-import AddAnimalSpecies from '../pages/admin/manage-dictionary/AddAnimalSpecies';
-import AddFoodType from '../pages/admin/manage-dictionary/AddFoodType';
-import AddEnclosureType from '../pages/admin/manage-dictionary/AddEnclosureType';
+import AnimalTypesList from '../pages/admin/manage-dictionary/AnimalTypesList';
+import FoodList from '../pages/admin/manage-dictionary/FoodList';
 
 
 import ReportsOverview from '../pages/director/ReportsOverview';
@@ -51,6 +50,8 @@ import HomeRedirect from "./HomeRedirect";
 
 
 import UserAccount from '../pages/userAccount';
+import SymptomsList from "../pages/admin/manage-dictionary/SymptomsList";
+import TerrainsList from "../pages/admin/manage-dictionary/TerrainsList";
 
 
 
@@ -82,9 +83,10 @@ const AppRouter = () => {
             <Route path="/admin/manage-users/add" element={<AddUser />} />
             <Route path="/admin/manage-users/edit/:id" element={<EditUser />} />
             <Route path="/admin/manage-users/:id" element={<UserDetails />} />
-            <Route path="/admin/add-animal-species" element={<AddAnimalSpecies />} />
-            <Route path="/admin/add-food-type" element={<AddFoodType />} />
-            <Route path="/admin/add-enclosure-type" element={<AddEnclosureType />} />
+            <Route path="/admin/dictionary/animals" element={<AnimalTypesList />} />
+            <Route path="/admin/dictionary/feed" element={<FoodList />} />
+            <Route path="/admin/dictionary/symptoms" element={<SymptomsList />} />
+            <Route path="/admin/dictionary/terrains" element={<TerrainsList />} />
         </Route>
 
         <Route element={<PrivateRoute requiredRole="DIRECTOR" />}>

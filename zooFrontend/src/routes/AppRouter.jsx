@@ -11,14 +11,14 @@ import VeterinarianDashboard from '../pages/veterinarian/dashboard/VeterinarianD
 
 //Registrar
 import RegistrarDashboard from '../pages/registrar/dashboard/RegistrarDashboard';
-import EditAnimal from '../pages/registrar/EditAnimal';
-import EditCaretaker from '../pages/registrar/EditCaretaker';
-import EditEnclosure from '../pages/registrar/EditEnclosure';
-import AnimalDetailsRegistrar from '../pages/registrar/AnimalDetails';
-import WorkSchedule  from '../pages/registrar/WorkSchedule';
-import UserSchedule from '../pages/registrar/UserSchedule';
-import EditFoodTypes from '../pages/registrar/EditFoodTypes';
-import EditSymptomsTypes from '../pages/registrar/EditSymptomsTypes';
+import EditAnimal from '../pages/registrar/animalRegistration/EditAnimal';
+import AnimalDetailsRegistrar from '../pages/registrar/animalRegistration/AnimalDetails';
+import EditCaretaker from '../pages/registrar/caretakerManagment/EditCaretaker';
+import EditEnclosure from '../pages/registrar/enclosureManagment/EditEnclosure';
+import WorkSchedule  from '../pages/registrar/workHours/WorkSchedule';
+import UserSchedule from '../pages/registrar/workHours/UserSchedule';
+import EditFoodTypes from '../pages/registrar/foodTypesManagment/EditFoodTypes';
+import EditSymptomsTypes from '../pages/registrar/symptomsTypesManagment/EditSymptomsTypes';
 
 import ManageUsers from '../pages/admin/manage-users/ManageUsers';
 import ManageDictionary from '../pages/admin/manage-dictionary/ManageDictionary';
@@ -73,8 +73,6 @@ const AppRouter = () => {
             <Route path="/registrar/work-schedule/:id" element={<UserSchedule />} />
             <Route path="/registrar/edit-food-types" element={<EditFoodTypes />} />
             <Route path="/registrar/edit-symptom-types" element={<EditSymptomsTypes />} />
-            import EditFoodTypes from '../pages/registrar/EditFoodTypes';
-            import EditSymptomsTypes from '../pages/registrar/EditSymptomsTypes';
         </Route>
 
         <Route element={<PrivateRoute requiredRole="ADMIN" />}>

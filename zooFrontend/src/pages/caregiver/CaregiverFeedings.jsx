@@ -23,7 +23,7 @@ const CaregiverFeedings = () => {
             hour: '2-digit',
             minute: '2-digit'
         };
-        return new Date(isoString).toLocaleString('pl-PL', options).replace(',', '');
+        return new Date(isoString).toLocaleString('en-GB', options).replace(',', '');
     };
 
     useEffect(() => {
@@ -49,7 +49,7 @@ const CaregiverFeedings = () => {
                 setEnclosureMap(enclosureMapData);
 
             } catch (error) {
-                console.error('Błąd podczas pobierania karmień:', error);
+                console.error('Error fetching feedings:', error);
             }
         };
         fetchFeedings();
@@ -81,26 +81,26 @@ const CaregiverFeedings = () => {
             setFeedings(updated);
             setEditingId(null);
         } catch (error) {
-            console.error('Błąd podczas zapisu zmian:', error);
+            console.error('Error saving changes:', error);
         }
     };
 
     return (
         <div className="min-h-screen bg-gray-50 p-6">
             <CaregiverNavbar />
-            <h1 className="text-2xl font-bold mb-6">Moje karmienia</h1>
+            <h1 className="text-2xl font-bold mb-6">My Feedings</h1>
             <div className="overflow-auto rounded-lg bg-white shadow-md">
 
                 {feedings.length > 0 ? (
                     <table className="min-w-full divide-y divide-gray-200 text-sm">
                         <thead className="bg-gray-200 text-gray-700">
                         <tr>
-                            <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Godzina karmienia</th>
-                            <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Typ jedzenia</th>
+                            <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Feeding Time</th>
+                            <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Food Type</th>
                             <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Status</th>
-                            <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Wybieg</th>
-                            <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Zwierzęta</th>
-                            <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Akcje</th>
+                            <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Enclosure</th>
+                            <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Animals</th>
+                            <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Actions</th>
                         </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
@@ -142,12 +142,12 @@ const CaregiverFeedings = () => {
                                             onChange={e => setEditData({ ...editData, isCompleted: e.target.value === 'completed' })}
                                             className="border rounded p-1"
                                         >
-                                            <option value="completed">Nakarmione</option>
-                                            <option value="not_completed">Nie nakarmione</option>
+                                            <option value="completed">Fed</option>
+                                            <option value="not_completed">Not Fed</option>
                                         </select>
                                     ) : (
                                         <span>
-                                            {f.isCompleted ? 'Nakarmione' : 'Nie nakarmione'}
+                                            {f.isCompleted ? 'Fed' : 'Not Fed'}
                                         </span>
                                     )}
                                 </td>
@@ -178,7 +178,7 @@ const CaregiverFeedings = () => {
                         </tbody>
                     </table>
                 ) : (
-                    <p>Brak dostępnych karmień.</p>
+                    <p>No feedings available.</p>
                 )}
             </div>
         </div>

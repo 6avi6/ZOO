@@ -15,7 +15,7 @@ const CaregiverScheduler = () => {
                 const scheduleData = await getPagedWorkSchedules(0, 50, currentUser.id);
                 setSchedule(scheduleData.content);
             } catch (err) {
-                console.error('Błąd podczas ładowania harmonogramu:', err);
+                console.error('Error loading schedule:', err);
             }
         };
 
@@ -26,14 +26,14 @@ const CaregiverScheduler = () => {
         <div className="min-h-screen bg-gray-50 p-6">
             <CaregiverNavbar />
 
-            <h1 className="text-2xl font-bold mb-6">Mój grafik pracy</h1>
+            <h1 className="text-2xl font-bold mb-6">My Work Schedule</h1>
             <div className="overflow-auto rounded-lg bg-white shadow-md">
                 {schedule.length > 0 ? (
                     <table className="min-w-full divide-y divide-gray-200 text-sm">
                         <thead className="bg-gray-200 text-gray-700">
                         <tr>
-                            <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Start zmiany</th>
-                            <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Koniec zmiany</th>
+                            <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Shift Start</th>
+                            <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Shift End</th>
                         </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
@@ -50,7 +50,7 @@ const CaregiverScheduler = () => {
                         </tbody>
                     </table>
                 ) : (
-                    <p>Brak dostępnych danych o harmonogramie.</p>
+                    <p>No schedule data available.</p>
                 )}
             </div>
 

@@ -4,8 +4,8 @@ import {
     createFoodType,
     updateFoodType,
     deleteFoodType
-} from '../../services/foodTypeService';
-import RegistrarNavbar from "../../components/RegistrarNavbar";
+} from '../../../services/foodTypeService';
+import RegistrarNavbar from "../../../components/RegistrarNavbar";
 import { Pencil, Save, Trash2, X, Plus } from "lucide-react";
 
 const EditFoodTypes = () => {
@@ -24,7 +24,7 @@ const EditFoodTypes = () => {
             const data = await getAllFoodTypes();
             setFoodTypes(data);
         } catch (error) {
-            console.error("Błąd ładowania typów jedzenia:", error);
+            console.error("Error loading food types:", error);
         }
     };
 
@@ -35,7 +35,7 @@ const EditFoodTypes = () => {
             setShowModal(false);
             fetchFoodTypes();
         } catch (error) {
-            console.error("Błąd przy dodawaniu typu jedzenia:", error);
+            console.error("Error adding food type:", error);
         }
     };
 
@@ -44,7 +44,7 @@ const EditFoodTypes = () => {
             await deleteFoodType(id);
             fetchFoodTypes();
         } catch (error) {
-            console.error("Błąd przy usuwaniu typu jedzenia:", error);
+            console.error("Error deleting food type:", error);
         }
     };
 
@@ -68,23 +68,23 @@ const EditFoodTypes = () => {
             setEditIndex(null);
             fetchFoodTypes();
         } catch (error) {
-            console.error("Błąd przy aktualizacji typu jedzenia:", error);
+            console.error("Error updating food type:", error);
         }
     };
 
     return (
         <div className="p-8">
             <RegistrarNavbar />
-            <h1 className="text-2xl font-bold mb-6">Typy Jedzenia</h1>
+            <h1 className="text-2xl font-bold mb-6">Food Types</h1>
             <div className="overflow-x-auto">
 
                 <table className="min-w-full border border-gray-300 bg-white shadow-md rounded-lg overflow-hidden">
                     <thead>
                     <tr className="bg-gray-100 text-gray-700">
                         <th className="border px-4 py-2">ID</th>
-                        <th className="border px-4 py-2">Nazwa</th>
-                        <th className="border px-4 py-2">Opis</th>
-                        <th className="border px-4 py-2">Akcje</th>
+                        <th className="border px-4 py-2">Name</th>
+                        <th className="border px-4 py-2">Description</th>
+                        <th className="border px-4 py-2">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -155,27 +155,27 @@ const EditFoodTypes = () => {
             <button
                 onClick={() => setShowModal(true)}
                 className="fixed bottom-8 right-8 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg"
-                title="Dodaj typ jedzenia"
+                title="Add Food Type"
             >
                 <Plus size={20} />
             </button>
 
-            {/* Modal dodawania */}
+            {/* Add Modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
                     <div className="bg-white p-6 rounded-xl shadow-lg w-full max-w-md">
-                        <h2 className="text-2xl font-semibold mb-4 text-center">Nowy Typ Jedzenia</h2>
+                        <h2 className="text-2xl font-semibold mb-4 text-center">New Food Type</h2>
                         <div className="space-y-4">
                             <input
                                 type="text"
-                                placeholder="Nazwa"
+                                placeholder="Name"
                                 value={newFood.name}
                                 onChange={(e) => setNewFood(prev => ({ ...prev, name: e.target.value }))}
                                 className="w-full border rounded px-3 py-2"
                             />
                             <input
                                 type="text"
-                                placeholder="Opis"
+                                placeholder="Description"
                                 value={newFood.description}
                                 onChange={(e) => setNewFood(prev => ({ ...prev, description: e.target.value }))}
                                 className="w-full border rounded px-3 py-2"
@@ -186,13 +186,13 @@ const EditFoodTypes = () => {
                                 onClick={() => setShowModal(false)}
                                 className="bg-gray-400 text-white px-4 py-2 rounded flex items-center gap-2"
                             >
-                                <X size={16} /> Anuluj
+                                <X size={16} /> Cancel
                             </button>
                             <button
                                 onClick={handleAddFoodType}
                                 className="bg-green-500 text-white px-4 py-2 rounded flex items-center gap-2"
                             >
-                                <Save size={16} />Dodaj
+                                <Save size={16} />Add
                             </button>
                         </div>
                     </div>

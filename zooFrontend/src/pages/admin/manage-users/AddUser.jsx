@@ -52,11 +52,11 @@ const AddUser = ({ onClose, onUserAdded }) => {
               size={36}
               className="absolute top-5 right-5 text-gray-800 cursor-pointer underline hover:text-[#e30b1e] rounded-full p-1 hover:bg-red-100 transition-all duration-150"/>
 
-          <h2 className="text-xl font-semibold mb-4">Dodaj użytkownika</h2>
+          <h2 className="text-xl font-semibold mb-4">Add user</h2>
 
           <form className="flex flex-col gap-3" onSubmit={handleRegisterUser}>
             <div>
-              <label className="block text-gray-700">Nazwa użytkownika</label>
+              <label className="block text-gray-700">Username</label>
               <input
                   type="text"
                   name="username"
@@ -66,7 +66,7 @@ const AddUser = ({ onClose, onUserAdded }) => {
               />
             </div>
             <div>
-              <label className="block text-gray-700">Hasło</label>
+              <label className="block text-gray-700">Password</label>
               <input
                   type="password"
                   name="password"
@@ -76,18 +76,17 @@ const AddUser = ({ onClose, onUserAdded }) => {
               />
             </div>
             <div>
-              <label className="block text-gray-700">Rola</label>
+              <label className="block text-gray-700">Role</label>
               <select
                   name="role"
                   value={formData.role}
                   onChange={handleChange}
                   className="border w-full p-2 rounded"
               >
-                <option value="ADMIN">Administrator</option>
-                <option value="DIRECTOR">Dyrektor</option>
-                <option value="VETERINARIAN">Weterynarz</option>
-                <option value="REGISTRAR">Rejestrator</option>
-                <option value="CAREGIVER">Opiekun</option>
+                <option value="DIRECTOR">Director</option>
+                <option value="VETERINARIAN">Veterinarian</option>
+                <option value="REGISTRAR">Registrar</option>
+                <option value="CAREGIVER">Caregiver</option>
               </select>
             </div>
             <button
@@ -96,7 +95,7 @@ const AddUser = ({ onClose, onUserAdded }) => {
             >
               <FaSave />
 
-              Zapisz
+              Save
             </button>
 
           </form>

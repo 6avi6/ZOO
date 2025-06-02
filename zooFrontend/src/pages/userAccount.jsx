@@ -60,7 +60,7 @@ const handleSave = async () => {
                 return <RegistrarNavbar />;
                 case 'VETERINARIAN':
                  return <VeterinarianNavbar />;
-            default:
+            case 'CAREGIVER':
                 return <CaregiverNavbar />;
         }
     };
@@ -117,7 +117,6 @@ const handleSave = async () => {
                             onClick={handleSave}>Save</button>
                 </div>
             </div>
-            <AppToast />
         </div>
     );
 };

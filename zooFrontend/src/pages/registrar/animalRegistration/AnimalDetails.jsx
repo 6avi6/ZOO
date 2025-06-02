@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Pencil, Plus, Save, X,Trash2 } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import { FaEdit } from 'react-icons/fa';
-import RegistrarNavbar from '../../components/RegistrarNavbar';
-import { getAnimalById } from '../../services/animalService';
-import { getEnclosureById } from '../../services/enclosureService';
-import { getFeedingsByAnimalId, createFeeding, updateFeeding, deleteFeeding } from '../../services/feedingsService';
-import { getCaretakersByAnimalId, assignCaretakersToAnimal,getAllCaregivers } from '../../services/caretakerService';
-import { getAllUsersPaged } from '../../services/userService';
-import { getAllFoodTypes } from '../../services/foodTypeService';
-import {getAllUsers} from "../../services/adminService";
+import RegistrarNavbar from '../../../components/RegistrarNavbar';
+import { getAnimalById } from '../../../services/animalService';
+import { getEnclosureById } from '../../../services/enclosureService';
+import { getFeedingsByAnimalId, createFeeding, updateFeeding, deleteFeeding } from '../../../services/feedingsService';
+import { getCaretakersByAnimalId, assignCaretakersToAnimal,getAllCaregivers } from '../../../services/caretakerService';
+import { getAllUsersPaged } from '../../../services/userService';
+import { getAllFoodTypes } from '../../../services/foodTypeService';
+import {getAllUsers} from "../../../services/adminService";
 
 const AnimalDetails = () => {
     const { id } = useParams();
@@ -71,7 +71,6 @@ const AnimalDetails = () => {
 
                 const uniqueCaregivers = Array.from(combinedSet.values());
 
-                console.log("Unikalni opiekunowie:", uniqueCaregivers);
                 setAssignedCaregiver(caretakersOfAnimal)
                 setAllCaregiver(uniqueCaregivers);
                 const allUsers= await getAllUsers();
@@ -126,7 +125,6 @@ const AnimalDetails = () => {
             enclosureId: enclosure?.id,
             userIds: newFeedingUsers
         };
-        console.log("Submitting feeding:", newFeeding);
         try {
             await createFeeding(newFeeding);
             const updatedFeedings = await getFeedingsByAnimalId(id);
@@ -157,7 +155,7 @@ const AnimalDetails = () => {
         userIds: []
     });
 
-    // Funkcja do rozpoczęcia edycji karmienia
+    /// Function to start editing feeding
     const startEditFeeding = (feeding) => {
         setEditingFeedingId(feeding.id);
         setEditingFeedingData({
@@ -168,7 +166,7 @@ const AnimalDetails = () => {
         });
     };
 
-    // Obsługa zmian formularza edycji karmienia
+// Handling changes in feeding edit form
     const handleEditingChange = (field, value) => {
         setEditingFeedingData(prev => ({
             ...prev,
@@ -176,7 +174,7 @@ const AnimalDetails = () => {
         }));
     };
 
-    // Obsługa checkboxów caretakers w edycji karmienia
+// Handling caretakers checkbox in feeding edit
     const toggleEditingCaretaker = (userId) => {
         setEditingFeedingData(prev => ({
             ...prev,
@@ -186,7 +184,7 @@ const AnimalDetails = () => {
         }));
     };
 
-    // Zatwierdzenie edycji karmienia
+// Confirm feeding edit
     const handleUpdateFeeding = async () => {
         try {
             await updateFeeding(editingFeedingId, {
@@ -197,11 +195,11 @@ const AnimalDetails = () => {
                 animalIds: [parseInt(id)],
             });
 
-            // Odśwież karmienia
+            // Refresh feedings
             const updatedFeedings = await getFeedingsByAnimalId(id);
             setFeedings(Array.isArray(updatedFeedings) ? updatedFeedings : [updatedFeedings]);
 
-            // Zamknij edycję
+            // Close edit mode
             setEditingFeedingId(null);
             setEditingFeedingData({
                 feedingDateTime: '',
@@ -214,7 +212,7 @@ const AnimalDetails = () => {
         }
     };
 
-    // Anulowanie edycji
+// Cancel feeding edit
     const cancelEditFeeding = () => {
         setEditingFeedingId(null);
         setEditingFeedingData({
@@ -231,24 +229,24 @@ const AnimalDetails = () => {
         <div className="min-h-screen bg-gray-100 relative">
             <RegistrarNavbar />
             <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg mt-8 rounded-xl">
-                <h1 className="text-3xl font-bold mb-6">Szczegóły : {animal.name}</h1>
+                <h1 className="text-3xl font-bold mb-6">Details: {animal.name}</h1>
 
                 <div className="grid grid-cols-2 gap-8">
                     <div className="space-y-2">
-                        <div><strong>Gatunek:</strong> {animal.species}</div>
-                        <div><strong>Stan:</strong> <span
+                        <div><strong>Species:</strong> {animal.species}</div>
+                        <div><strong>Condition:</strong> <span
                             className={
                                 (animal.condition === 'Good' || animal.condition === 'GOOD')
                                     ? 'text-green-600 font-semibold'
                                     : animal.condition === 'INJURED'
                                         ? 'text-yellow-600 font-semibold'
-                                        : 'text-red-600 font-semibold'
+                                        : 'text-gray-600 font-semibold'
                             }
                         > {animal.condition}</span></div>
-                        <div><strong>Data urodzenia:</strong> {animal.birthDate}</div>
+                        <div><strong>Date of Birth:</strong> {animal.birthDate}</div>
 
                         <div className="flex items-center justify-between mt-4">
-                            <h2 className="text-lg font-semibold">Aktualni opiekunowie:</h2>
+                            <h2 className="text-lg font-semibold">Current Caretakers:</h2>
                             <button onClick={handleEditClick} className="text-blue-600 hover:text-blue-800">
                                 <FaEdit />
                             </button>
@@ -261,20 +259,20 @@ const AnimalDetails = () => {
                                 ))}
                             </ul>
                         ) : (
-                            <p>Brak przypisanych opiekunów.</p>
+                            <p>No assigned caretakers.</p>
                         )}
                     </div>
 
                     <div className="space-y-2">
-                        <div><strong>Płeć:</strong> {animal.sex}</div>
-                        <div><strong>Waga:</strong> {animal.weight} kg</div>
-                        <div><strong>Wybieg:</strong> {enclosure ? `${enclosure.id} | ${enclosure.terrainType}` : 'No data'}</div>
+                        <div><strong>Sex:</strong> {animal.sex}</div>
+                        <div><strong>Weight:</strong> {animal.weight} kg</div>
+                        <div><strong>Enclosure:</strong> {enclosure ? `${enclosure.id} | ${enclosure.terrainType}` : 'No data'}</div>
                     </div>
                 </div>
 
-                {isEditing && ( //Edycja opiekunów
+                {isEditing && ( // Edit caretakers
                     <div className="mt-4 border-t pt-4">
-                        <h2 className="text-lg font-semibold mb-2">Przypisz opiekuna:</h2>
+                        <h2 className="text-lg font-semibold mb-2">Assign Caretaker:</h2>
                         <div className="max-h-64 overflow-y-auto border p-2 rounded">
                             {careGivers.map(user => (
                                 <div key={user.id} className="flex items-center mb-2">
@@ -290,29 +288,27 @@ const AnimalDetails = () => {
                         </div>
                         <button
                             onClick={handleAssignCaretakers}
-
                             className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-400 flex items-center gap-1"
                         >
-                            <Save size={16} /> Zapisz
+                            <Save size={16} /> Save
                         </button>
                     </div>
                 )}
 
                 <div className="mt-6">
                     <div className="flex justify-between items-center mb-2">
-                        <h2 className="text-xl font-semibold">Karmienia:</h2>
+                        <h2 className="text-xl font-semibold">Feedings:</h2>
                     </div>
-
 
                     {feedings.length > 0 ? (
                         <table className="w-full mt-2 table-auto border border-gray-300 text-sm">
                             <thead>
                             <tr className="bg-gray-200">
-                                <th className="border p-2">Czas</th>
-                                <th className="border p-2">Typ jedzenia</th>
-                                <th className="border p-2">Status karmienia</th>
-                                <th className="border p-2">Opiekunowie</th>
-                                <th className="border p-2">Akcje</th>
+                                <th className="border p-2">Time</th>
+                                <th className="border p-2">Food Type</th>
+                                <th className="border p-2">Feeding Status</th>
+                                <th className="border p-2">Caretakers</th>
+                                <th className="border p-2">Actions</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -333,22 +329,22 @@ const AnimalDetails = () => {
                                                     value={editingFeedingData.foodTypeId}
                                                     onChange={(e) => handleEditingChange('foodTypeId', e.target.value)}
                                                     className="border rounded px-1 py-0.5 w-full"
-                                                    >
+                                                >
                                                     {foodTypes.map(type => (
                                                         <option key={type.id} value={type.id} title={type.description}>
                                                             {type.id} | {type.name}
                                                         </option>
                                                     ))}
-                                            </select>
-                                        </td>
+                                                </select>
+                                            </td>
                                             <td className="border p-2">
                                                 <select
                                                     value={editingFeedingData.isCompleted ? 'completed' : 'not_completed'}
                                                     onChange={e => handleEditingChange('isCompleted', e.target.value === 'completed')}
                                                     className="border rounded px-1 py-0.5"
                                                 >
-                                                    <option value="completed">Nakarmione</option>
-                                                    <option value="not_completed">Nie nakarmione</option>
+                                                    <option value="completed">Completed</option>
+                                                    <option value="not_completed">Not completed</option>
                                                 </select>
                                             </td>
                                             <td className="border p-2 max-w-xs">
@@ -367,7 +363,7 @@ const AnimalDetails = () => {
                                             <td className="border p-2 space-x-1">
                                                 <button
                                                     onClick={handleUpdateFeeding}
-                                                    className="text-green-600  px-2 py-1 rounded hover:text-green-400"
+                                                    className="text-green-600 px-2 py-1 rounded hover:text-green-400"
                                                 >
                                                     <Save size={16} />
                                                 </button>
@@ -383,11 +379,13 @@ const AnimalDetails = () => {
                                         <>
                                             <td className="border p-2">{formatDateTime(f.feedingDateTime)}</td>
                                             <td className="border p-2" title={
-                                                foodTypes.find(ft => ft.id === f.foodTypeId)?.description || 'Brak opisu'
+                                                foodTypes.find(ft => ft.id === f.foodTypeId)?.description || 'No description'
                                             }>
-                                                {foodTypes.find(ft => ft.id === f.foodTypeId) ? `${f.foodTypeId} | ${foodTypes.find(ft => ft.id === f.foodTypeId).name}` : `ID ${f.foodTypeId}`}
+                                                {foodTypes.find(ft => ft.id === f.foodTypeId)
+                                                    ? `${f.foodTypeId} | ${foodTypes.find(ft => ft.id === f.foodTypeId).name}`
+                                                    : `ID ${f.foodTypeId}`}
                                             </td>
-                                            <td className="border p-2">{f.isCompleted ? 'Nakarmione' : 'Nie nakarmione'}</td>
+                                            <td className="border p-2">{f.isCompleted ? 'Completed' : 'Not completed'}</td>
                                             <td className="border p-2">
                                                 {f.userIds.map((uid) => {
                                                     const user = allUsers.find((c) => c.id === uid);
@@ -397,7 +395,7 @@ const AnimalDetails = () => {
                                             <td className="border p-2 space-x-2">
                                                 <button
                                                     onClick={() => startEditFeeding(f)}
-                                                    className=" text-blue-600 px-2 py-1 rounded hover:text-blue-400"
+                                                    className="text-blue-600 px-2 py-1 rounded hover:text-blue-400"
                                                 >
                                                     <Pencil size={16} />
                                                 </button>
@@ -415,7 +413,7 @@ const AnimalDetails = () => {
                             </tbody>
                         </table>
                     ) : (
-                        <p>No feeding data.</p>
+                        <p>No feeding data available.</p>
                     )}
                 </div>
                 {/* FAB Button */}
@@ -430,9 +428,10 @@ const AnimalDetails = () => {
                 {showAddForm && (
                     <div className={modalBackdrop}>
                         <div className={modalContent}>
-                            <h3 className="text-lg font-semibold mb-4">Nowe karmienie</h3>
+                            <h3 className="text-lg font-semibold mb-4">New Feeding</h3>
+
                             <div className="mb-4">
-                                <label className="block text-sm font-medium">Data i godzina karmienia:</label>
+                                <label className="block text-sm font-medium">Feeding Date and Time:</label>
                                 <input
                                     type="datetime-local"
                                     value={feedingDateTime}
@@ -440,8 +439,9 @@ const AnimalDetails = () => {
                                     className="mt-1 w-full border rounded px-2 py-1"
                                 />
                             </div>
+
                             <div className="mb-4">
-                                <label className="block text-sm font-medium">Typ jedzenia:</label>
+                                <label className="block text-sm font-medium">Food Type:</label>
                                 <select
                                     value={foodTypeId}
                                     onChange={(e) => setFoodTypeId(e.target.value)}
@@ -454,8 +454,9 @@ const AnimalDetails = () => {
                                     ))}
                                 </select>
                             </div>
+
                             <div className="mb-4">
-                                <label className="block text-sm font-medium">Przypisz opiekunów:</label>
+                                <label className="block text-sm font-medium">Assign Caretakers:</label>
                                 <div className="max-h-40 overflow-y-auto border p-2 rounded">
                                     {careGivers.map(c => (
                                         <div key={c.id} className="flex items-center mb-1">
@@ -476,23 +477,25 @@ const AnimalDetails = () => {
                                     ))}
                                 </div>
                             </div>
+
                             <div className="flex justify-end gap-2 mt-4">
                                 <button
                                     onClick={() => setShowAddForm(false)}
                                     className="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400 flex items-center gap-1"
                                 >
-                                    <X size={16} /> Anuluj
+                                    <X size={16} /> Cancel
                                 </button>
                                 <button
                                     onClick={handleAddFeedingSubmit}
                                     className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 flex items-center gap-1"
                                 >
-                                    <Save size={16} /> Zapisz
+                                    <Save size={16} /> Save
                                 </button>
                             </div>
                         </div>
                     </div>
                 )}
+
             </div>
         </div>
     );

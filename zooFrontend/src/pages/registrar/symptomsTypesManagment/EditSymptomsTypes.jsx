@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import {Pencil, Trash2, Plus, X, Save} from 'lucide-react';
+import { Pencil, Trash2, Plus, X, Save } from 'lucide-react';
 import {
     getAllSymptoms,
     createSymptom,
     updateSymptom,
     deleteSymptom
-} from '../../services/symptomService';
-import RegistrarNavbar from "../../components/RegistrarNavbar";
+} from '../../../services/symptomService';
+import RegistrarNavbar from "../../../components/RegistrarNavbar";
 
 const EditSymptoms = () => {
     const [symptoms, setSymptoms] = useState([]);
@@ -24,7 +24,7 @@ const EditSymptoms = () => {
             const data = await getAllSymptoms();
             setSymptoms(data);
         } catch (error) {
-            console.error("Błąd ładowania symptomów:", error);
+            console.error("Error loading symptoms:", error);
         }
     };
 
@@ -35,7 +35,7 @@ const EditSymptoms = () => {
             setIsDialogOpen(false);
             fetchSymptoms();
         } catch (error) {
-            console.error("Błąd przy dodawaniu symptomu:", error);
+            console.error("Error adding symptom:", error);
         }
     };
 
@@ -44,13 +44,18 @@ const EditSymptoms = () => {
             await deleteSymptom(id);
             fetchSymptoms();
         } catch (error) {
-            console.error("Błąd przy usuwaniu symptomu:", error);
+            console.error("Error deleting symptom:", error);
         }
     };
 
     const startEdit = (index, symptom) => {
         setEditIndex(index);
         setEditData({ name: symptom.name, description: symptom.description });
+    };
+
+    const cancelEdit = () => {
+        setEditIndex(null);
+        setEditData({ name: '', description: '' });
     };
 
     const handleEditChange = (field, value) => {
@@ -63,7 +68,7 @@ const EditSymptoms = () => {
             setEditIndex(null);
             fetchSymptoms();
         } catch (error) {
-            console.error("Błąd przy aktualizacji symptomu:", error);
+            console.error("Error updating symptom:", error);
         }
     };
 
@@ -71,16 +76,16 @@ const EditSymptoms = () => {
         <div className="p-8">
             <RegistrarNavbar />
 
-            <h1 className="text-2xl font-bold mb-6">Typy Objawów</h1>
+            <h1 className="text-2xl font-bold mb-6">Symptom Types</h1>
             <div className="overflow-x-auto">
-                {/* Tabela symptomów */}
+                {/* Symptoms table */}
                 <table className="min-w-full border border-gray-300 bg-white shadow-md rounded-lg overflow-hidden">
                     <thead>
                     <tr className="bg-gray-100 text-gray-700">
                         <th className="border px-4 py-2">ID</th>
-                        <th className="border px-4 py-2">Nazwa</th>
-                        <th className="border px-4 py-2">Opis</th>
-                        <th className="border px-4 py-2">Akcje</th>
+                        <th className="border px-4 py-2">Name</th>
+                        <th className="border px-4 py-2">Description</th>
+                        <th className="border px-4 py-2">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -109,12 +114,20 @@ const EditSymptoms = () => {
                             </td>
                             <td className="border px-4 py-2">
                                 {editIndex === index ? (
+                                    <>
                                     <button
                                         onClick={() => saveEdit(symptom.id)}
                                         className="px-2 py-1 text-green-600 hover:text-green-400"
                                     >
-                                        <Pencil size={16} />
+                                        <Save size={16} />
                                     </button>
+                                    <button
+                                        onClick={cancelEdit}
+                                        className=" px-2 py-1 text-gray-600 hover:text-gray-400"
+                                    >
+                                        <X size={16} />
+                                    </button>
+                                    </>
                                 ) : (
                                     <>
                                         <button
@@ -146,22 +159,22 @@ const EditSymptoms = () => {
                 <Plus size={20} />
             </button>
 
-            {/* Dialog dodawania */}
+            {/* Add Dialog */}
             {isDialogOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
                     <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-xl">
-                        <h2 className="text-xl font-bold mb-4 text-gray-800 text-center">Dodaj nowy objaw</h2>
+                        <h2 className="text-xl font-bold mb-4 text-gray-800 text-center">Add New Symptom</h2>
                         <div className="space-y-4">
                             <input
                                 type="text"
-                                placeholder="Nazwa"
+                                placeholder="Name"
                                 value={newSymptom.name}
                                 onChange={(e) => setNewSymptom(prev => ({ ...prev, name: e.target.value }))}
                                 className="border rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
                             />
                             <input
                                 type="text"
-                                placeholder="Opis"
+                                placeholder="Description"
                                 value={newSymptom.description}
                                 onChange={(e) => setNewSymptom(prev => ({ ...prev, description: e.target.value }))}
                                 className="border rounded-xl px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -171,25 +184,19 @@ const EditSymptoms = () => {
                                     onClick={() => setIsDialogOpen(false)}
                                     className="bg-gray-400 text-white px-4 py-2 rounded flex items-center gap-2"
                                 >
-                                    <X size={16} /> Anuluj
+                                    <X size={16} /> Cancel
                                 </button>
                                 <button
                                     onClick={handleAddSymptom}
                                     className="bg-green-500 text-white px-4 py-2 rounded flex items-center gap-2"
                                 >
-                                    <Save size={16} />Dodaj
+                                    <Save size={16} />Add
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
             )}
-            <button
-                onClick={() => setIsDialogOpen(true)}
-                className="fixed bottom-8 right-8 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg"
-            >
-                <Plus size={20}/>
-            </button>
         </div>
     );
 };

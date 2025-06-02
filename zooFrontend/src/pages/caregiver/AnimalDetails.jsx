@@ -107,30 +107,30 @@ const AnimalDetails = () => {
         });
     };
 
-    if (!animal) return <div className="p-8 text-center">Ładowanie danych zwierzęcia...</div>;
+    if (!animal) return <div className="p-8 text-center">Loading animal data...</div>;
 
     return (
         <div className="min-h-screen bg-gray-100">
             <CaregiverNavbar />
             <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg mt-8 rounded-xl">
-                <h1 className="text-3xl font-bold mb-6">Szczegóły: {animal.name}</h1>
+                <h1 className="text-3xl font-bold mb-6">Details: {animal.name}</h1>
 
                 <div className="grid grid-cols-2 gap-8">
                     <div className="space-y-2">
-                        <div><strong>Gatunek:</strong> {animal.species}</div>
-                        <div><strong>Stan:</strong>
+                        <div><strong>Species:</strong> {animal.species}</div>
+                        <div><strong>Condition:</strong>
                             <span
-                            className={
-                                (animal.condition === 'Good' || animal.condition === 'GOOD')
-                                    ? 'text-green-600 font-semibold'
-                                    : animal.condition === 'INJURED'
-                                        ? 'text-yellow-600 font-semibold'
-                                        : 'text-red-600 font-semibold'
-                            }
-                        > {animal.condition}</span></div>
-                        <div><strong>Data urodzenia:</strong> {animal.birthDate}</div>
+                                className={
+                                    (animal.condition === 'Good' || animal.condition === 'GOOD')
+                                        ? 'text-green-600 font-semibold'
+                                        : animal.condition === 'INJURED'
+                                            ? 'text-yellow-600 font-semibold'
+                                            : 'text-gray-600 font-semibold'
+                                }
+                            > {animal.condition}</span></div>
+                        <div><strong>Birth date:</strong> {animal.birthDate}</div>
 
-                        <h2 className="text-lg font-semibold mt-4">Opiekunowie:</h2>
+                        <h2 className="text-lg font-semibold mt-4">Caretakers:</h2>
                         {caretakers.length > 0 ? (
                             <ul className="list-disc list-inside">
                                 {caretakers.map((c) => (
@@ -138,126 +138,129 @@ const AnimalDetails = () => {
                                 ))}
                             </ul>
                         ) : (
-                            <p>Brak przypisanych opiekunów.</p>
+                            <p>No caretakers assigned.</p>
                         )}
                     </div>
 
                     <div className="space-y-2">
-                        <div><strong>Płeć:</strong> {animal.sex}</div>
-                        <div><strong>Waga:</strong> {animal.weight} kg</div>
-                        <div><strong>Wybieg:</strong> {enclosure ? `${enclosure.id} | ${enclosure.terrainType}` : 'Brak danych'}</div>
+                        <div><strong>Sex:</strong> {animal.sex}</div>
+                        <div><strong>Weight:</strong> {animal.weight} kg</div>
+                        <div><strong>Enclosure:</strong> {enclosure ? `${enclosure.id} | ${enclosure.terrainType}` : 'No data available'}</div>
                     </div>
                 </div>
 
                 <div className="mt-6">
-                    <h2 className="text-xl font-semibold mb-2">Karmienia:</h2>
+                    <h2 className="text-xl font-semibold mb-2">Feedings:</h2>
                     <div className="overflow-auto rounded-lg bg-white shadow-md">
-                    {feedings.length > 0 ? (
-                        <table className="min-w-full divide-y divide-gray-200 text-sm">
-                            <thead className="bg-gray-200 text-gray-700">
-                            <tr>
-                                <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Czas karmienia</th>
-                                <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Typ jedzenia</th>
-                                <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Wybieg</th>
-                                <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Status</th>
-                                <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Opiekunowie</th>
-                                <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Akcje</th>
-                            </tr>
-                            </thead>
-                            <tbody className="divide-y divide-gray-100">
-                            {feedings.map((f) => (
-                                <tr key={f.id} className="group hover:bg-gray-50 transition-colors duration-150">
-                                    {editingFeedingId === f.id ? (
-                                        <>
-                                            <td className="whitespace-nowrap px-4 py-3">
-                                                <input
-                                                    type="datetime-local"
-                                                    value={editingFeedingData.feedingDateTime}
-                                                    onChange={e => handleEditingChange('feedingDateTime', e.target.value)}
-                                                    className="border rounded px-1 py-0.5"
-                                                />
-                                            </td>
-                                            <td className="whitespace-nowrap px-4 py-3">
-                                                <select
-                                                    value={editingFeedingData.foodTypeId}
-                                                    onChange={e => handleEditingChange('foodTypeId', e.target.value)}
-                                                    className="border rounded px-1 py-0.5 w-full"
-                                                >
-                                                    {foodTypes.map(type => (
-                                                        <option key={type.id} value={type.id} title={type.description}>
-                                                            {type.id} | {type.name}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                            </td>
-                                            <td className="whitespace-nowrap px-4 py-3">{enclosure ? `${enclosure.id} | ${enclosure.terrainType}` : 'Brak danych'}</td>
-                                            <td className="whitespace-nowrap px-4 py-3">
-                                                <select
-                                                    value={editingFeedingData.isCompleted ? 'completed' : 'not_completed'}
-                                                    onChange={e => handleEditingChange('isCompleted', e.target.value === 'completed')}
-                                                    className="border rounded px-1 py-0.5"
-                                                >
-                                                    <option value="completed">Nakarmione</option>
-                                                    <option value="not_completed">Nie nakarmione</option>
-                                                </select>
-                                            </td>
-                                            <td className="whitespace-nowrap px-4 py-3">
-                                                {f.userIds.map((uid) => {
-                                                    const user = caretakers.find((c) => c.id === uid);
-                                                    return user ? user.username : `ID ${uid}`;
-                                                }).join(', ')}
-                                            </td>
-                                            <td className="whitespace-nowrap px-4 py-3 flex gap-3">
-                                                <button
-                                                    onClick={handleUpdateFeeding}
-                                                    className="text-green-600 px-2 py-1 hover:text-green-400"
-                                                >
-                                                    <Save size={20}/>
-                                                </button>
-                                                <button
-                                                    onClick={cancelEditFeeding}
-                                                    className="text-gray-600 px-2 py-1 hover:text-gray-400"
-                                                >
-                                                    <X size={16}/>
-                                                </button>
-                                            </td>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <td className="whitespace-nowrap px-4 py-3">{formatDateTime(f.feedingDateTime)}</td>
-                                            <td className="whitespace-nowrap px-4 py-3" title={foodTypes.find(ft => ft.id === f.foodTypeId)?.description || ''}>
-                                                {foodTypes.find(ft => ft.id === f.foodTypeId) ? `${f.foodTypeId} | ${foodTypes.find(ft => ft.id === f.foodTypeId).name}` : `ID ${f.foodTypeId}`}
-                                            </td>
-                                            <td className="whitespace-nowrap px-4 py-3">{enclosure ? `${enclosure.id} | ${enclosure.terrainType}` : 'Brak danych'}</td>
-                                            <td className="whitespace-nowrap px-4 py-3">{f.isCompleted ? 'Nakarmione' : 'Nie nakarmione'}</td>
-                                            <td className="whitespace-nowrap px-4 py-3">
-                                                {f.userIds.map((uid) => {
-                                                    const user = caretakers.find((c) => c.id === uid);
-                                                    return user ? user.username : `ID ${uid}`;
-                                                }).join(', ')}
-                                            </td>
-                                            <td className="whitespace-nowrap px-4 py-3 flex gap-3">
-                                                <button
-                                                    onClick={() => startEditFeeding(f)}
-                                                    className="text-blue-600 px-2 py-1 hover:text-blue-400"
-                                                >
-                                                    <Pencil size={16} />
-                                                </button>
-                                            </td>
-                                        </>
-                                    )}
+                        {feedings.length > 0 ? (
+                            <table className="min-w-full divide-y divide-gray-200 text-sm">
+                                <thead className="bg-gray-200 text-gray-700">
+                                <tr>
+                                    <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Feeding time</th>
+                                    <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Food type</th>
+                                    <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Enclosure</th>
+                                    <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Status</th>
+                                    <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Caretakers</th>
+                                    <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Actions</th>
                                 </tr>
-                            ))}
-                            </tbody>
-                        </table>
-                    ) : (
-                        <p>Brak danych o karmieniach.</p>
-                    )}
+                                </thead>
+                                <tbody className="divide-y divide-gray-100">
+                                {feedings.map((f) => (
+                                    <tr key={f.id} className="group hover:bg-gray-50 transition-colors duration-150">
+                                        {editingFeedingId === f.id ? (
+                                            <>
+                                                <td className="whitespace-nowrap px-4 py-3">
+                                                    <input
+                                                        type="datetime-local"
+                                                        value={editingFeedingData.feedingDateTime}
+                                                        onChange={e => handleEditingChange('feedingDateTime', e.target.value)}
+                                                        className="border rounded px-1 py-0.5"
+                                                    />
+                                                </td>
+                                                <td className="whitespace-nowrap px-4 py-3">
+                                                    <select
+                                                        value={editingFeedingData.foodTypeId}
+                                                        onChange={e => handleEditingChange('foodTypeId', e.target.value)}
+                                                        className="border rounded px-1 py-0.5 w-full"
+                                                    >
+                                                        {foodTypes.map(type => (
+                                                            <option key={type.id} value={type.id} title={type.description}>
+                                                                {type.id} | {type.name}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </td>
+                                                <td className="whitespace-nowrap px-4 py-3">{enclosure ? `${enclosure.id} | ${enclosure.terrainType}` : 'No data'}</td>
+                                                <td className="whitespace-nowrap px-4 py-3">
+                                                    <select
+                                                        value={editingFeedingData.isCompleted ? 'completed' : 'not_completed'}
+                                                        onChange={e => handleEditingChange('isCompleted', e.target.value === 'completed')}
+                                                        className="border rounded px-1 py-0.5"
+                                                    >
+                                                        <option value="completed">Fed</option>
+                                                        <option value="not_completed">Not fed</option>
+                                                    </select>
+                                                </td>
+                                                <td className="whitespace-nowrap px-4 py-3">
+                                                    {f.userIds.map((uid) => {
+                                                        const user = caretakers.find((c) => c.id === uid);
+                                                        return user ? user.username : `ID ${uid}`;
+                                                    }).join(', ')}
+                                                </td>
+                                                <td className="whitespace-nowrap px-4 py-3 flex gap-3">
+                                                    <button
+                                                        onClick={handleUpdateFeeding}
+                                                        className="text-green-600 px-2 py-1 hover:text-green-400"
+                                                    >
+                                                        <Save size={20} />
+                                                    </button>
+                                                    <button
+                                                        onClick={cancelEditFeeding}
+                                                        className="text-gray-600 px-2 py-1 hover:text-gray-400"
+                                                    >
+                                                        <X size={16} />
+                                                    </button>
+                                                </td>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <td className="whitespace-nowrap px-4 py-3">{formatDateTime(f.feedingDateTime)}</td>
+                                                <td className="whitespace-nowrap px-4 py-3" title={foodTypes.find(ft => ft.id === f.foodTypeId)?.description || ''}>
+                                                    {foodTypes.find(ft => ft.id === f.foodTypeId) ? `${f.foodTypeId} | ${foodTypes.find(ft => ft.id === f.foodTypeId).name}` : `ID ${f.foodTypeId}`}
+                                                </td>
+                                                <td className="whitespace-nowrap px-4 py-3">{enclosure ? `${enclosure.id} | ${enclosure.terrainType}` : 'No data'}</td>
+                                                <td className="whitespace-nowrap px-4 py-3">
+                                                    {f.isCompleted ? 'Fed' : 'Not fed'}
+                                                </td>
+                                                <td className="whitespace-nowrap px-4 py-3">
+                                                    {f.userIds.map((uid) => {
+                                                        const user = caretakers.find((c) => c.id === uid);
+                                                        return user ? user.username : `ID ${uid}`;
+                                                    }).join(', ')}
+                                                </td>
+                                                <td className="whitespace-nowrap px-4 py-3">
+                                                    <button
+                                                        onClick={() => startEditFeeding(f)}
+                                                        className="text-blue-600 hover:text-blue-400"
+                                                    >
+                                                        <Pencil size={18} />
+                                                    </button>
+                                                </td>
+                                            </>
+                                        )}
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        ) : (
+                            <p className="p-4">No feeding records available.</p>
+                        )}
                     </div>
                 </div>
             </div>
         </div>
     );
+
 };
 
 export default AnimalDetails;

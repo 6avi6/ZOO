@@ -26,33 +26,34 @@ const CaregiverNavbar = () => {
 
     return (
         <div className="bg-white h-[80px] w-full flex items-center border-b-2 border-gray-200 mb-5">
+            <Link to={generateLink('dashboard')}>
             <img
                 src={logo}
                 alt="logo"
                 className="size-16 ml-3 rounded-md hover:scale-[1.05] cursor-pointer transition-all duration-300"
             />
-
+            </Link>
             {/* Desktop navigation */}
             <div className="hidden sm:flex flex-row items-center justify-between w-full ml-auto">
                 <div className="flex flex-row gap-4 ml-12">
                     <Link to={generateLink('animals')}>
                         <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
-                            Moje zwierzęta
+                            My Animals
                         </p>
                     </Link>
                     <Link to={generateLink('schedule')}>
                         <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
-                            Mój grafik pracy
+                            My Work Schedule
                         </p>
                     </Link>
                     <Link to={generateLink('feedings')}>
                         <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
-                            Moje karmienia
+                            My Feedings
                         </p>
                     </Link>
                     <Link to={generateLink('account')}>
                         <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
-                            Konto
+                            Account
                         </p>
                     </Link>
                 </div>
@@ -78,22 +79,22 @@ const CaregiverNavbar = () => {
                 <ul className="pt-4 mx-4">
                     <Link to={generateLink('animals')}>
                         <li className="p-3 mb-2 text-gray-800 border-b-2 border-gray-200 hover:pl-2 hover:border-green-300 duration-200">
-                            Moje zwierzęta
+                            My Animals
                         </li>
                     </Link>
                     <Link to={generateLink('schedule')}>
                         <li className="p-3 mb-2 text-gray-800 border-b-2 border-gray-200 hover:pl-2 hover:border-green-300 duration-200">
-                            Mój grafik pracy
+                            My Work Schedule
                         </li>
                     </Link>
                     <Link to={generateLink('feedings')}>
                         <li className="p-3 mb-2 text-gray-800 border-b-2 border-gray-200 hover:pl-2 hover:border-green-300 duration-200">
-                            Moje karmienia
+                            My Feedings
                         </li>
                     </Link>
                     <Link to={generateLink('account')}>
                         <li className="p-3 mb-2 text-gray-800 border-b-2 border-gray-200 hover:pl-2 hover:border-green-300 duration-200">
-                            Konto
+                            Account
                         </li>
                     </Link>
                 </ul>

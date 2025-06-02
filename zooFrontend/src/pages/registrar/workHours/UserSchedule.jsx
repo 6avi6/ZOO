@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getUser } from '../../services/userService';
+import { getUser } from '../../../services/userService';
 import {
     getPagedWorkSchedules,
     createWorkSchedule,
     updateWorkSchedule,
     deleteWorkSchedule
-} from '../../services/workScheduleService';
-import RegistrarNavbar from "../../components/RegistrarNavbar";
+} from '../../../services/workScheduleService';
+import RegistrarNavbar from "../../../components/RegistrarNavbar";
 import { Pencil, Plus, Trash2, Save, X } from 'lucide-react';
 
 
@@ -38,8 +38,8 @@ const UserSchedule = () => {
             const user = await getUser(userId);
             setUsername(user.username);
         } catch (err) {
-            console.error('Błąd podczas ładowania danych użytkownika:', err);
-            setUsername(`Użytkownik #${userId}`);
+            console.error('Error loading user data:', err);
+            setUsername(`User #${userId}`);
         }
     };
 
@@ -48,7 +48,7 @@ const UserSchedule = () => {
             const data = await getPagedWorkSchedules(0, 100, userId);
             setSchedules(data.content);
         } catch (err) {
-            setError('Błąd podczas ładowania harmonogramu pracy.');
+            setError('Error loading work schedule.');
             console.error(err);
         } finally {
             setLoading(false);
@@ -72,17 +72,17 @@ const UserSchedule = () => {
             setDialogVisible(false);
             fetchSchedules();
         } catch (err) {
-            console.error("Błąd przy dodawaniu:", err);
+            console.error("Error adding schedule:", err);
         }
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm("Czy na pewno chcesz usunąć ten wpis?")) {
+        if (window.confirm("Are you sure you want to delete this entry?")) {
             try {
                 await deleteWorkSchedule(id);
                 fetchSchedules();
             } catch (err) {
-                console.error("Błąd przy usuwaniu:", err);
+                console.error("Error deleting schedule:", err);
             }
         }
     };
@@ -111,7 +111,7 @@ const UserSchedule = () => {
             setFormData({ shiftStart: '', shiftEnd: '' });
             fetchSchedules();
         } catch (err) {
-            console.error("Błąd przy aktualizacji:", err);
+            console.error("Error updating schedule:", err);
         }
     };
     const handleUpdate = async (e) => {
@@ -127,17 +127,17 @@ const UserSchedule = () => {
             setDialogVisible(false);
             fetchSchedules();
         } catch (err) {
-            console.error("Błąd przy aktualizacji:", err);
+            console.error("Error updating schedule:", err);
         }
     };
 
-    if (loading) return <div className="p-8">Ładowanie...</div>;
+    if (loading) return <div className="p-8">Loading...</div>;
     if (error) return <div className="p-8 text-red-600">{error}</div>;
 
     return (
         <div className="relative p-8">
             <RegistrarNavbar />
-            <h1 className="text-2xl font-bold mb-6">Harmonogram pracy: {username}</h1>
+            <h1 className="text-2xl font-bold mb-6">Work Schedule: {username}</h1>
 
             {/* Dialog modal */}
             {dialogVisible && (
@@ -170,13 +170,13 @@ const UserSchedule = () => {
                                     }}
                                     className="bg-gray-400 text-white px-4 py-2 rounded flex items-center gap-2"
                                 >
-                                    <X size={16} /> Anuluj
+                                    <X size={16} /> Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     className="bg-green-500 text-white px-4 py-2 rounded flex items-center gap-2"
                                 >
-                                    <Save size={16} /> {editingId ? 'Zapisz zmiany' : 'Dodaj'}
+                                    <Save size={16} /> {editingId ? 'Save Changes' : 'Add'}
                                 </button>
                             </div>
                         </form>
@@ -185,7 +185,7 @@ const UserSchedule = () => {
             )}
 
             {schedules.length === 0 ? (
-                <p className="text-gray-500">Brak harmonogramów pracy dla tego użytkownika.</p>
+                <p className="text-gray-500">No work schedules for this user.</p>
             ) : (
                 <div className="overflow-x-auto relative">
                     <table className="min-w-full border border-gray-300 bg-white shadow-md rounded-lg overflow-hidden">
@@ -193,8 +193,8 @@ const UserSchedule = () => {
                         <tr>
                             <th className="px-4 py-2">ID</th>
                             <th className="px-4 py-2">Start</th>
-                            <th className="px-4 py-2">Koniec</th>
-                            <th className="px-4 py-2">Akcje</th>
+                            <th className="px-4 py-2">End</th>
+                            <th className="px-4 py-2">Actions</th>
                         </tr>
                         </thead>
                         <tbody>

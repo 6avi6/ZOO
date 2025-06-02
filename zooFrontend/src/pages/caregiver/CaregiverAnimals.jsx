@@ -20,7 +20,7 @@ const MyAnimals = () => {
     const [showVetDialog, setShowVetDialog] = useState(false);
     const [symptoms, setSymptoms] = useState([]);
     const [selectedSymptomIds, setSelectedSymptomIds] = useState([]);
-    const [treatmentDescription, setTreatmentDescription] = useState('Opis leczenia');
+    const [treatmentDescription, setTreatmentDescription] = useState('Treatment description');
     const [treatmentDateTime, setTreatmentDateTime] = useState(new Date().toISOString().slice(0, 16));
     const [veterinarians, setVeterinarians] = useState([]);
     const [assignedUserId, setVeterinarianId] = useState(1);
@@ -100,7 +100,7 @@ const MyAnimals = () => {
         setEditedAnimal({});
         setShowVetDialog(false);
         setSelectedSymptomIds([]);
-        setTreatmentDescription('Opis leczenia');
+        setTreatmentDescription('Treatment description');
         setTreatmentDateTime(new Date().toISOString().slice(0, 16));
     };
 
@@ -111,13 +111,13 @@ const MyAnimals = () => {
     return (
         <div className="min-h-screen bg-gray-50 p-6">
             <CaregiverNavbar />
-            <h1 className="text-2xl font-bold mb-6">Moje zwierzęta</h1>
+            <h1 className="text-2xl font-bold mb-6">My Animals</h1>
 
             <div className="overflow-auto rounded-lg bg-white shadow-md">
                 <table className="min-w-full divide-y divide-gray-200 text-sm">
                     <thead className="bg-gray-200 text-gray-700">
                     <tr>
-                        {['ID', 'Nazwa', 'Gatunek', 'Stan', 'Waga', 'Wybieg', 'Akcje'].map((header) => (
+                        {['ID', 'Name', 'Species', 'Condition', 'Weight', 'Enclosure', 'Actions'].map((header) => (
                             <th
                                 key={header}
                                 scope="col"
@@ -158,7 +158,7 @@ const MyAnimals = () => {
                                                 ? 'text-green-600 font-semibold'
                                                 : animal.condition === 'INJURED'
                                                     ? 'text-yellow-600 font-semibold'
-                                                    : 'text-red-600 font-semibold'
+                                                    : 'text-gray-600 font-semibold'
                                         }
                                     >
                       {animal.condition}
@@ -183,7 +183,7 @@ const MyAnimals = () => {
                                 ) : animalEnclosures[animal.id] ? (
                                     `${animalEnclosures[animal.id].id} | ${animalEnclosures[animal.id].terrainType}`
                                 ) : (
-                                    <span className="text-gray-400 italic">Brak danych</span>
+                                    <span className="text-gray-400 italic">No data</span>
                                 )}
                             </td>
                             <td className="whitespace-nowrap px-4 py-3 flex gap-3">
@@ -213,7 +213,7 @@ const MyAnimals = () => {
                                         <button
                                             onClick={() => handleDetailClick(animal.id)}
                                             className="px-2 py-1  text-gray-600 hover:text-gray-400"
-                                            aria-label="Szczegóły"
+                                            aria-label="Details"
                                         >
                                             <ArrowRight size={16} />
                                         </button>
@@ -229,18 +229,18 @@ const MyAnimals = () => {
             {showVetDialog && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
                     <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-                        <h2 className="mb-5 text-xl font-semibold text-gray-900">Uzupełnij kartę leczenia</h2>
+                        <h2 className="mb-5 text-xl font-semibold text-gray-900">Complete Treatment Card</h2>
 
-                        <label className="mb-1 block font-medium text-gray-700">Opis</label>
+                        <label className="mb-1 block font-medium text-gray-700">Description</label>
                         <textarea
                             value={treatmentDescription}
                             onChange={(e) => setTreatmentDescription(e.target.value)}
                             rows={4}
                             className="mb-5 w-full rounded border border-gray-300 p-3 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                            placeholder="Opis leczenia zwierzęcia"
+                            placeholder="Animal treatment description"
                         />
 
-                        <label className="mb-1 block font-medium text-gray-700">Data i godzina</label>
+                        <label className="mb-1 block font-medium text-gray-700">Date and Time</label>
                         <input
                             type="datetime-local"
                             value={treatmentDateTime}
@@ -248,53 +248,53 @@ const MyAnimals = () => {
                             className="mb-5 w-full rounded border border-gray-300 p-3 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                         />
 
-                        <label className="mb-1 block font-medium text-gray-700">Symptomy</label>
-                        <div className="mb-5 max-h-40 overflow-y-auto rounded border border-gray-300 p-3">
-                            {symptoms.map((s) => (
-                                <div key={s.id} className="mb-2 flex items-center">
-                                    <input
-                                        id={`symptom-${s.id}`}
-                                        type="checkbox"
-                                        checked={selectedSymptomIds.includes(s.id)}
-                                        onChange={() =>
-                                            setSelectedSymptomIds((prev) =>
-                                                prev.includes(s.id) ? prev.filter((id) => id !== s.id) : [...prev, s.id]
-                                            )
-                                        }
-                                        className="mr-3 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                                    />
-                                    <label htmlFor={`symptom-${s.id}`} className="text-gray-700">
-                                        {s.name}
-                                    </label>
-                                </div>
-                            ))}
-                        </div>
-
-                        <label className="mb-1 block font-medium text-gray-700">Weterynarz</label>
+                        <label className="mb-1 block font-medium text-gray-700">Veterinarian</label>
                         <select
                             value={assignedUserId}
                             onChange={(e) => setVeterinarianId(Number(e.target.value))}
-                            className="mb-6 w-full rounded border border-gray-300 p-3 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                            className="mb-5 w-full rounded border border-gray-300 p-3 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                         >
-                            {veterinarians.map((v) => (
-                                <option key={v.id} value={v.id}>
-                                    {`${v.firstName} ${v.lastName}`}
+                            {veterinarians.map((vet) => (
+                                <option key={vet.id} value={vet.id}>
+                                    {vet.firstName} {vet.lastName}
                                 </option>
                             ))}
                         </select>
 
+                        <label className="mb-1 block font-medium text-gray-700">Symptoms</label>
+                        <div className="mb-6 flex flex-wrap gap-2">
+                            {symptoms.map((symptom) => (
+                                <label key={symptom.id} className="flex cursor-pointer items-center gap-2 rounded border border-gray-300 bg-gray-100 px-3 py-1.5 text-gray-900 hover:border-gray-400">
+                                    <input
+                                        type="checkbox"
+                                        value={symptom.id}
+                                        checked={selectedSymptomIds.includes(symptom.id)}
+                                        onChange={(e) => {
+                                            const id = Number(e.target.value);
+                                            if (e.target.checked) {
+                                                setSelectedSymptomIds((prev) => [...prev, id]);
+                                            } else {
+                                                setSelectedSymptomIds((prev) => prev.filter((x) => x !== id));
+                                            }
+                                        }}
+                                    />
+                                    {symptom.name}
+                                </label>
+                            ))}
+                        </div>
+
                         <div className="flex justify-end gap-3">
                             <button
                                 onClick={() => setShowVetDialog(false)}
-                                className="rounded border border-gray-300 px-4 py-2 text-gray-700 transition hover:bg-gray-100"
+                                className="rounded border border-gray-300 bg-white px-5 py-2 text-gray-700 hover:bg-gray-100"
                             >
-                                Anuluj
+                                Cancel
                             </button>
                             <button
                                 onClick={handleSaveClick}
-                                className="rounded bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
+                                className="rounded bg-blue-600 px-5 py-2 text-white hover:bg-blue-700"
                             >
-                                Zapisz
+                                Save
                             </button>
                         </div>
                     </div>

@@ -14,6 +14,7 @@ export const getAllEnclosures = async () => {
 // Pobierz pojedynczy wybieg po ID
 export const getEnclosureById = async (id) => {
     try {
+        console.log(id);
         const response = await axiosInstance.get(`/api/enclosures/${id}`);
         return response.data;
     } catch (error) {

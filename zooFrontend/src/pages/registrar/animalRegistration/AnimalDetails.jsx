@@ -345,8 +345,8 @@ const AnimalDetails = () => {
                                                     onChange={e => handleEditingChange('isCompleted', e.target.value === 'completed')}
                                                     className="border rounded px-1 py-0.5"
                                                 >
-                                                    <option value="completed">Completed</option>
-                                                    <option value="not_completed">Not completed</option>
+                                                    <option value="completed">Fed</option>
+                                                    <option value="not_completed">Not fed</option>
                                                 </select>
                                             </td>
                                             <td className="whitespace-nowrap px-4 py-3">
@@ -461,23 +461,27 @@ const AnimalDetails = () => {
                             <div className="mb-4">
                                 <label className="block text-sm font-medium">Assign Caretakers:</label>
                                 <div className="max-h-40 overflow-y-auto border p-2 rounded">
-                                    {careGivers.map(c => (
-                                        <div key={c.id} className="flex items-center mb-1">
-                                            <input
-                                                type="checkbox"
-                                                checked={newFeedingUsers.includes(c.id)}
-                                                onChange={() => {
-                                                    setNewFeedingUsers(prev =>
-                                                        prev.includes(c.id)
-                                                            ? prev.filter(id => id !== c.id)
-                                                            : [...prev, c.id]
-                                                    );
-                                                }}
-                                                className="mr-2"
-                                            />
-                                            <span>{c.username}</span>
-                                        </div>
-                                    ))}
+                                    {assignCaretakers.length > 0 ? (
+                                        assignCaretakers.map(c => (
+                                            <div key={c.id} className="flex items-center mb-1">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={newFeedingUsers.includes(c.id)}
+                                                    onChange={() => {
+                                                        setNewFeedingUsers(prev =>
+                                                            prev.includes(c.id)
+                                                                ? prev.filter(id => id !== c.id)
+                                                                : [...prev, c.id]
+                                                        );
+                                                    }}
+                                                    className="mr-2"
+                                                />
+                                                <span>{c.username}</span>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="text-gray-500 italic">No current caretakers available.</div>
+                                    )}
                                 </div>
                             </div>
 

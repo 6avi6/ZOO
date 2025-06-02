@@ -7,6 +7,7 @@ import { getEnclosureById } from '../../../services/enclosureService';
 import { getFeedingsByAnimalId, updateFeeding } from '../../../services/feedingsService';
 import { getCaretakersByAnimalId } from '../../../services/caretakerService';
 import { getAllFoodTypes } from '../../../services/foodTypeService';
+import {getAllUsers} from "../../../services/adminService";
 
 const AnimalDetails = () => {
     const { id } = useParams();
@@ -15,7 +16,7 @@ const AnimalDetails = () => {
     const [feedings, setFeedings] = useState([]);
     const [caretakers, setCaretakers] = useState([]);
     const [foodTypes, setFoodTypes] = useState([]);
-
+    const [allUsers, setAllUsers] = useState([]);
     const [editingFeedingId, setEditingFeedingId] = useState(null);
     const [editingFeedingData, setEditingFeedingData] = useState({
         feedingDateTime: '',
@@ -54,6 +55,8 @@ const AnimalDetails = () => {
 
             const foodTypesData = await getAllFoodTypes();
             setFoodTypes(foodTypesData);
+            const allUsers= await getAllUsers();
+            setAllUsers(allUsers);
         };
 
         fetchData();
@@ -203,7 +206,7 @@ const AnimalDetails = () => {
                                                 </td>
                                                 <td className="whitespace-nowrap px-4 py-3">
                                                     {f.userIds.map((uid) => {
-                                                        const user = caretakers.find((c) => c.id === uid);
+                                                        const user = allUsers.find((c) => c.id === uid);
                                                         return user ? user.username : `ID ${uid}`;
                                                     }).join(', ')}
                                                 </td>
@@ -230,11 +233,11 @@ const AnimalDetails = () => {
                                                 </td>
                                                 <td className="whitespace-nowrap px-4 py-3">{enclosure ? `${enclosure.id} | ${enclosure.terrainType}` : 'No data'}</td>
                                                 <td className="whitespace-nowrap px-4 py-3">
-                                                    {f.isCompleted ? 'Fed' : 'Not fed'}
+                                                    {f.isCompleted ? 'Complete' : 'Not complete'}
                                                 </td>
                                                 <td className="whitespace-nowrap px-4 py-3">
                                                     {f.userIds.map((uid) => {
-                                                        const user = caretakers.find((c) => c.id === uid);
+                                                        const user = allUsers.find((c) => c.id === uid);
                                                         return user ? user.username : `ID ${uid}`;
                                                     }).join(', ')}
                                                 </td>

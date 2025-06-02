@@ -18,7 +18,7 @@ const EmployeesReport = () => {
         const data = await getAllUsers();
         setUsers(data);
       } catch (err) {
-        setError('Nie udało się pobrać użytkowników.');
+        setError('Failed to fetch users.');
       } finally {
         setLoading(false);
       }
@@ -31,14 +31,14 @@ const downloadPDF = () => {
   const doc = new jsPDF();
   const today = new Date().toLocaleDateString('pl-PL');
 
-  doc.setFontSize(18);
-  doc.text('Lista pracowników', 14, 20);
+ doc.setFontSize(18);
+    doc.text('Employee List', 14, 20);
 
-  doc.setFontSize(11);
-  doc.setTextColor(100);
-  doc.text(`Raport na dzien: ${today}`, 14, 28);
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    doc.text(`Report as of: ${today}`, 14, 28);
 
-  const tableColumn = ['ID', 'Imie', 'Nazwisko', 'Rola'];
+    const tableColumn = ['ID', 'First Name', 'Last Name', 'Role'];
   const tableRows = users.map((user) => [
     user.id,
     user.firstName,
@@ -46,19 +46,19 @@ const downloadPDF = () => {
     user.role,
   ]);
 
-  autoTable(doc, { // 👈 zamiast doc.autoTable
+  autoTable(doc, { 
     head: [tableColumn],
     body: tableRows,
     startY: 35,
   });
 
   doc.text(
-    `Pracuje ${users.length} ${users.length === 1 ? 'pracownik' : 'pracowników'}`,
+    `There are ${users.length} ${users.length === 1 ? 'employee' : 'employees'} working`,
     14,
     doc.lastAutoTable.finalY + 10
   );
 
-  doc.save('raport_pracownikow.pdf');
+  doc.save('employee_report.pdf');
 };
 
   return (
@@ -66,13 +66,13 @@ const downloadPDF = () => {
       <DirectorNavbar />
       <div className="bg-white mt-12 mx-auto min-h-[300px] w-[80%] rounded-lg border shadow-sm border-gray-300 p-8 relative">
         <div className="flex flex-col items-center justify-between mb-6">
-          <h1 className="text-2xl font-semibold text-gray-800">Lista pracowników</h1>
-          <p className="text-gray-500 mt-1">Raport na dzień: {today}</p>
+           <h1 className="text-2xl font-semibold text-gray-800">Employee List</h1>
+          <p className="text-gray-500 mt-1">Report as of: {today}</p>
         </div>
 
         <div id="report-content">
           {loading ? (
-            <p>Ładowanie...</p>
+            <p>Loading...</p>
           ) : error ? (
             <p className="text-red-500">{error}</p>
           ) : (
@@ -81,9 +81,9 @@ const downloadPDF = () => {
                 <thead>
                   <tr className="border-b">
                     <th className="p-3">ID</th>
-                    <th className="p-3">Imię</th>
-                    <th className="p-3">Nazwisko</th>
-                    <th className="p-3">Rola</th>
+                    <th className="p-3">First Name</th>
+                    <th className="p-3">Last Name</th>
+                    <th className="p-3">Role</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -99,7 +99,7 @@ const downloadPDF = () => {
               </table>
 
               <p className="mt-4 text-right font-semibold text-gray-700">
-                Pracuje {users.length} {users.length === 1 ? 'pracownik' : 'pracowników'}
+                There are {users.length} {users.length === 1 ? 'employee' : 'employees'} working
               </p>
             </>
           )}
@@ -111,7 +111,7 @@ const downloadPDF = () => {
               onClick={downloadPDF}
               className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
             >
-              Pobierz raport w formacie PDF
+              Download PDF Report
             </button>
           </div>
         )}

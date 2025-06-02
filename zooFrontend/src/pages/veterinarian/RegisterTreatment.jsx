@@ -1,4 +1,3 @@
-
 import VeterinarianNavbar from '../../components/VeterinarianNavbar';
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
@@ -9,7 +8,7 @@ import {
   deleteAnimalTreatmentCard,
   getAllAnimals,
   getAllSymptoms
-} from '../../services/animalTreatmentCardService'; // <-- Twój serwis
+} from '../../services/animalTreatmentCardService';
 
 const RegisterTreatment = () => {
   const [cards, setCards] = useState([]);
@@ -24,7 +23,6 @@ const RegisterTreatment = () => {
   const [editingCard, setEditingCard] = useState(null);
   const [error, setError] = useState(null);
 
-  // Funkcja fetchująca wszystkie dane (karty, zwierzęta, symptomy)
   const fetchData = async () => {
     try {
       const [fetchedCards, fetchedAnimals, fetchedSymptoms] = await Promise.all([
@@ -36,39 +34,35 @@ const RegisterTreatment = () => {
       setAnimals(fetchedAnimals);
       setSymptoms(fetchedSymptoms);
     } catch (e) {
-      setError('Błąd podczas pobierania danych.');
+      setError('Error while fetching data.');
       console.error(e);
     }
   };
 
-  // Fetch danych przy pierwszym załadowaniu komponentu
   useEffect(() => {
     fetchData();
   }, []);
 
-  // Dodawanie nowej karty leczenia
   const handleAdd = async () => {
     const payload = {
       animalId: newCard.animalId,
       description: newCard.description,
       dateTime: dayjs(newCard.dateTime).format('YYYY-MM-DDTHH:mm:ss'),
       symptomIds: newCard.symptomIds,
-      //veterinarianId: 5// <-- Sztywne przypisanie weterynarza
       assignedUserId: 5
     };
-    console.log('Payload do CREATE:', payload);
+    console.log('Payload for CREATE:', payload);
 
     try {
       await createAnimalTreatmentCard(payload);
-      await fetchData(); // <-- odśwież wszystkie dane po dodaniu
-      setNewCard({ animalId: '', description: '', dateTime: '', symptomIds: [] }); // Reset formularza
+      await fetchData();
+      setNewCard({ animalId: '', description: '', dateTime: '', symptomIds: [] });
     } catch (err) {
-      setError('Błąd podczas dodawania karty leczenia.');
+      setError('Error while adding treatment card.');
       console.error(err);
     }
   };
 
-  // Aktualizacja istniejącej karty leczenia
   const handleUpdate = async () => {
     const payload = {
       id: editingCard.id,
@@ -76,31 +70,29 @@ const RegisterTreatment = () => {
       description: editingCard.description,
       dateTime: dayjs(editingCard.dateTime).format('YYYY-MM-DDTHH:mm:ss'),
       symptomIds: editingCard.symptomIds,
-      //veterinarianId: 5 // <-- Sztywne przypisanie weterynarza
       assignedUserId: 5
     };
-    console.log('Payload do UPDATE:', payload);
+    console.log('Payload for UPDATE:', payload);
 
     try {
       await updateAnimalTreatmentCard(editingCard.id, payload);
-      await fetchData(); // <-- odśwież wszystkie dane po edycji
-      setEditingCard(null); // Wyłącz tryb edycji
+      await fetchData();
+      setEditingCard(null);
     } catch (err) {
-      setError('Błąd podczas aktualizacji karty leczenia.');
+      setError('Error while updating treatment card.');
       console.error(err);
     }
   };
 
-
   const handleDelete = async (id) => {
-    if (!window.confirm('Czy na pewno chcesz usunąć tę kartę leczenia?')) {
+    if (!window.confirm('Are you sure you want to delete this treatment card?')) {
       return;
     }
     try {
       await deleteAnimalTreatmentCard(id);
       setCards(cards.filter((card) => card.id !== id));
     } catch (err) {
-      setError('Błąd podczas usuwania karty leczenia.');
+      setError('Error while deleting treatment card.');
       console.error(err);
     }
   };
@@ -109,7 +101,7 @@ const RegisterTreatment = () => {
     <div>
       <VeterinarianNavbar />
       <div className="p-8 max-w-6xl mx-auto bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold text-center mb-6">Rejestruj leczenie</h2>
+        <h2 className="text-2xl font-semibold text-center mb-6">Register Treatment</h2>
 
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
@@ -117,11 +109,11 @@ const RegisterTreatment = () => {
           <thead>
             <tr className="bg-gray-100">
               <th className="px-4 py-2">ID</th>
-              <th className="px-4 py-2">Zwierzę</th>
-              <th className="px-4 py-2">Choroba</th>
-              <th className="px-4 py-2">Data</th>
-              <th className="px-4 py-2">Symptomy</th>
-              <th className="px-4 py-2">Akcje</th>
+              <th className="px-4 py-2">Animal</th>
+              <th className="px-4 py-2">Disease</th>
+              <th className="px-4 py-2">Date</th>
+              <th className="px-4 py-2">Symptoms</th>
+              <th className="px-4 py-2">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -137,7 +129,7 @@ const RegisterTreatment = () => {
                       }
                       className="w-full border rounded p-1"
                     >
-                      <option value="">Wybierz zwierzę</option>
+                      <option value="">Select animal</option>
                       {animals.map((a) => (
                         <option key={a.id} value={a.id}>
                           {a.name}
@@ -180,22 +172,22 @@ const RegisterTreatment = () => {
                       onClick={handleUpdate}
                       className="text-blue-600 hover:underline mb-2"
                     >
-                      Zapisz
+                      Save
                     </button>
                     <button
                       onClick={() => setEditingCard(null)}
                       className="text-gray-600 hover:underline"
                     >
-                      Anuluj
+                      Cancel
                     </button>
                   </td>
                 </tr>
               ) : (
                 <tr key={card.id} className="border-b">
                   <td className="px-4 py-2">{card.id}</td>
-                  <td className="px-4 py-2">{animals.find((a) => a.id === card.animalId)?.name || 'Brak'}</td>
+                  <td className="px-4 py-2">{animals.find((a) => a.id === card.animalId)?.name || 'None'}</td>
                   <td className="px-4 py-2">{card.description}</td>
-                  <td className="px-4 py-2">{new Date(card.dateTime).toLocaleString('pl-PL')}</td>
+                  <td className="px-4 py-2">{new Date(card.dateTime).toLocaleString('en-GB')}</td>
                   <td className="px-4 py-2">
                     {(card.symptomIds || [])
                       .map((id) => symptoms.find((s) => s.id === id)?.name)
@@ -213,22 +205,22 @@ const RegisterTreatment = () => {
                       })}
                       className="text-blue-600 hover:underline mb-2"
                     >
-                      Edytuj
+                      Edit
                     </button>
                     <button
                       onClick={() => handleDelete(card.id)}
                       className="text-red-600 hover:underline"
                     >
-                      Usuń
+                      Delete
                     </button>
                   </td>
                 </tr>
               )
             ))}
 
-            {/* Nowy wpis */}
+            {/* New entry */}
             <tr>
-              <td className="px-4 py-2">Nowe</td>
+              <td className="px-4 py-2">New</td>
               <td className="px-4 py-2">
                 <select
                   value={newCard.animalId || ''}
@@ -237,7 +229,7 @@ const RegisterTreatment = () => {
                   }
                   className="w-full border rounded p-1"
                 >
-                  <option value="">Wybierz zwierzę</option>
+                  <option value="">Select animal</option>
                   {animals.map((a) => (
                     <option key={a.id} value={a.id}>
                       {a.name}
@@ -249,7 +241,7 @@ const RegisterTreatment = () => {
                 <input
                   value={newCard.description}
                   onChange={(e) => setNewCard({ ...newCard, description: e.target.value })}
-                  placeholder="Opis choroby"
+                  placeholder="Disease description"
                   className="w-full border rounded p-1"
                 />
               </td>
@@ -278,7 +270,7 @@ const RegisterTreatment = () => {
               </td>
               <td className="px-4 py-2">
                 <button onClick={handleAdd} className="text-green-600 hover:underline">
-                  Dodaj
+                  Add
                 </button>
               </td>
             </tr>

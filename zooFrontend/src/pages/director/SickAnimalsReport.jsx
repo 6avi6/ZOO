@@ -16,7 +16,7 @@ const SickAnimalsReport = () => {
         const data = await getSickAnimalsReport();
         setSickAnimals(data);
       } catch (err) {
-        setError('Nie udało się pobrać danych o chorych zwierzętach.');
+        setError('Failed to fetch sick animals data.');
       } finally {
         setLoading(false);
       }
@@ -29,13 +29,14 @@ const SickAnimalsReport = () => {
     const doc = new jsPDF();
 
     doc.setFontSize(18);
-    doc.text('Wykaz chorych zwierzat', 14, 20);
+    doc.text('Sick Animals Report', 14, 20);
 
     doc.setFontSize(11);
     doc.setTextColor(100);
-    doc.text(`Raport na dzien: ${today}`, 14, 28);
+    doc.text(`Report as of: ${today}`, 14, 28);
 
-    const tableColumn = ['ID', 'Nazwa', 'Choroba', 'Leczenie'];
+    const tableColumn = ['ID', 'Name', 'Disease', 'Treatment'];
+    
     const tableRows = sickAnimals.map((animal) => [
       animal.animalId,
       animal.animalName,
@@ -50,23 +51,23 @@ const SickAnimalsReport = () => {
     });
 
     doc.text(
-      `Aktualnie chorych zwierzat: ${sickAnimals.length}`,
+      `Currently sick animals: ${sickAnimals.length}`,
       14,
       doc.lastAutoTable.finalY + 10
     );
 
-    doc.save('raport_chorych_zwierzat.pdf');
+    doc.save('sick_animals_report.pdf');
   };
 
   return (
     <div>
       <DirectorNavbar />
       <div className="p-8 max-w-4xl mx-auto bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold text-center mb-2">Wykaz chorych zwierząt</h2>
-        <p className="text-center text-gray-500 mb-6">Raport na dzień: {today}</p>
+        <h2 className="text-2xl font-semibold text-center mb-2">Sick Animals Report</h2>
+        <p className="text-center text-gray-500 mb-6">Report as of: {today}</p>
 
         {loading ? (
-          <p>Ładowanie...</p>
+          <p>Loading...</p>
         ) : error ? (
           <p className="text-red-500">{error}</p>
         ) : (
@@ -75,9 +76,9 @@ const SickAnimalsReport = () => {
               <thead>
                 <tr className="bg-gray-100">
                   <th className="px-4 py-2">ID</th>
-                  <th className="px-4 py-2">Nazwa</th>
-                  <th className="px-4 py-2">Choroba</th>
-                  <th className="px-4 py-2">Leczenie</th>
+                  <th className="px-4 py-2">Name</th>
+                  <th className="px-4 py-2">Disease</th>
+                  <th className="px-4 py-2">Treatment</th>
                 </tr>
               </thead>
               <tbody>
@@ -93,7 +94,7 @@ const SickAnimalsReport = () => {
             </table>
 
             <p className="mt-4 text-right font-semibold text-gray-700">
-              Aktualnie chorych zwierząt: {sickAnimals.length}
+              Currently sick animals: {sickAnimals.length}
             </p>
 
             <div className="flex justify-end mt-6">
@@ -101,7 +102,7 @@ const SickAnimalsReport = () => {
                 onClick={downloadPDF}
                 className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
               >
-                Pobierz raport w formacie PDF
+                Download PDF Report
               </button>
             </div>
           </>

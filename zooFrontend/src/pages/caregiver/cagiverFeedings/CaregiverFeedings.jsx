@@ -33,7 +33,7 @@ const CaregiverFeedings = () => {
                 setFeedings(data);
 
                 const animalIds = [...new Set(data.flatMap(f => f.animalIds))];
-                const enclosureIds = [...new Set(data.map(f => f.enclosureId))];
+                const enclosureIds = [...new Set(data.map(f => f.enclosureId).filter(id => id !== null))];
 
                 const animals = await Promise.all(animalIds.map(id => getAnimalById(id)));
                 const enclosures = await Promise.all(enclosureIds.map(id => getEnclosureById(id)));
@@ -45,7 +45,11 @@ const CaregiverFeedings = () => {
                 setAnimalMap(animalMapData);
 
                 const enclosureMapData = {};
-                enclosures.forEach(enc => { enclosureMapData[enc.id] = enc; });
+                enclosures.forEach(enc => {
+                    if (enc && enc.id !== null) {
+                        enclosureMapData[enc.id] = enc;
+                    }
+                });
                 setEnclosureMap(enclosureMapData);
 
             } catch (error) {

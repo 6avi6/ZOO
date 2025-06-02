@@ -20,7 +20,7 @@ const MyAnimals = () => {
     const [showVetDialog, setShowVetDialog] = useState(false);
     const [symptoms, setSymptoms] = useState([]);
     const [selectedSymptomIds, setSelectedSymptomIds] = useState([]);
-    const [treatmentDescription, setTreatmentDescription] = useState('Treatment description');
+    const [treatmentDescription, setTreatmentDescription] = useState('Default description');
     const [treatmentDateTime, setTreatmentDateTime] = useState(new Date().toISOString().slice(0, 16));
     const [veterinarians, setVeterinarians] = useState([]);
     const [assignedUserId, setVeterinarianId] = useState(1);
@@ -256,7 +256,7 @@ const MyAnimals = () => {
                         >
                             {veterinarians.map((vet) => (
                                 <option key={vet.id} value={vet.id}>
-                                    {vet.firstName} {vet.lastName}
+                                    {vet.firstName}
                                 </option>
                             ))}
                         </select>

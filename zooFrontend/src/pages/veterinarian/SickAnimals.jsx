@@ -7,7 +7,7 @@ const SickAnimals = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const today = new Date().toLocaleDateString('pl-PL');
+  const today = new Date().toLocaleDateString('en-GB'); // 🇬🇧
 
   useEffect(() => {
     const fetchData = async () => {
@@ -15,7 +15,7 @@ const SickAnimals = () => {
         const response = await axiosInstance.get('/api/reports/sick-animals');
         setSickAnimals(response.data);
       } catch (err) {
-        setError('Nie udało się pobrać danych o chorych zwierzętach.');
+        setError('Failed to fetch sick animals data.');
       } finally {
         setLoading(false);
       }
@@ -27,11 +27,11 @@ const SickAnimals = () => {
     <div>
       <VeterinarianNavbar />
       <div className="p-8 max-w-4xl mx-auto bg-white rounded-lg shadow-md mt-8">
-        <h2 className="text-2xl font-semibold text-center mb-2">Wykaz chorych zwierząt</h2>
-        <p className="text-center text-gray-500 mb-6">Raport na dzień: {today}</p>
+        <h2 className="text-2xl font-semibold text-center mb-2">Sick Animals List</h2>
+        <p className="text-center text-gray-500 mb-6">Report as of: {today}</p>
 
         {loading ? (
-          <p>Ładowanie...</p>
+          <p>Loading...</p>
         ) : error ? (
           <p className="text-red-500">{error}</p>
         ) : (
@@ -40,9 +40,9 @@ const SickAnimals = () => {
               <thead>
                 <tr className="bg-gray-100">
                   <th className="px-4 py-2">ID</th>
-                  <th className="px-4 py-2">Nazwa</th>
-                  <th className="px-4 py-2">Choroba</th>
-                  <th className="px-4 py-2">Leczenie</th>
+                  <th className="px-4 py-2">Name</th>
+                  <th className="px-4 py-2">Disease</th>
+                  <th className="px-4 py-2">Treatment</th>
                 </tr>
               </thead>
               <tbody>
@@ -57,7 +57,7 @@ const SickAnimals = () => {
               </tbody>
             </table>
             <p className="mt-4 text-right font-semibold text-gray-700">
-              Aktualnie chorych zwierząt: {sickAnimals.length}
+              Currently sick animals: {sickAnimals.length}
             </p>
           </>
         )}

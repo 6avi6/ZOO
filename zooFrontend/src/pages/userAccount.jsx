@@ -18,14 +18,14 @@ const UserAccount = () => {
         role: ''
     });
 
-    const handleSave = async () => {
+const handleSave = async () => {
         try {
             const updatedUser = await updateCurrentUser(user);
-            console.log("Zapisano dane:", updatedUser);
-            toast.success("Zapisano dane.");
+            console.log("Data saved:", updatedUser);
+            toast.success("Data saved.");
         } catch (error) {
-            console.error("Błąd zapisu danych:", error);
-            toast.error("Błąd zapisu danych");
+            console.error("Failed to save data:", error);
+            toast.error("Failed to save data.");
         }
     };
 
@@ -33,7 +33,7 @@ const UserAccount = () => {
         const fetchUser = async () => {
             try {
                 const userData = await getCurrentUser();
-                console.log('Otrzymane dane użytkownika:', userData);
+                console.log('Fetched user data:', userData);
                 setUser({
                     firstName: userData.firstName || '',
                     lastName: userData.lastName || '',
@@ -43,7 +43,7 @@ const UserAccount = () => {
                     role: userData.role || ''
                 });
             } catch (error) {
-                console.error('Błąd pobierania danych:', error);
+                console.error('Error fetching user data:', error);
             }
         };
 
@@ -69,24 +69,24 @@ const UserAccount = () => {
         <div>
             {renderNavbar()}
             <div className="bg-white my-12 mx-auto h-[550px] max-w-lg rounded-lg border shadow-sm border-gray-300">
-                <h1 className="mx-auto ml-12 font-semibold text-2xl text-gray-800 my-6">Konto</h1>
+                <h1 className="mx-auto ml-12 font-semibold text-2xl text-gray-800 my-6">Account</h1>
                 <div className="mx-12 flex flex-col justify-between gap-2">
                     <div>
-                        <label className="block text-gray-700 text-md">Imię</label>
+                        <label className="block text-gray-700 text-md">First Name</label>
                         <input type="text"
                                className="border w-full p-1 border-gray-300 rounded-lg"
                                value={user.firstName}
                                onChange={(e) => setUser({ ...user, firstName: e.target.value })} />
                     </div>
                     <div>
-                        <label className="block text-gray-700 text-md">Nazwisko</label>
+                        <label className="block text-gray-700 text-md">Last Name</label>
                         <input type="text"
                                className="border w-full p-1 border-gray-300 rounded-lg"
                                value={user.lastName}
                                onChange={(e) => setUser({ ...user, lastName: e.target.value })} />
                     </div>
                     <div>
-                        <label className="block text-gray-700 text-md">Nazwa użytkownika</label>
+                        <label className="block text-gray-700 text-md">Username</label>
                         <input type="text"
                                className="border w-full p-1 border-gray-300 rounded-lg"
                                value={user.username}
@@ -100,21 +100,21 @@ const UserAccount = () => {
                                onChange={(e) => setUser({ ...user, email: e.target.value })} />
                     </div>
                     <div>
-                        <label className="block text-gray-700 text-md">Data zatrudnienia</label>
+                        <label className="block text-gray-700 text-md">Hire Date</label>
                         <input type="text"
                                className="bg-gray-100 border w-full p-1 border-gray-300 rounded-lg"
                                value={user.hireDate}
                                readOnly />
                     </div>
                     <div>
-                        <label className="block text-gray-700 text-md">Rola</label>
+                        <label className="block text-gray-700 text-md">Role</label>
                         <input type="text"
                                className="bg-gray-100 border w-full p-1 border-gray-300 rounded-lg"
                                value={user.role}
                                readOnly />
                     </div>
                     <button className="mt-4 mx-auto w-1/3 bg-[#526C43] hover:bg-[#234228] text-white py-2 px-4 rounded-md transition-all duration-150"
-                            onClick={handleSave}>Zapisz</button>
+                            onClick={handleSave}>Save</button>
                 </div>
             </div>
             <AppToast />

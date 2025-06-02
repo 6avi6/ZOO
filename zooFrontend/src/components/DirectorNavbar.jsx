@@ -17,7 +17,7 @@ const DirectorNavbar = () => {
             await logout();
             navigate('/login');
         } catch (error) {
-            console.error('Błąd podczas wylogowania:', error);
+            console.error('Error during logout:', error);
         }
     };
 
@@ -34,18 +34,18 @@ const DirectorNavbar = () => {
                 <div className="flex flex-row gap-4 ml-12">
                     <Link to="/director/reports">
                         <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-[#F4E7CB] transition-all duration-200">
-                            Raporty
+                            Reports
                         </p>
                     </Link>
                     <Link to="/director/buy-animal">
                         <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-[#F4E7CB] transition-all duration-200">
-                            Kup zwierzę
+                            Buy Animal
                         </p>
                     </Link>
                     
                     <Link to="/director/account">
                         <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-[#F4E7CB] transition-all duration-200">
-                            Konto
+                            Account
                         </p>
                     </Link>
                 </div>

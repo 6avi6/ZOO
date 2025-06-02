@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import CaregiverNavbar from '../../components/CaregiverNavbar';
-import { getMyFeedings } from '../../services/caretakerService';
-import { updateFeeding } from '../../services/feedingsService';
-import { getAllEnclosures, getEnclosureById } from '../../services/enclosureService';
-import { getAnimalById } from '../../services/animalService';
-import { getAllFoodTypes } from '../../services/foodTypeService';
+import CaregiverNavbar from '../../../components/CaregiverNavbar';
+import { getMyFeedings } from '../../../services/caretakerService';
+import { updateFeeding } from '../../../services/feedingsService';
+import { getAllEnclosures, getEnclosureById } from '../../../services/enclosureService';
+import { getAnimalById } from '../../../services/animalService';
+import { getAllFoodTypes } from '../../../services/foodTypeService';
 import { Pencil, Save, X } from 'lucide-react';
 
 const CaregiverFeedings = () => {

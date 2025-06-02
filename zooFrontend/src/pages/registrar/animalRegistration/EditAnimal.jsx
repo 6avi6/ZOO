@@ -200,7 +200,7 @@ const EditAnimal = () => {
 
     return (
 
-        <div className="p-8">
+        <div className="min-h-screen bg-gray-50 p-6">
             <RegistrarNavbar/>
             <h1 className="text-2xl font-bold mb-6">Animals</h1>
             {/* Floating Add Button */}
@@ -210,54 +210,65 @@ const EditAnimal = () => {
             >
                 <Plus size={20}/>
             </button>
-            <div className="overflow-x-auto">
-            {/* Animal Table */}
-            <table className="min-w-full border border-gray-300 bg-white shadow-md rounded-lg overflow-hidden">
+            <div className="overflow-auto rounded-lg bg-white shadow-md">
+                <table className="min-w-full divide-y divide-gray-200 text-sm">
                     <thead className="bg-gray-200 text-gray-700">
                     <tr>
-                        <th className="px-4 py-2">ID</th>
-                        <th className="px-4 py-2">Mame</th>
-                        <th className="px-4 py-2">Birth date</th>
-                        <th className="px-4 py-2">Species</th>
-                        <th className="px-4 py-2">State</th>
-                        <th className="px-4 py-2">Gender</th>
-                        <th className="px-4 py-2">Weight</th>
-                        <th className="px-4 py-2">Enclosure</th>
-                        <th className="px-4 py-2">Action</th>
+                        {['ID', 'Name', 'Birth date', 'Species', 'State', 'Gender', 'Weight', 'Enclosure', 'Actions'].map((header) => (
+                            <th
+                                key={header}
+                                scope="col"
+                                className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700"
+                            >
+                                {header}
+                            </th>
+                        ))}
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="divide-y divide-gray-100">
                     {animals.map((animal) => (
-                        <tr key={animal.id} className="hover:bg-gray-50">
-                            <td className="px-4 py-2">{animal.id}</td>
+                        <tr key={animal.id} className="group hover:bg-gray-50 transition-colors duration-150">
+                            <td className="whitespace-nowrap px-4 py-3 font-medium text-gray-800">{animal.id}</td>
                             {editingAnimal === animal.id ? (
                                 <>
-                                    <td><input name="name" value={editedAnimal.name} onChange={handleEditChange} className="p-1 border rounded" /></td>
-                                    <td><input name="birthDate" value={editedAnimal.birthDate} onChange={handleEditChange} className="p-1 border rounded" /></td>
-                                    <td><select name="species" value={editedAnimal.species} onChange={handleEditChange} className="p-1 border rounded">
-                                        <option value="">Select specie</option>
-                                        {speciesOptions.map(species => (
-                                            <option key={species} value={species}>{species}</option>
-                                        ))}
-                                    </select></td>
-                                    <td><select name="condition" value={editedAnimal.condition} onChange={handleEditChange} className="p-1 border rounded">
-                                        <option value="">Select health state</option>
-                                        {conditionOptions.map(condition => (
-                                            <option key={condition} value={condition}>{condition}</option>
-                                        ))}
-                                    </select></td>
-                                    <td><select name="sex" value={editedAnimal.sex} onChange={handleEditChange}  className="p-1 border rounded">
-                                        <option value="">Select gender</option>
-                                        <option value="FEMALE">Female</option>
-                                        <option value="MALE">Male</option>
-                                    </select></td>
-                                    <td><input name="weight" value={editedAnimal.weight} onChange={handleEditChange} className="p-1 border rounded" /></td>
-                                    <td>
+                                    <td className="whitespace-nowrap px-4 py-3">
+                                        <input name="name" value={editedAnimal.name} onChange={handleEditChange}  className="border rounded px-1 py-0.5" />
+                                    </td>
+                                    <td className="whitespace-nowrap px-4 py-3">
+                                        <input name="birthDate" value={editedAnimal.birthDate} onChange={handleEditChange}  className="border rounded px-1 py-0.5" />
+                                    </td>
+                                    <td className="whitespace-nowrap px-4 py-3">
+                                        <select name="species" value={editedAnimal.species} onChange={handleEditChange}  className="border rounded px-1 py-0.5">
+                                            <option value="">Select specie</option>
+                                            {speciesOptions.map(species => (
+                                                <option key={species} value={species}>{species}</option>
+                                            ))}
+                                        </select>
+                                    </td>
+                                    <td className="whitespace-nowrap px-4 py-3">
+                                        <select name="condition" value={editedAnimal.condition} onChange={handleEditChange}  className="border rounded px-1 py-0.5">
+                                            <option value="">Select health state</option>
+                                            {conditionOptions.map(condition => (
+                                                <option key={condition} value={condition}>{condition}</option>
+                                            ))}
+                                        </select>
+                                    </td>
+                                    <td className="whitespace-nowrap px-4 py-3">
+                                        <select name="sex" value={editedAnimal.sex} onChange={handleEditChange}  className="border rounded px-1 py-0.5">
+                                            <option value="">Select gender</option>
+                                            <option value="FEMALE">Female</option>
+                                            <option value="MALE">Male</option>
+                                        </select>
+                                    </td>
+                                    <td className="whitespace-nowrap px-4 py-3">
+                                        <input name="weight" value={editedAnimal.weight} onChange={handleEditChange}  className="border rounded px-1 py-0.5" />
+                                    </td>
+                                    <td className="whitespace-nowrap px-4 py-3">
                                         <select
                                             name="enclosureId"
                                             value={editedAnimal.enclosureId || ''}
                                             onChange={handleEditChange}
-                                            className="p-1 border rounded"
+                                            className="border rounded px-1 py-0.5"
                                         >
                                             <option value="">Select enclosure</option>
                                             {enclosures.map((e) => (
@@ -266,41 +277,41 @@ const EditAnimal = () => {
                                                 </option>
                                             ))}
                                         </select>
-
                                     </td>
-
-
-                                    <td className="flex gap-2">
-                                        <button onClick={() => handleSaveClick(animal.id)} className="px-2 py-1 text-green-600  rounded hover:text-green-400"><Save size={16}/></button>
-                                        <button onClick={() => setEditingAnimal(null)} className="px-2 py-1 text-gray-600 rounded hover:text-gray-400"><X size={16}/></button>
+                                    <td className="whitespace-nowrap px-4 py-3 flex gap-3">
+                                        <button onClick={() => handleSaveClick(animal.id)} className="text-green-600 hover:text-green-400"><Save size={16} /></button>
+                                        <button onClick={() => setEditingAnimal(null)} className="text-gray-600 hover:text-gray-400"><X size={16} /></button>
                                     </td>
                                 </>
                             ) : (
                                 <>
-                                    <td className="px-4 py-2">{animal.name}</td>
-                                    <td className="px-4 py-2">{animal.birthDate}</td>
-                                    <td className="px-4 py-2">{animal.species}</td>
-                                    <td className="px-4 py-2">                                   <span
-                                        className={
-                                            (animal.condition === 'Good' || animal.condition === 'GOOD')
-                                                ? 'text-green-600 font-semibold'
-                                                : animal.condition === 'INJURED'
-                                                    ? 'text-yellow-600 font-semibold'
-                                                    : 'text-gray-600 font-semibold'
-                                        }
-                                    >{animal.condition}</span></td>
-                                    <td className="px-4 py-2">{animal.sex}</td>
-                                    <td className="px-4 py-2">{animal.weight}</td>
-                                    <td className="px-4 py-2">
+                                    <td className="whitespace-nowrap px-4 py-3">{animal.name}</td>
+                                    <td className="whitespace-nowrap px-4 py-3">{animal.birthDate}</td>
+                                    <td className="whitespace-nowrap px-4 py-3">{animal.species}</td>
+                                    <td className="whitespace-nowrap px-4 py-3">
+                                <span
+                                    className={
+                                        (animal.condition === 'Good' || animal.condition === 'GOOD')
+                                            ? 'text-green-600 font-semibold'
+                                            : animal.condition === 'INJURED'
+                                                ? 'text-yellow-600 font-semibold'
+                                                : 'text-gray-600 font-semibold'
+                                    }
+                                >
+                                    {animal.condition}
+                                </span>
+                                    </td>
+                                    <td className="whitespace-nowrap px-4 py-3">{animal.sex}</td>
+                                    <td className="whitespace-nowrap px-4 py-3">{animal.weight}</td>
+                                    <td className="whitespace-nowrap px-4 py-3">
                                         {animalEnclosures[animal.id]
                                             ? `${animalEnclosures[animal.id].id} | ${animalEnclosures[animal.id].terrainType}`
                                             : ''}
                                     </td>
-
-                                    <td className="flex gap-2">
-                                        <button onClick={() => handleEditClick(animal)} className="px-2 py-1 text-blue-600 hover:text-blue-400"><Pencil size={16} /></button>
-                                        <button onClick={() => handleDeleteClick(animal.id)} className="p-1 text-red-600 hover:text-red-400"><Trash2 size={16} /></button>
-                                        <button onClick={() => window.location.href = `animals/${animal.id}`} className="p-1 text-gray-600 hover:text-gray-400" title="Szczegóły"><ArrowRight size={16} /></button>
+                                    <td className="whitespace-nowrap px-4 py-3 flex gap-3">
+                                        <button onClick={() => handleEditClick(animal)} className="text-blue-600 hover:text-blue-400"><Pencil size={16} /></button>
+                                        <button onClick={() => handleDeleteClick(animal.id)} className="text-red-600 hover:text-red-400"><Trash2 size={16} /></button>
+                                        <button onClick={() => window.location.href = `animals/${animal.id}`} className="text-gray-600 hover:text-gray-400" title="Szczegóły"><ArrowRight size={16} /></button>
                                     </td>
                                 </>
                             )}

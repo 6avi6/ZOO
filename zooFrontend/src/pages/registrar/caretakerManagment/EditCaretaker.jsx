@@ -89,9 +89,9 @@ const EditCaretaker = () => {
     const displayOrPlaceholder = (value) => value ? value : <span className="text-gray-400 italic">No data</span>;
 
     return (
-        <div className="p-8">
+        <div className="min-h-screen bg-gray-50 p-6">
             <RegistrarNavbar />
-            <h1 className="text-2xl font-bold mb-4">Caregivers</h1>
+            <h1 className="text-2xl font-bold mb-6">Caregivers</h1>
 
             {isAdding && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -132,24 +132,28 @@ const EditCaretaker = () => {
                     </div>
                 </div>
             )}
-            <div className="overflow-x-auto">
-                <table className="min-w-full border border-gray-300 bg-white shadow-md rounded-lg overflow-hidden">
-                    <thead>
-                    <tr className="bg-gray-200">
-                        <th className="p-2">Username</th>
-                        <th className="p-2">First Name</th>
-                        <th className="p-2">Last Name</th>
-                        <th className="p-2">Email</th>
-                        <th className="p-2">Hired</th>
-                        <th className="p-2 text-center">Actions</th>
+
+            <div className="overflow-auto rounded-lg bg-white shadow-md">
+                <table className="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead className="bg-gray-200 text-gray-700">
+                    <tr>
+                        {['Username', 'First Name', 'Last Name', 'Email', 'Hired', 'Actions'].map((header) => (
+                            <th
+                                key={header}
+                                scope="col"
+                                className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700"
+                            >
+                                {header}
+                            </th>
+                        ))}
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="divide-y divide-gray-100">
                     {caregivers.map(user => (
-                        <tr key={user.id} className="text-sm text-left">
+                        <tr key={user.id} className="group hover:bg-gray-50 transition-colors duration-150">
                             {editingUser === user.id ? (
                                 <>
-                                    <td className="p-2">
+                                    <td className="whitespace-nowrap px-4 py-3">
                                         <input
                                             name="username"
                                             value={user.username || ''}
@@ -157,7 +161,7 @@ const EditCaretaker = () => {
                                             onChange={handleChange}
                                         />
                                     </td>
-                                    <td className="p-2">
+                                    <td className="whitespace-nowrap px-4 py-3">
                                         <input
                                             name="firstName"
                                             value={editedUser.firstName || ''}
@@ -165,7 +169,7 @@ const EditCaretaker = () => {
                                             className="border p-1 rounded w-full"
                                         />
                                     </td>
-                                    <td className="p-2">
+                                    <td className="whitespace-nowrap px-4 py-3">
                                         <input
                                             name="lastName"
                                             value={editedUser.lastName || ''}
@@ -173,7 +177,7 @@ const EditCaretaker = () => {
                                             className="border p-1 rounded w-full"
                                         />
                                     </td>
-                                    <td className="p-2">
+                                    <td className="whitespace-nowrap px-4 py-3">
                                         <input
                                             name="email"
                                             value={editedUser.email || ''}
@@ -181,7 +185,7 @@ const EditCaretaker = () => {
                                             className="border p-1 rounded w-full"
                                         />
                                     </td>
-                                    <td className="p-2">
+                                    <td className="whitespace-nowrap px-4 py-3">
                                         <input
                                             type="date"
                                             name="hireDate"
@@ -190,7 +194,7 @@ const EditCaretaker = () => {
                                             className="border p-1 rounded w-full"
                                         />
                                     </td>
-                                    <td className="p-2 flex justify-center gap-2">
+                                    <td className="whitespace-nowrap px-4 py-3 flex gap-3">
                                         <button
                                             onClick={handleSaveClick}
                                             className="text-green-600 hover:text-green-400 px-2 py-2"
@@ -207,12 +211,12 @@ const EditCaretaker = () => {
                                 </>
                             ) : (
                                 <>
-                                    <td className="p-2">{displayOrPlaceholder(user.username)}</td>
-                                    <td className="p-2">{displayOrPlaceholder(user.firstName)}</td>
-                                    <td className="p-2">{displayOrPlaceholder(user.lastName)}</td>
-                                    <td className="p-2">{displayOrPlaceholder(user.email)}</td>
-                                    <td className="p-2">{displayOrPlaceholder(user.hireDate)}</td>
-                                    <td className="p-2 flex justify-center gap-2">
+                                    <td className="whitespace-nowrap px-4 py-3">{displayOrPlaceholder(user.username)}</td>
+                                    <td className="whitespace-nowrap px-4 py-3">{displayOrPlaceholder(user.firstName)}</td>
+                                    <td className="whitespace-nowrap px-4 py-3">{displayOrPlaceholder(user.lastName)}</td>
+                                    <td className="whitespace-nowrap px-4 py-3">{displayOrPlaceholder(user.email)}</td>
+                                    <td className="whitespace-nowrap px-4 py-3">{displayOrPlaceholder(user.hireDate)}</td>
+                                    <td className="whitespace-nowrap px-4 py-3 flex gap-3">
                                         <button
                                             onClick={() => handleEditClick(user)}
                                             className="px-2 py-1 text-blue-600 hover:text-blue-400"><Pencil size={16} /></button>

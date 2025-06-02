@@ -135,7 +135,7 @@ const UserSchedule = () => {
     if (error) return <div className="p-8 text-red-600">{error}</div>;
 
     return (
-        <div className="relative p-8">
+        <div className="min-h-screen bg-gray-50 p-6">
             <RegistrarNavbar />
             <h1 className="text-2xl font-bold mb-6">Work Schedule: {username}</h1>
 
@@ -187,50 +187,55 @@ const UserSchedule = () => {
             {schedules.length === 0 ? (
                 <p className="text-gray-500">No work schedules for this user.</p>
             ) : (
-                <div className="overflow-x-auto relative">
-                    <table className="min-w-full border border-gray-300 bg-white shadow-md rounded-lg overflow-hidden">
-                        <thead className="bg-gray-200">
+                <div className="overflow-auto rounded-lg bg-white shadow-md">
+                    <table className="min-w-full divide-y divide-gray-200 text-sm">
+                        <thead className="bg-gray-200 text-gray-700">
                         <tr>
-                            <th className="px-4 py-2">ID</th>
-                            <th className="px-4 py-2">Start</th>
-                            <th className="px-4 py-2">End</th>
-                            <th className="px-4 py-2">Actions</th>
+                            {['ID', 'Start', 'Species', 'Actions'].map((header) => (
+                                <th
+                                    key={header}
+                                    scope="col"
+                                    className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700"
+                                >
+                                    {header}
+                                </th>
+                            ))}
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="divide-y divide-gray-100">
                         {schedules.map(schedule => (
-                            <tr key={schedule.id} className="border-t">
-                                <td className="px-4 py-2">{schedule.id}</td>
+                            <tr key={schedule.id} className="group hover:bg-gray-50 transition-colors duration-150">
+                                <td className="whitespace-nowrap px-4 py-3 font-medium text-gray-800">{schedule.id}</td>
 
-                                <td className="px-4 py-2">
+                                <td className="whitespace-nowrap px-4 py-3">
                                     {editingId === schedule.id ? (
                                         <input
                                             type="datetime-local"
                                             name="shiftStart"
                                             value={formData.shiftStart}
                                             onChange={handleInputChange}
-                                            className="border rounded p-1"
+                                            className="border p-1 rounded w-full"
                                         />
                                     ) : (
                                         new Date(schedule.shiftStart).toLocaleString()
                                     )}
                                 </td>
 
-                                <td className="px-4 py-2">
+                                <td className="whitespace-nowrap px-4 py-3">
                                     {editingId === schedule.id ? (
                                         <input
                                             type="datetime-local"
                                             name="shiftEnd"
                                             value={formData.shiftEnd}
                                             onChange={handleInputChange}
-                                            className="border rounded p-1"
+                                            className="border p-1 rounded w-full"
                                         />
                                     ) : (
                                         new Date(schedule.shiftEnd).toLocaleString()
                                     )}
                                 </td>
 
-                                <td className={`p-2 flex justify-center gap-2`}>
+                                <td className="whitespace-nowrap px-4 py-3 flex gap-3">
                                     {editingId === schedule.id ? (
                                         <>
                                             <button onClick={handleSaveClick} className="text-green-600 hover:text-green-400 px-2 py-2">
@@ -242,10 +247,10 @@ const UserSchedule = () => {
                                         </>
                                     ) : (
                                         <>
-                                            <button onClick={() => handleEdit(schedule)} className="text-blue-600 hover:text-blue-400 px-2 py-">
+                                            <button onClick={() => handleEdit(schedule)} className="text-blue-600 hover:text-blue-400 px-2 py-2">
                                                 <Pencil size={16} />
                                             </button>
-                                            <button onClick={() => handleDelete(schedule.id)} className="text-red-600 hover:text-red-400 px-2 py-">
+                                            <button onClick={() => handleDelete(schedule.id)} className="text-red-600 hover:text-red-400 px-2 py-2">
                                                 <Trash2 size={16} />
                                             </button>
                                         </>

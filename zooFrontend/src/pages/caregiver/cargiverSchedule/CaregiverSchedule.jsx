@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import CaregiverNavbar from '../../components/CaregiverNavbar';
-import { getCurrentUser } from '../../services/userService';
-import { getPagedWorkSchedules } from '../../services/workScheduleService';
+import CaregiverNavbar from '../../../components/CaregiverNavbar';
+import { getCurrentUser } from '../../../services/userService';
+import { getPagedWorkSchedules } from '../../../services/workScheduleService';
 
 const CaregiverScheduler = () => {
     const [user, setUser] = useState(null);

@@ -107,9 +107,9 @@ const EditEnclosure = () => {
     };
 
     return (
-        <div className="p-8">
+        <div className="min-h-screen bg-gray-50 p-6">
             <RegistrarNavbar />
-            <h1 className="text-2xl font-bold mb-4">Enclosures</h1>
+            <h1 className="text-2xl font-bold mb-6">Enclosures</h1>
 
             <button
                 onClick={() => setIsAdding(true)}
@@ -118,31 +118,33 @@ const EditEnclosure = () => {
                 <Plus size={20} />
             </button>
 
-            <div className="overflow-x-auto">
-                <table className="min-w-full border border-gray-300 bg-white shadow-md rounded-lg overflow-hidden">
+            <div className="overflow-auto rounded-lg bg-white shadow-md">
+                <table className="min-w-full divide-y divide-gray-200 text-sm">
                     <thead className="bg-gray-200 text-gray-700">
                     <tr>
-                        <th className="px-4 py-2">ID</th>
-                        <th className="px-4 py-2">Insolation</th>
-                        <th className="px-4 py-2">Access to Water</th>
-                        <th className="px-4 py-2">Max Animals</th>
-                        <th className="px-4 py-2">Temperature</th>
-                        <th className="px-4 py-2">Terrain Type</th>
-                        <th className="px-4 py-2">Actions</th>
+                        {['ID', 'Insolation', 'Access to Water', 'Max Animals', 'Temperature', 'Terrain Type', 'Actions'].map((header) => (
+                            <th
+                                key={header}
+                                scope="col"
+                                className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700"
+                            >
+                                {header}
+                            </th>
+                        ))}
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="divide-y divide-gray-100">
                     {enclosures.map((enc) => (
-                        <tr key={enc.id} className="hover:bg-gray-50">
-                            <td className="px-4 py-2">{enc.id}</td>
+                        <tr key={enc.id} className="group hover:bg-gray-50 transition-colors duration-150">
+                            <td className="whitespace-nowrap px-4 py-3 font-medium text-gray-800">{enc.id}</td>
                             {editingEnclosure === enc.id ? (
                                 <>
-                                    <td>
+                                    <td className="whitespace-nowrap px-4 py-3">
                                         <select
                                             name="insolation"
                                             value={editedEnclosure.insolation}
                                             onChange={handleEditChange}
-                                            className="p-1 border rounded"
+                                            className="border p-1 rounded w-full"
                                         >
                                             <option value="">Select</option>
                                             {insolationOptions.map(opt => (
@@ -150,38 +152,39 @@ const EditEnclosure = () => {
                                             ))}
                                         </select>
                                     </td>
-                                    <td>
+                                    <td className="whitespace-nowrap px-4 py-3">
                                         <input
                                             type="checkbox"
                                             name="isAccessWater"
                                             checked={editedEnclosure.isAccessWater}
                                             onChange={handleEditChange}
+                                            className="border p-1 rounded w-full"
                                         />
                                     </td>
-                                    <td>
+                                    <td className="whitespace-nowrap px-4 py-3">
                                         <input
                                             name="maxAnimals"
                                             type="number"
                                             value={editedEnclosure.maxAnimals}
                                             onChange={handleEditChange}
-                                            className="p-1 border rounded"
+                                            className="border p-1 rounded w-full"
                                         />
                                     </td>
-                                    <td>
+                                    <td className="whitespace-nowrap px-4 py-3">
                                         <input
                                             name="temperature"
                                             type="number"
                                             value={editedEnclosure.temperature}
                                             onChange={handleEditChange}
-                                            className="p-1 border rounded"
+                                            className="border p-1 rounded w-full"
                                         />
                                     </td>
-                                    <td>
+                                    <td className="whitespace-nowrap px-4 py-3">
                                         <select
                                             name="terrainType"
                                             value={editedEnclosure.terrainType}
                                             onChange={handleEditChange}
-                                            className="p-1 border rounded"
+                                            className="border p-1 rounded w-full"
                                         >
                                             <option value="">Select</option>
                                             {terrainTypes.map(t => (
@@ -189,7 +192,7 @@ const EditEnclosure = () => {
                                             ))}
                                         </select>
                                     </td>
-                                    <td className="flex gap-2">
+                                    <td className="whitespace-nowrap px-4 py-3 flex gap-3">
                                         <button
                                             onClick={() => handleSaveClick(enc.id)}
                                             className="px-2 py-1 text-green-600 hover:text-green-400 rounded"
@@ -206,12 +209,12 @@ const EditEnclosure = () => {
                                 </>
                             ) : (
                                 <>
-                                    <td className="px-4 py-2">{enc.insolation}</td>
-                                    <td className="px-4 py-2">{enc.isAccessWater ? 'Yes' : 'No'}</td>
-                                    <td className="px-4 py-2">{enc.maxAnimals}</td>
-                                    <td className="px-4 py-2">{enc.temperature}</td>
-                                    <td className="px-4 py-2">{enc.terrainType}</td>
-                                    <td className="flex gap-2">
+                                    <td className="whitespace-nowrap px-4 py-3">{enc.insolation}</td>
+                                    <td className="whitespace-nowrap px-4 py-3">{enc.isAccessWater ? 'Yes' : 'No'}</td>
+                                    <td className="whitespace-nowrap px-4 py-3">{enc.maxAnimals}</td>
+                                    <td className="whitespace-nowrap px-4 py-3">{enc.temperature}</td>
+                                    <td className="whitespace-nowrap px-4 py-3">{enc.terrainType}</td>
+                                    <td className="whitespace-nowrap px-4 py-3 flex gap-3">
                                         <button
                                             onClick={() => handleEditClick(enc)}
                                             className="px-2 py-1 text-blue-600 hover:text-blue-400"

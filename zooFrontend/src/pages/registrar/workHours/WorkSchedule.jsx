@@ -24,38 +24,39 @@ const WorkSchedule = () => {
     const displayOrPlaceholder = (value) => value ? value : <span className="text-gray-400 italic">No data</span>;
 
     return (
-        <div className="p-8">
+        <div className="min-h-screen bg-gray-50 p-6">
             <RegistrarNavbar />
             <h1 className="text-2xl font-bold mb-6">User List</h1>
 
-            <div className="overflow-x-auto">
-                <table className="min-w-full border border-gray-300 bg-white shadow-md rounded-lg overflow-hidden">
-                    <thead className="bg-gray-200">
+            <div className="overflow-auto rounded-lg bg-white shadow-md">
+                <table className="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead className="bg-gray-200 text-gray-700">
                     <tr>
-                        <th className="px-4 py-2 text-left">ID</th>
-                        <th className="px-4 py-2 text-left">Username</th>
-                        <th className="px-4 py-2 text-left">Role</th>
-                        <th className="px-4 py-2 text-left">First Name</th>
-                        <th className="px-4 py-2 text-left">Last Name</th>
-                        <th className="px-4 py-2 text-left">Email</th>
-                        <th className="px-4 py-2 text-left">Hire Date</th>
-                        <th className="px-4 py-2 text-left">Actions</th>
+                        {['ID', 'Username', 'Role', 'First Name', 'Last Name', 'Email', 'Hire Date', 'Actions'].map((header) => (
+                            <th
+                                key={header}
+                                scope="col"
+                                className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700"
+                            >
+                                {header}
+                            </th>
+                        ))}
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="divide-y divide-gray-100">
                     {users.map(user => (
-                        <tr key={user.id} className="border-t">
-                            <td className="px-4 py-2">{displayOrPlaceholder(user.id)}</td>
-                            <td className="px-4 py-2">{displayOrPlaceholder(user.username)}</td>
-                            <td className="px-4 py-2">{displayOrPlaceholder(user.role)}</td>
-                            <td className="px-4 py-2">{displayOrPlaceholder(user.firstName)}</td>
-                            <td className="px-4 py-2">{displayOrPlaceholder(user.lastName)}</td>
-                            <td className="px-4 py-2">{displayOrPlaceholder(user.email)}</td>
-                            <td className="px-4 py-2">{displayOrPlaceholder(user.hireDate)}</td>
-                            <td className="px-4 py-2">
+                        <tr key={user.id} className="group hover:bg-gray-50 transition-colors duration-150">
+                            <td className="whitespace-nowrap px-4 py-3 font-medium text-gray-800">{displayOrPlaceholder(user.id)}</td>
+                            <td className="whitespace-nowrap px-4 py-3">{displayOrPlaceholder(user.username)}</td>
+                            <td className="whitespace-nowrap px-4 py-3">{displayOrPlaceholder(user.role)}</td>
+                            <td className="whitespace-nowrap px-4 py-3">{displayOrPlaceholder(user.firstName)}</td>
+                            <td className="whitespace-nowrap px-4 py-3">{displayOrPlaceholder(user.lastName)}</td>
+                            <td className="whitespace-nowrap px-4 py-3">{displayOrPlaceholder(user.email)}</td>
+                            <td className="whitespace-nowrap px-4 py-3">{displayOrPlaceholder(user.hireDate)}</td>
+                            <td className="whitespace-nowrap px-4 py-3 flex gap-3">
                                 <button
                                     onClick={() => navigate(`/registrar/work-schedule/${user.id}`)}
-                                    className="text-gray-600 hover:text-gray-400 font-semibold flex items-center gap-1"
+                                    className="text-gray-600 hover:text-gray-400 font-semibold flex items-center gap-1 px-2 py-2"
                                     title="View schedule"
                                 >
                                     <ArrowRight size={16} />

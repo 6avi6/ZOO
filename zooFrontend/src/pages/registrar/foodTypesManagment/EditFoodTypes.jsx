@@ -73,45 +73,50 @@ const EditFoodTypes = () => {
     };
 
     return (
-        <div className="p-8">
+        <div className="min-h-screen bg-gray-50 p-6">
             <RegistrarNavbar />
             <h1 className="text-2xl font-bold mb-6">Food Types</h1>
-            <div className="overflow-x-auto">
+            <div className="overflow-auto rounded-lg bg-white shadow-md">
 
-                <table className="min-w-full border border-gray-300 bg-white shadow-md rounded-lg overflow-hidden">
-                    <thead>
-                    <tr className="bg-gray-100 text-gray-700">
-                        <th className="border px-4 py-2">ID</th>
-                        <th className="border px-4 py-2">Name</th>
-                        <th className="border px-4 py-2">Description</th>
-                        <th className="border px-4 py-2">Actions</th>
+                <table className="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead className="bg-gray-200 text-gray-700">
+                    <tr>
+                        {['ID', 'Name', 'Description', 'Actions'].map((header) => (
+                            <th
+                                key={header}
+                                scope="col"
+                                className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700"
+                            >
+                                {header}
+                            </th>
+                        ))}
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="divide-y divide-gray-100">
                     {foodTypes.map((food, index) => (
-                        <tr key={food.id} className="text-center">
-                            <td className="border px-4 py-2">{food.id}</td>
-                            <td className="border px-4 py-2">
+                        <tr key={food.id} className="group hover:bg-gray-50 transition-colors duration-150">
+                            <td className="whitespace-nowrap px-4 py-3 font-medium text-gray-800">{food.id}</td>
+                            <td className="whitespace-nowrap px-4 py-3">
                                 {editIndex === index ? (
                                     <input
                                         type="text"
                                         value={editData.name}
                                         onChange={(e) => handleEditChange('name', e.target.value)}
-                                        className="border rounded px-3 py-1 w-full"
+                                        className="border p-1 rounded w-full"
                                     />
                                 ) : food.name}
                             </td>
-                            <td className="border px-4 py-2">
+                            <td className="whitespace-nowrap px-4 py-3">
                                 {editIndex === index ? (
                                     <input
                                         type="text"
                                         value={editData.description}
                                         onChange={(e) => handleEditChange('description', e.target.value)}
-                                        className="border  rounded px-3 py-1 w-full"
+                                        className="border p-1 rounded w-full"
                                     />
                                 ) : food.description}
                             </td>
-                            <td className="border px-4 py-2">
+                            <td className="whitespace-nowrap px-4 py-3 flex gap-3">
                                 {editIndex === index ? (
                                     <>
                                         <button

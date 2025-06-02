@@ -296,27 +296,29 @@ const AnimalDetails = () => {
                 )}
 
                 <div className="mt-6">
-                    <div className="flex justify-between items-center mb-2">
-                        <h2 className="text-xl font-semibold">Feedings:</h2>
-                    </div>
-
+                    <h2 className="text-xl font-semibold mb-2">Feedings:</h2>
+                    <div className="overflow-auto rounded-lg bg-white shadow-md">
                     {feedings.length > 0 ? (
-                        <table className="w-full mt-2 table-auto border border-gray-300 text-sm">
-                            <thead>
-                            <tr className="bg-gray-200">
-                                <th className="border p-2">Time</th>
-                                <th className="border p-2">Food Type</th>
-                                <th className="border p-2">Feeding Status</th>
-                                <th className="border p-2">Caretakers</th>
-                                <th className="border p-2">Actions</th>
+                        <table className="min-w-full divide-y divide-gray-200 text-sm">
+                            <thead className="bg-gray-200 text-gray-700">
+                            <tr>
+                                {['Time', 'Food Type', 'Feeding Status', 'Caretakers', 'Actions'].map((header) => (
+                                    <th
+                                        key={header}
+                                        scope="col"
+                                        className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700"
+                                    >
+                                        {header}
+                                    </th>
+                                ))}
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody className="divide-y divide-gray-100">
                             {feedings.map((f) => (
-                                <tr key={f.id}>
+                                <tr key={f.id} className="group hover:bg-gray-50 transition-colors duration-150">
                                     {editingFeedingId === f.id ? (
                                         <>
-                                            <td className="border p-2">
+                                            <td className="whitespace-nowrap px-4 py-3">
                                                 <input
                                                     type="datetime-local"
                                                     value={editingFeedingData.feedingDateTime}
@@ -324,11 +326,11 @@ const AnimalDetails = () => {
                                                     className="border rounded px-1 py-0.5"
                                                 />
                                             </td>
-                                            <td className="border p-2">
+                                            <td className="whitespace-nowrap px-4 py-3">
                                                 <select
                                                     value={editingFeedingData.foodTypeId}
                                                     onChange={(e) => handleEditingChange('foodTypeId', e.target.value)}
-                                                    className="border rounded px-1 py-0.5 w-full"
+                                                    className="border rounded px-1 py-0.5"
                                                 >
                                                     {foodTypes.map(type => (
                                                         <option key={type.id} value={type.id} title={type.description}>
@@ -337,7 +339,7 @@ const AnimalDetails = () => {
                                                     ))}
                                                 </select>
                                             </td>
-                                            <td className="border p-2">
+                                            <td className="whitespace-nowrap px-4 py-3">
                                                 <select
                                                     value={editingFeedingData.isCompleted ? 'completed' : 'not_completed'}
                                                     onChange={e => handleEditingChange('isCompleted', e.target.value === 'completed')}
@@ -347,7 +349,7 @@ const AnimalDetails = () => {
                                                     <option value="not_completed">Not completed</option>
                                                 </select>
                                             </td>
-                                            <td className="border p-2 max-w-xs">
+                                            <td className="whitespace-nowrap px-4 py-3">
                                                 {caretakers.map(c => (
                                                     <label key={c.id} className="mr-2">
                                                         <input
@@ -360,7 +362,7 @@ const AnimalDetails = () => {
                                                     </label>
                                                 ))}
                                             </td>
-                                            <td className="border p-2 space-x-1">
+                                            <td className="whitespace-nowrap px-4 py-3">
                                                 <button
                                                     onClick={handleUpdateFeeding}
                                                     className="text-green-600 px-2 py-1 rounded hover:text-green-400"
@@ -377,22 +379,22 @@ const AnimalDetails = () => {
                                         </>
                                     ) : (
                                         <>
-                                            <td className="border p-2">{formatDateTime(f.feedingDateTime)}</td>
-                                            <td className="border p-2" title={
+                                            <td className="whitespace-nowrap px-4 py-3">{formatDateTime(f.feedingDateTime)}</td>
+                                            <td className="whitespace-nowrap px-4 py-3" title={
                                                 foodTypes.find(ft => ft.id === f.foodTypeId)?.description || 'No description'
                                             }>
                                                 {foodTypes.find(ft => ft.id === f.foodTypeId)
                                                     ? `${f.foodTypeId} | ${foodTypes.find(ft => ft.id === f.foodTypeId).name}`
                                                     : `ID ${f.foodTypeId}`}
                                             </td>
-                                            <td className="border p-2">{f.isCompleted ? 'Completed' : 'Not completed'}</td>
-                                            <td className="border p-2">
+                                            <td className="whitespace-nowrap px-4 py-3">{f.isCompleted ? 'Completed' : 'Not completed'}</td>
+                                            <td className="whitespace-nowrap px-4 py-3">
                                                 {f.userIds.map((uid) => {
                                                     const user = allUsers.find((c) => c.id === uid);
                                                     return user ? user.username : `ID ${uid}`;
                                                 }).join(', ')}
                                             </td>
-                                            <td className="border p-2 space-x-2">
+                                            <td className="whitespace-nowrap px-4 py-3">
                                                 <button
                                                     onClick={() => startEditFeeding(f)}
                                                     className="text-blue-600 px-2 py-1 rounded hover:text-blue-400"
@@ -415,6 +417,7 @@ const AnimalDetails = () => {
                     ) : (
                         <p>No feeding data available.</p>
                     )}
+                </div>
                 </div>
                 {/* FAB Button */}
                 <button

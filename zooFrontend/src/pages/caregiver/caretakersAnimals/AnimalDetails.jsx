@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Pencil,Save,X } from 'lucide-react';
 import { useParams } from 'react-router-dom';
-import CaregiverNavbar from '../../components/CaregiverNavbar';
-import { getAnimalById } from '../../services/animalService';
-import { getEnclosureById } from '../../services/enclosureService';
-import { getFeedingsByAnimalId, updateFeeding } from '../../services/feedingsService';
-import { getCaretakersByAnimalId } from '../../services/caretakerService';
-import { getAllFoodTypes } from '../../services/foodTypeService';
+import CaregiverNavbar from '../../../components/CaregiverNavbar';
+import { getAnimalById } from '../../../services/animalService';
+import { getEnclosureById } from '../../../services/enclosureService';
+import { getFeedingsByAnimalId, updateFeeding } from '../../../services/feedingsService';
+import { getCaretakersByAnimalId } from '../../../services/caretakerService';
+import { getAllFoodTypes } from '../../../services/foodTypeService';
 
 const AnimalDetails = () => {
     const { id } = useParams();
@@ -181,7 +181,7 @@ const AnimalDetails = () => {
                                                     <select
                                                         value={editingFeedingData.foodTypeId}
                                                         onChange={e => handleEditingChange('foodTypeId', e.target.value)}
-                                                        className="border rounded px-1 py-0.5 w-full"
+                                                        className="border rounded px-1 py-0.5"
                                                     >
                                                         {foodTypes.map(type => (
                                                             <option key={type.id} value={type.id} title={type.description}>

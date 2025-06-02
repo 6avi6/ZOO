@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Pencil, ArrowRight, Save, X } from 'lucide-react';
-import CaregiverNavbar from '../../components/CaregiverNavbar';
-import { getMyAnimals } from '../../services/caretakerService';
-import { updateAnimal } from '../../services/animalService';
-import { getAllEnclosures, getEnclosureById } from '../../services/enclosureService';
-import { createAnimalTreatmentCard } from '../../services/animalTreatmentCardService';
-import { getAllVeterinarians } from '../../services/veterinarianService';
-import { getAllSymptoms } from '../../services/symptomService';
+import CaregiverNavbar from '../../../components/CaregiverNavbar';
+import { getMyAnimals } from '../../../services/caretakerService';
+import { updateAnimal } from '../../../services/animalService';
+import { getAllEnclosures, getEnclosureById } from '../../../services/enclosureService';
+import { createAnimalTreatmentCard } from '../../../services/animalTreatmentCardService';
+import { getAllVeterinarians } from '../../../services/veterinarianService';
+import { getAllSymptoms } from '../../../services/symptomService';
 import { useNavigate } from 'react-router-dom';
 
 const conditionOptions = ['GOOD', 'INJURED', 'DEAD'];
@@ -143,7 +143,7 @@ const MyAnimals = () => {
                                         name="condition"
                                         value={editedAnimal.condition}
                                         onChange={handleEditChange}
-                                        className="w-full rounded border border-gray-300 px-2 py-1 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                        className="border p-1 rounded w-full"
                                     >
                                         {conditionOptions.map((option) => (
                                             <option key={option} value={option}>
@@ -172,7 +172,7 @@ const MyAnimals = () => {
                                         name="enclosureId"
                                         value={editedAnimal.enclosureId}
                                         onChange={handleEditChange}
-                                        className="w-full rounded border border-gray-300 px-2 py-1 text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                        className="border p-1 rounded w-full"
                                     >
                                         {enclosures.map((e) => (
                                             <option key={e.id} value={e.id}>

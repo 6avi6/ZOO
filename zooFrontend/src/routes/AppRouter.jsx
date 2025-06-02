@@ -38,10 +38,10 @@ import AnimalsCaregiversReport from '../pages/director/AnimalsCaregiversReport';
 import SickAnimalsReport from '../pages/director/SickAnimalsReport';
 
 //Caregiver
-import CaregiverAnimals from '../pages/caregiver/CaregiverAnimals';
-import CaregiverFeedings from '../pages/caregiver/CaregiverFeedings';
-import CaregiverSchedule from '../pages/caregiver/CaregiverSchedule';
-import AnimalDetailsCaregiver     from '../pages/caregiver/AnimalDetails';
+import CaregiverAnimals from '../pages/caregiver/caretakersAnimals/CaregiverAnimals';
+import CaregiverFeedings from '../pages/caregiver/cagiverFeedings/CaregiverFeedings';
+import CaregiverSchedule from '../pages/caregiver/cargiverSchedule/CaregiverSchedule';
+import AnimalDetailsCaregiver     from '../pages/caregiver/caretakersAnimals/AnimalDetails';
 
 import RegisterTreatment from '../pages/veterinarian/RegisterTreatment';
 import ViewReports from '../pages/veterinarian/ViewReports';

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Pencil } from 'lucide-react';
+import { Pencil,Save,X } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import CaregiverNavbar from '../../components/CaregiverNavbar';
 import { getAnimalById } from '../../services/animalService';
@@ -118,7 +118,16 @@ const AnimalDetails = () => {
                 <div className="grid grid-cols-2 gap-8">
                     <div className="space-y-2">
                         <div><strong>Gatunek:</strong> {animal.species}</div>
-                        <div><strong>Stan:</strong> {animal.condition}</div>
+                        <div><strong>Stan:</strong>
+                            <span
+                            className={
+                                (animal.condition === 'Good' || animal.condition === 'GOOD')
+                                    ? 'text-green-600 font-semibold'
+                                    : animal.condition === 'INJURED'
+                                        ? 'text-yellow-600 font-semibold'
+                                        : 'text-red-600 font-semibold'
+                            }
+                        > {animal.condition}</span></div>
                         <div><strong>Data urodzenia:</strong> {animal.birthDate}</div>
 
                         <h2 className="text-lg font-semibold mt-4">Opiekunowie:</h2>
@@ -142,25 +151,25 @@ const AnimalDetails = () => {
 
                 <div className="mt-6">
                     <h2 className="text-xl font-semibold mb-2">Karmienia:</h2>
-
+                    <div className="overflow-auto rounded-lg bg-white shadow-md">
                     {feedings.length > 0 ? (
-                        <table className="w-full mt-2 table-auto border border-gray-300 text-sm">
-                            <thead>
-                            <tr className="bg-gray-200">
-                                <th className="border p-2">Czas karmienia</th>
-                                <th className="border p-2">Typ jedzenia</th>
-                                <th className="border p-2">Wybieg</th>
-                                <th className="border p-2">Status</th>
-                                <th className="border p-2">Opiekunowie</th>
-                                <th className="border p-2">Akcje</th>
+                        <table className="min-w-full divide-y divide-gray-200 text-sm">
+                            <thead className="bg-gray-200 text-gray-700">
+                            <tr>
+                                <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Czas karmienia</th>
+                                <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Typ jedzenia</th>
+                                <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Wybieg</th>
+                                <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Status</th>
+                                <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Opiekunowie</th>
+                                <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Akcje</th>
                             </tr>
                             </thead>
-                            <tbody>
+                            <tbody className="divide-y divide-gray-100">
                             {feedings.map((f) => (
-                                <tr key={f.id}>
+                                <tr key={f.id} className="group hover:bg-gray-50 transition-colors duration-150">
                                     {editingFeedingId === f.id ? (
                                         <>
-                                            <td className="border p-2">
+                                            <td className="whitespace-nowrap px-4 py-3">
                                                 <input
                                                     type="datetime-local"
                                                     value={editingFeedingData.feedingDateTime}
@@ -168,7 +177,7 @@ const AnimalDetails = () => {
                                                     className="border rounded px-1 py-0.5"
                                                 />
                                             </td>
-                                            <td className="border p-2">
+                                            <td className="whitespace-nowrap px-4 py-3">
                                                 <select
                                                     value={editingFeedingData.foodTypeId}
                                                     onChange={e => handleEditingChange('foodTypeId', e.target.value)}
@@ -181,8 +190,8 @@ const AnimalDetails = () => {
                                                     ))}
                                                 </select>
                                             </td>
-                                            <td className="border p-2">{enclosure ? `${enclosure.id} | ${enclosure.terrainType}` : 'Brak danych'}</td>
-                                            <td className="border p-2">
+                                            <td className="whitespace-nowrap px-4 py-3">{enclosure ? `${enclosure.id} | ${enclosure.terrainType}` : 'Brak danych'}</td>
+                                            <td className="whitespace-nowrap px-4 py-3">
                                                 <select
                                                     value={editingFeedingData.isCompleted ? 'completed' : 'not_completed'}
                                                     onChange={e => handleEditingChange('isCompleted', e.target.value === 'completed')}
@@ -192,47 +201,47 @@ const AnimalDetails = () => {
                                                     <option value="not_completed">Nie nakarmione</option>
                                                 </select>
                                             </td>
-                                            <td className="border p-2">
+                                            <td className="whitespace-nowrap px-4 py-3">
                                                 {f.userIds.map((uid) => {
                                                     const user = caretakers.find((c) => c.id === uid);
                                                     return user ? user.username : `ID ${uid}`;
                                                 }).join(', ')}
                                             </td>
-                                            <td className="border p-2 space-x-2">
+                                            <td className="whitespace-nowrap px-4 py-3 flex gap-3">
                                                 <button
                                                     onClick={handleUpdateFeeding}
-                                                    className="bg-green-600 text-white px-2 py-1 rounded hover:bg-green-700"
+                                                    className="text-green-600 px-2 py-1 hover:text-green-400"
                                                 >
-                                                    Zapisz
+                                                    <Save size={20}/>
                                                 </button>
                                                 <button
                                                     onClick={cancelEditFeeding}
-                                                    className="bg-gray-400 text-white px-2 py-1 rounded hover:bg-gray-500"
+                                                    className="text-gray-600 px-2 py-1 hover:text-gray-400"
                                                 >
-                                                    Anuluj
+                                                    <X size={16}/>
                                                 </button>
                                             </td>
                                         </>
                                     ) : (
                                         <>
-                                            <td className="border p-2">{formatDateTime(f.feedingDateTime)}</td>
-                                            <td className="border p-2" title={foodTypes.find(ft => ft.id === f.foodTypeId)?.description || ''}>
+                                            <td className="whitespace-nowrap px-4 py-3">{formatDateTime(f.feedingDateTime)}</td>
+                                            <td className="whitespace-nowrap px-4 py-3" title={foodTypes.find(ft => ft.id === f.foodTypeId)?.description || ''}>
                                                 {foodTypes.find(ft => ft.id === f.foodTypeId) ? `${f.foodTypeId} | ${foodTypes.find(ft => ft.id === f.foodTypeId).name}` : `ID ${f.foodTypeId}`}
                                             </td>
-                                            <td className="border p-2">{enclosure ? `${enclosure.id} | ${enclosure.terrainType}` : 'Brak danych'}</td>
-                                            <td className="border p-2">{f.isCompleted ? 'Nakarmione' : 'Nie nakarmione'}</td>
-                                            <td className="border p-2">
+                                            <td className="whitespace-nowrap px-4 py-3">{enclosure ? `${enclosure.id} | ${enclosure.terrainType}` : 'Brak danych'}</td>
+                                            <td className="whitespace-nowrap px-4 py-3">{f.isCompleted ? 'Nakarmione' : 'Nie nakarmione'}</td>
+                                            <td className="whitespace-nowrap px-4 py-3">
                                                 {f.userIds.map((uid) => {
                                                     const user = caretakers.find((c) => c.id === uid);
                                                     return user ? user.username : `ID ${uid}`;
                                                 }).join(', ')}
                                             </td>
-                                            <td className="border p-2">
+                                            <td className="whitespace-nowrap px-4 py-3 flex gap-3">
                                                 <button
                                                     onClick={() => startEditFeeding(f)}
-                                                    className="text-blue-600 font-semibold flex items-center gap-1"
+                                                    className="text-blue-600 px-2 py-1 hover:text-blue-400"
                                                 >
-                                                    <Pencil size={20} /> Edytuj
+                                                    <Pencil size={16} />
                                                 </button>
                                             </td>
                                         </>
@@ -244,6 +253,7 @@ const AnimalDetails = () => {
                     ) : (
                         <p>Brak danych o karmieniach.</p>
                     )}
+                    </div>
                 </div>
             </div>
         </div>

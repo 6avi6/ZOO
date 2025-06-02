@@ -20,6 +20,8 @@ const WorkSchedule = () => {
         fetchUsers();
     }, []);
 
+    const displayOrPlaceholder = (value) => value ? value : <span className="text-gray-400 italic">Brak danych</span>;
+
     return (
         <div className="p-8">
             <RegistrarNavbar />
@@ -42,13 +44,13 @@ const WorkSchedule = () => {
                     <tbody>
                     {users.map(user => (
                         <tr key={user.id} className="border-t">
-                            <td className="px-4 py-2">{user.id}</td>
-                            <td className="px-4 py-2">{user.username}</td>
-                            <td className="px-4 py-2">{user.role}</td>
-                            <td className="px-4 py-2">{user.firstName ?? '-'}</td>
-                            <td className="px-4 py-2">{user.lastName ?? '-'}</td>
-                            <td className="px-4 py-2">{user.email ?? '-'}</td>
-                            <td className="px-4 py-2">{user.hireDate ?? '-'}</td>
+                            <td className="px-4 py-2">{displayOrPlaceholder(user.id)}</td>
+                            <td className="px-4 py-2">{displayOrPlaceholder(user.username)}</td>
+                            <td className="px-4 py-2">{displayOrPlaceholder(user.role)}</td>
+                            <td className="px-4 py-2">{displayOrPlaceholder(user.firstName)}</td>
+                            <td className="px-4 py-2">{displayOrPlaceholder(user.lastName)}</td>
+                            <td className="px-4 py-2">{displayOrPlaceholder(user.email)}</td>
+                            <td className="px-4 py-2">{displayOrPlaceholder(user.hireDate)}</td>
                             <td className="px-4 py-2">
                                 <button
                                     onClick={() => navigate(`/registrar/work-schedule/${user.id}`)}

@@ -23,24 +23,28 @@ const CaregiverScheduler = () => {
     }, []);
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-gray-50 p-6">
             <CaregiverNavbar />
-            <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg mt-8 rounded-xl">
-                <h1 className="text-2xl font-bold mb-6">Twój grafik pracy</h1>
 
+            <h1 className="text-2xl font-bold mb-6">Mój grafik pracy</h1>
+            <div className="overflow-auto rounded-lg bg-white shadow-md">
                 {schedule.length > 0 ? (
-                    <table className="w-full table-auto border border-gray-300 text-sm">
-                        <thead className="bg-gray-200">
+                    <table className="min-w-full divide-y divide-gray-200 text-sm">
+                        <thead className="bg-gray-200 text-gray-700">
                         <tr>
-                            <th className="border p-2">Start zmiany</th>
-                            <th className="border p-2">Koniec zmiany</th>
+                            <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Start zmiany</th>
+                            <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Koniec zmiany</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="divide-y divide-gray-100">
                         {schedule.map((item) => (
                             <tr key={item.id}>
-                                <td className="border p-2">{new Date(item.shiftStart).toLocaleString()}</td>
-                                <td className="border p-2">{new Date(item.shiftEnd).toLocaleString()}</td>
+                                <td className="whitespace-nowrap px-4 py-3">
+                                    {new Date(item.shiftStart).toLocaleString()}
+                                </td>
+                                <td className="whitespace-nowrap px-4 py-3">
+                                    {new Date(item.shiftEnd).toLocaleString()}
+                                </td>
                             </tr>
                         ))}
                         </tbody>
@@ -49,6 +53,7 @@ const CaregiverScheduler = () => {
                     <p>Brak dostępnych danych o harmonogramie.</p>
                 )}
             </div>
+
         </div>
     );
 };

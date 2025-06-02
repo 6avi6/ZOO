@@ -236,7 +236,15 @@ const AnimalDetails = () => {
                 <div className="grid grid-cols-2 gap-8">
                     <div className="space-y-2">
                         <div><strong>Gatunek:</strong> {animal.species}</div>
-                        <div><strong>Stan:</strong> {animal.condition}</div>
+                        <div><strong>Stan:</strong> <span
+                            className={
+                                (animal.condition === 'Good' || animal.condition === 'GOOD')
+                                    ? 'text-green-600 font-semibold'
+                                    : animal.condition === 'INJURED'
+                                        ? 'text-yellow-600 font-semibold'
+                                        : 'text-red-600 font-semibold'
+                            }
+                        > {animal.condition}</span></div>
                         <div><strong>Data urodzenia:</strong> {animal.birthDate}</div>
 
                         <div className="flex items-center justify-between mt-4">

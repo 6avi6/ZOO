@@ -208,7 +208,7 @@ const EditAnimal = () => {
                 onClick={() => setIsAdding(true)}
                 className="fixed bottom-6 right-6 z-50 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all text-sm"
             >
-                <Plus size={16}/>
+                <Plus size={20}/>
             </button>
             <div className="overflow-x-auto">
             {/* Animal Table */}
@@ -280,7 +280,15 @@ const EditAnimal = () => {
                                     <td className="px-4 py-2">{animal.name}</td>
                                     <td className="px-4 py-2">{animal.birthDate}</td>
                                     <td className="px-4 py-2">{animal.species}</td>
-                                    <td className="px-4 py-2">{animal.condition}</td>
+                                    <td className="px-4 py-2">                                   <span
+                                        className={
+                                            (animal.condition === 'Good' || animal.condition === 'GOOD')
+                                                ? 'text-green-600 font-semibold'
+                                                : animal.condition === 'INJURED'
+                                                    ? 'text-yellow-600 font-semibold'
+                                                    : 'text-red-600 font-semibold'
+                                        }
+                                    >{animal.condition}</span></td>
                                     <td className="px-4 py-2">{animal.sex}</td>
                                     <td className="px-4 py-2">{animal.weight}</td>
                                     <td className="px-4 py-2">

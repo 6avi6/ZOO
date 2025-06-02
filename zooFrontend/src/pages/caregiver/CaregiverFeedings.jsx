@@ -86,26 +86,27 @@ const CaregiverFeedings = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-gray-50 p-6">
             <CaregiverNavbar />
-            <div className="max-w-6xl mx-auto p-6 bg-white shadow-lg mt-8 rounded-xl">
-                <h1 className="text-2xl font-bold mb-6">Twoje karmienia</h1>
+            <h1 className="text-2xl font-bold mb-6">Moje karmienia</h1>
+            <div className="overflow-auto rounded-lg bg-white shadow-md">
+
                 {feedings.length > 0 ? (
-                    <table className="w-full table-auto border border-gray-300 text-sm">
-                        <thead className="bg-gray-200">
+                    <table className="min-w-full divide-y divide-gray-200 text-sm">
+                        <thead className="bg-gray-200 text-gray-700">
                         <tr>
-                            <th className="border p-2">Godzina karmienia</th>
-                            <th className="border p-2">Typ jedzenia</th>
-                            <th className="border p-2">Status</th>
-                            <th className="border p-2">Wybieg</th>
-                            <th className="border p-2">Zwierzęta</th>
-                            <th className="border p-2">Akcje</th>
+                            <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Godzina karmienia</th>
+                            <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Typ jedzenia</th>
+                            <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Status</th>
+                            <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Wybieg</th>
+                            <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Zwierzęta</th>
+                            <th className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700">Akcje</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="divide-y divide-gray-100">
                         {feedings.map(f => (
-                            <tr key={f.id}>
-                                <td className="border p-2">
+                            <tr key={f.id} className="group hover:bg-gray-50 transition-colors duration-150">
+                                <td className="whitespace-nowrap px-4 py-3">
                                     {editingId === f.id ? (
                                         <input
                                             type="datetime-local"
@@ -115,7 +116,7 @@ const CaregiverFeedings = () => {
                                         />
                                     ) : formatDateTime(f.feedingDateTime)}
                                 </td>
-                                <td className="border p-2">
+                                <td className="whitespace-nowrap px-4 py-3">
                                     {editingId === f.id ? (
                                         <select
                                             value={editData.foodTypeId}
@@ -134,7 +135,7 @@ const CaregiverFeedings = () => {
                                         </span>
                                     )}
                                 </td>
-                                <td className="border p-2">
+                                <td className="whitespace-nowrap px-4 py-3">
                                     {editingId === f.id ? (
                                         <select
                                             value={editData.isCompleted ? 'completed' : 'not_completed'}
@@ -150,25 +151,25 @@ const CaregiverFeedings = () => {
                                         </span>
                                     )}
                                 </td>
-                                <td className="border p-2">
+                                <td className="whitespace-nowrap px-4 py-3">
                                     {enclosureMap[f.enclosureId] ? `${f.enclosureId} | ${enclosureMap[f.enclosureId].terrainType}` : 'N/A'}
                                 </td>
-                                <td className="border p-2">
+                                <td className="whitespace-nowrap px-4 py-3">
                                     {f.animalIds.map(id => animalMap[id] ? `${id} | ${animalMap[id].name}` : `ID ${id}`).join(', ')}
                                 </td>
-                                <td className="border p-2">
+                                <td className="whitespace-nowrap px-4 py-3">
                                     {editingId === f.id ? (
                                         <>
-                                            <button onClick={() => handleSave(f.id)} className="text-green-600 font-semibold mr-2 flex items-center gap-1">
-                                                <Save size={16} /> Zapisz
+                                            <button onClick={() => handleSave(f.id)} className="px-2 py-1 text-green-600 hover:text-green-400">
+                                                <Save size={16} />
                                             </button>
-                                            <button onClick={() => setEditingId(null)} className="text-gray-600 flex items-center gap-1">
-                                                <X size={16} /> Anuluj
+                                            <button onClick={() => setEditingId(null)} className="px-2 py-1 text-gray-600 hover:text-gray-400">
+                                                <X size={16} />
                                             </button>
                                         </>
                                     ) : (
-                                        <button onClick={() => handleEditClick(f)} className="text-blue-600 font-semibold flex items-center gap-1">
-                                            <Pencil size={16} /> Edytuj
+                                        <button onClick={() => handleEditClick(f)} className="px-2 py-1 text-blue-600 hover:text-blue-400">
+                                            <Pencil size={16} />
                                         </button>
                                     )}
                                 </td>

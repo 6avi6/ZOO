@@ -43,6 +43,28 @@ const RegisterTreatment = () => {
     fetchData();
   }, []);
 
+  const handleSymptomChange = (symptomId) => {
+    setNewCard((prev) => {
+      const alreadySelected = prev.symptomIds.includes(symptomId);
+      if (alreadySelected) {
+        return { ...prev, symptomIds: prev.symptomIds.filter((id) => id !== symptomId) };
+      } else {
+        return { ...prev, symptomIds: [...prev.symptomIds, symptomId] };
+      }
+    });
+  };
+
+  const handleEditSymptomChange = (symptomId) => {
+    setEditingCard((prev) => {
+      const alreadySelected = prev.symptomIds.includes(symptomId);
+      if (alreadySelected) {
+        return { ...prev, symptomIds: prev.symptomIds.filter((id) => id !== symptomId) };
+      } else {
+        return { ...prev, symptomIds: [...prev.symptomIds, symptomId] };
+      }
+    });
+  };
+
   const handleAdd = async () => {
     const payload = {
       animalId: newCard.animalId,
@@ -158,9 +180,7 @@ const RegisterTreatment = () => {
                         <input
                           type="checkbox"
                           checked={editingCard?.symptomIds?.includes(s.id) || false}
-                          onChange={() =>
-                            setEditingCard({ ...editingCard, symptomIds: [s.id] })
-                          }
+                          onChange={() => handleEditSymptomChange(s.id)}
                           className="mr-2"
                         />
                         {s.name}
@@ -259,9 +279,7 @@ const RegisterTreatment = () => {
                     <input
                       type="checkbox"
                       checked={newCard.symptomIds.includes(s.id)}
-                      onChange={() =>
-                        setNewCard({ ...newCard, symptomIds: [s.id] })
-                      }
+                      onChange={() => handleSymptomChange(s.id)}
                       className="mr-2"
                     />
                     {s.name}

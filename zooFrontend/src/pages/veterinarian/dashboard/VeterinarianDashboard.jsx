@@ -18,13 +18,13 @@ const VeterinarianDashboard = () => {
           <FaStethoscope size={120} />
         </div>
 
-        <div
+        {/* <div
           className="flex flex-col items-center max-w-lg w-1/3 min-w-72 p-5 border border-gray-300 bg-white shadow-md h-72 rounded-lg hover:border-[#A54C02] hover:scale-[1.03] transition-all duration-300 cursor-pointer"
           onClick={() => navigate('/veterinarian/sick-animals')}
         >
           <h1 className="mb-8 mt-4">Browse Reports</h1>
           <FaNotesMedical size={120} />
-        </div>
+        </div> */}
 
         <div
           className="flex flex-col items-center max-w-lg w-1/3 min-w-72 p-5 border border-gray-300 bg-white shadow-md h-72 rounded-lg hover:border-[#A54C02] hover:scale-[1.03] transition-all duration-300 cursor-pointer"

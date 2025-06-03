@@ -17,7 +17,7 @@ const BuyAnimal = () => {
   const [enclosures, setEnclosures] = useState([]);
 
   const sexOptions = ['MALE', 'FEMALE'];
-  const conditionOptions = ['GOOD', 'COUGHING', 'FATIGUE', 'LOSS_OF_APPETITE']; // Removed 'OTHER'
+  const conditionOptions = ['GOOD', 'INJURED']; 
 
   useEffect(() => {
     const fetchData = async () => {

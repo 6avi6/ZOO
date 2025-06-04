@@ -18,11 +18,12 @@ services:
     build: ./zooBackend 
     container_name: zoo-backend
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/zoo
+      PGHOST: localhost
+      PGPORT: 8084
+      PGDATABASE: zoo
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update  # Automatyczne tworzenie tabel
-      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
     ports:
       - "8083:8083"
     networks:

@@ -31,7 +31,7 @@ export const getCaretakersByAnimalId = async (animalId) => {
 // Przypisz opiekunów do zwierzęcia
 export const assignCaretakersToAnimal = async (animalId, userIds) => {
     try {
-        const response = await axiosInstance.put(`/api/animals/${animalId}/employees`, userIds);
+        const response = await axiosInstance.put(`/api/animals/${animalId}/caretakers`, userIds);
         return response.data;
     } catch (error) {
         console.error(`Błąd podczas przypisywania opiekunów do zwierzęcia ${animalId}:`, error);
@@ -87,7 +87,7 @@ export const getMyAnimals = async () => {
 // Pobieranie karmień dla aktualnie zalogowanego opiekuna
 export const getMyFeedings = async () => {
     try {
-        const response = await axiosInstance.get('/api/caregiver/my-Feedings');
+        const response = await axiosInstance.get('/api/caregiver/my-feedings');
         return response.data;
     } catch (error) {
         console.error('Błąd podczas pobierania harmonogramu karmienia:', error);

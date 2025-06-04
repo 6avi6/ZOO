@@ -11,21 +11,22 @@ import VeterinarianDashboard from '../pages/veterinarian/dashboard/VeterinarianD
 
 //Registrar
 import RegistrarDashboard from '../pages/registrar/dashboard/RegistrarDashboard';
-import EditAnimal from '../pages/registrar/EditAnimal';
-import EditCaretaker from '../pages/registrar/EditCaretaker';
-import EditEnclosure from '../pages/registrar/EditEnclosure';
-import AnimalDetailsRegistrar from '../pages/registrar/AnimalDetails';
-import WorkSchedule  from '../pages/registrar/WorkSchedule';
-import UserSchedule from '../pages/registrar/UserSchedule';
+import EditAnimal from '../pages/registrar/animalRegistration/EditAnimal';
+import AnimalDetailsRegistrar from '../pages/registrar/animalRegistration/AnimalDetails';
+import EditCaretaker from '../pages/registrar/caretakerManagment/EditCaretaker';
+import EditEnclosure from '../pages/registrar/enclosureManagment/EditEnclosure';
+import WorkSchedule  from '../pages/registrar/workHours/WorkSchedule';
+import UserSchedule from '../pages/registrar/workHours/UserSchedule';
+import EditFoodTypes from '../pages/registrar/foodTypesManagment/EditFoodTypes';
+import EditSymptomsTypes from '../pages/registrar/symptomsTypesManagment/EditSymptomsTypes';
 
 import ManageUsers from '../pages/admin/manage-users/ManageUsers';
 import ManageDictionary from '../pages/admin/manage-dictionary/ManageDictionary';
 import AddUser from '../pages/admin/manage-users/AddUser';
 import EditUser from '../pages/admin/manage-users/EditUser';
 import UserDetails from '../pages/admin/manage-users/UserDetails';
-import AddAnimalSpecies from '../pages/admin/manage-dictionary/AddAnimalSpecies';
-import AddFoodType from '../pages/admin/manage-dictionary/AddFoodType';
-import AddEnclosureType from '../pages/admin/manage-dictionary/AddEnclosureType';
+import AnimalTypesList from '../pages/admin/manage-dictionary/AnimalTypesList';
+import FoodList from '../pages/admin/manage-dictionary/FoodList';
 
 
 import ReportsOverview from '../pages/director/ReportsOverview';
@@ -36,10 +37,10 @@ import AnimalsCaregiversReport from '../pages/director/AnimalsCaregiversReport';
 import SickAnimalsReport from '../pages/director/SickAnimalsReport';
 
 //Caregiver
-import CaregiverAnimals from '../pages/caregiver/CaregiverAnimals';
-import CaregiverFeedings from '../pages/caregiver/CaregiverFeedings';
-import CaregiverSchedule from '../pages/caregiver/CaregiverSchedule';
-import AnimalDetailsCaregiver     from '../pages/caregiver/AnimalDetails';
+import CaregiverAnimals from '../pages/caregiver/caretakersAnimals/CaregiverAnimals';
+import CaregiverFeedings from '../pages/caregiver/cagiverFeedings/CaregiverFeedings';
+import CaregiverSchedule from '../pages/caregiver/cargiverSchedule/CaregiverSchedule';
+import AnimalDetailsCaregiver     from '../pages/caregiver/caretakersAnimals/AnimalDetails';
 
 import RegisterTreatment from '../pages/veterinarian/RegisterTreatment';
 import ViewReports from '../pages/veterinarian/ViewReports';
@@ -49,6 +50,8 @@ import HomeRedirect from "./HomeRedirect";
 
 
 import UserAccount from '../pages/userAccount';
+import SymptomsList from "../pages/admin/manage-dictionary/SymptomsList";
+import TerrainsList from "../pages/admin/manage-dictionary/TerrainsList";
 
 
 
@@ -69,6 +72,8 @@ const AppRouter = () => {
             <Route path="/registrar/animals/:id" element={<AnimalDetailsRegistrar />} />
             <Route path="/registrar/work-schedule" element={<WorkSchedule />} />
             <Route path="/registrar/work-schedule/:id" element={<UserSchedule />} />
+            <Route path="/registrar/edit-food-types" element={<EditFoodTypes />} />
+            <Route path="/registrar/edit-symptom-types" element={<EditSymptomsTypes />} />
         </Route>
 
         <Route element={<PrivateRoute requiredRole="ADMIN" />}>
@@ -78,9 +83,10 @@ const AppRouter = () => {
             <Route path="/admin/manage-users/add" element={<AddUser />} />
             <Route path="/admin/manage-users/edit/:id" element={<EditUser />} />
             <Route path="/admin/manage-users/:id" element={<UserDetails />} />
-            <Route path="/admin/add-animal-species" element={<AddAnimalSpecies />} />
-            <Route path="/admin/add-food-type" element={<AddFoodType />} />
-            <Route path="/admin/add-enclosure-type" element={<AddEnclosureType />} />
+            <Route path="/admin/dictionary/animals" element={<AnimalTypesList />} />
+            <Route path="/admin/dictionary/feed" element={<FoodList />} />
+            <Route path="/admin/dictionary/symptoms" element={<SymptomsList />} />
+            <Route path="/admin/dictionary/terrains" element={<TerrainsList />} />
         </Route>
 
         <Route element={<PrivateRoute requiredRole="DIRECTOR" />}>
@@ -91,6 +97,8 @@ const AppRouter = () => {
             <Route path="/director/reports/enclosures" element={<EnclosuresReport />} />
             <Route path="/director/reports/assignments" element={<AnimalsCaregiversReport />} />
             <Route path="/director/reports/sick-animals" element={<SickAnimalsReport />} />
+          
+
         </Route>
 
         <Route element={<PrivateRoute requiredRole="CAREGIVER" />}>

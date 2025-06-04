@@ -59,11 +59,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/register").hasRole("ADMIN")
+                        .requestMatchers("/api/auth/register").hasAnyRole("ADMIN", "REGISTRAR")
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/feedings/**").authenticated()
-                        .requestMatchers("/api/feedings/**").hasAnyRole("ADMIN", "DIRECTOR", "VETERINARIAN")
+                        .requestMatchers("/api/feedings/**").authenticated()
                         .requestMatchers("/api/enclosures/**").authenticated()
                         .requestMatchers("/api/animals/**").authenticated()
                         .requestMatchers("/api/food-types/**").authenticated()
@@ -78,6 +78,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/work-schedules/**").authenticated()
                         .requestMatchers("/api/work-schedules/**").hasAnyRole("REGISTRAR", "ADMIN", "DIRECTOR")
                         .requestMatchers("/api/caregiver/**").hasRole("CAREGIVER")
+
                         .requestMatchers("/api/hello").permitAll()
                         .requestMatchers("/api/hello/Veterinarian").hasRole("VETERINARIAN")
                         .requestMatchers("/api/hello/Caregiver").hasRole("CAREGIVER")

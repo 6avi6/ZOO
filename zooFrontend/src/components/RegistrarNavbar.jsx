@@ -7,7 +7,7 @@ import logo from '../assets/logo.png';
 const RegistrarNavbar = () => {
     const [menu, setMenu] = useState(false);
     const navigate = useNavigate();
-    const location = useLocation();  // Pobierz aktualną lokalizację
+    const location = useLocation();  // Get current location
 
     const toggleMenu = () => setMenu(!menu);
 
@@ -20,45 +20,56 @@ const RegistrarNavbar = () => {
         }
     };
 
-    // Funkcja generująca dynamiczne ścieżki w zależności od lokalizacji
+    // Function to generate dynamic paths depending on location
     const generateLink = (path) => {
         return location.pathname.startsWith('/registrar') ? `/registrar/${path}` : `/${path}`;
     };
 
     return (
         <div className="bg-white h-[80px] w-full flex items-center border-b-2 border-gray-200 mb-5">
-            <img
-                src={logo}
-                alt="logo"
-                className="size-16 ml-3 rounded-md hover:scale-[1.05] cursor-pointer transition-all duration-300"
-            />
-
+            <Link to={generateLink('dashboard')}>
+                <img
+                    src={logo}
+                    alt="logo"
+                    className="size-16 ml-3 rounded-md hover:scale-[1.05] cursor-pointer transition-all duration-300"
+                />
+            </Link>
             {/* Desktop navigation */}
             <div className="hidden sm:flex flex-row items-center justify-between w-full ml-auto">
                 <div className="flex flex-row gap-4 ml-12">
                     <Link to={generateLink('edit-animal')}>
                         <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
-                            Rejestracja zwierząt
+                            Animal Registration
                         </p>
                     </Link>
                     <Link to={generateLink('edit-caretaker')}>
                         <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
-                            Rejestracja opiekunów
+                            Caretaker Registration
                         </p>
                     </Link>
                     <Link to={generateLink('edit-enclosure')}>
                         <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
-                            Zarządzanie wybiegami
+                            Enclosure Management
                         </p>
                     </Link>
                     <Link to={generateLink('work-schedule')}>
                         <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
-                            Godziny prac
+                            Work Hours
+                        </p>
+                    </Link>
+                    <Link to={generateLink('edit-food-types')}>
+                        <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
+                            Food Types
+                        </p>
+                    </Link>
+                    <Link to={generateLink('edit-symptom-types')}>
+                        <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
+                            Symptom Types
                         </p>
                     </Link>
                     <Link to={generateLink('account')}>
                         <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
-                            Konto
+                            Account
                         </p>
                     </Link>
                 </div>
@@ -84,22 +95,32 @@ const RegistrarNavbar = () => {
                 <ul className="pt-4 mx-4">
                     <Link to={generateLink('edit-animal')}>
                         <li className="p-3 mb-2 text-gray-800 border-b-2 border-gray-200 hover:pl-2 hover:border-green-300 duration-200">
-                            Zwierzęta
+                            Animals
                         </li>
                     </Link>
                     <Link to={generateLink('edit-caretaker')}>
                         <li className="p-3 mb-2 text-gray-800 border-b-2 border-gray-200 hover:pl-2 hover:border-green-300 duration-200">
-                            Opiekunowie
+                            Caretakers
                         </li>
                     </Link>
                     <Link to={generateLink('edit-enclosure')}>
                         <li className="p-3 mb-2 text-gray-800 border-b-2 border-gray-200 hover:pl-2 hover:border-green-300 duration-200">
-                            Rejestracja
+                            Registration
                         </li>
+                    </Link>
+                    <Link to={generateLink('edit-food-types')}>
+                        <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
+                            Food Types
+                        </p>
+                    </Link>
+                    <Link to={generateLink('edit-symptom-types')}>
+                        <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-green-300 transition-all duration-200">
+                            Symptom Types
+                        </p>
                     </Link>
                     <Link to={generateLink('account')}>
                         <li className="p-3 mb-2 text-gray-800 border-b-2 border-gray-200 hover:pl-2 hover:border-green-300 duration-200">
-                            Konto
+                            Account
                         </li>
                     </Link>
                 </ul>

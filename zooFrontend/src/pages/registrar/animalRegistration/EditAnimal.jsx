@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import {Trash2, Pencil, ArrowRight, Plus} from 'lucide-react';
-import RegistrarNavbar from '../../components/RegistrarNavbar';
-import { getAllAnimals, updateAnimal, deleteAnimal, addAnimal } from '../../services/animalService';
-import { getAllEnclosures , getEnclosureById } from '../../services/enclosureService';
-import { getAllVeterinarians } from '../../services/veterinarianService';
-import { createAnimalTreatmentCard } from '../../services/animalTreatmentCardService';
-import { getAllSymptoms } from '../../services/symptomService';
+import {Trash2, Pencil, ArrowRight, Plus,Save,X} from 'lucide-react';
+import RegistrarNavbar from '../../../components/RegistrarNavbar';
+import { getAllAnimals, updateAnimal, deleteAnimal, addAnimal } from '../../../services/animalService';
+import { getAllEnclosures , getEnclosureById } from '../../../services/enclosureService';
+import { getAllVeterinarians } from '../../../services/veterinarianService';
+import { createAnimalTreatmentCard } from '../../../services/animalTreatmentCardService';
+import { getAllSymptoms } from '../../../services/symptomService';
 const EditAnimal = () => {
     const [animals, setAnimals] = useState([]);
     const [editingAnimal, setEditingAnimal] = useState(null);
@@ -25,7 +25,7 @@ const EditAnimal = () => {
     const [showVetDialog, setShowVetDialog] = useState(false);
     const [symptoms, setSymptoms] = useState([]);
     const [selectedSymptomIds, setSelectedSymptomIds] = useState([]);
-    const [treatmentDescription, setTreatmentDescription] = useState('Domyślny opis przypadłośći');
+    const [treatmentDescription, setTreatmentDescription] = useState('');
     const [treatmentDateTime, setTreatmentDateTime] = useState(new Date().toISOString().slice(0, 16));
     const [veterinarianId, setVeterinarianId] = useState(1);
     const [veterinarians, setVeterinarians] = useState([]);
@@ -55,7 +55,7 @@ const EditAnimal = () => {
                 setEnclosures(allEnclosures);
                 //console.log(allEnclosures);
             } catch (error) {
-                console.error("Błąd przy pobieraniu wybiegów:", error);
+                console.error("Fetching enclosures error:", error);
             }
         };
         fetchEnclosures();
@@ -85,7 +85,7 @@ const EditAnimal = () => {
 
                         }
                     } catch (error) {
-                        console.error(`Błąd przy pobieraniu wybiegu dla zwierzęcia o ID ${animal.id}:`, error);
+                        console.error(`Error during fetching enclosure of ${animal.id}:`, error);
                     }
                 }
             }));
@@ -121,7 +121,7 @@ const EditAnimal = () => {
                 setVeterinarians(vets);
                 setShowVetDialog(true);
             } catch (error) {
-                console.error("Błąd przy pobieraniu danych do formularza leczenia:", error);
+                console.error("Error during fetching data for treatment card:", error);
             }
         }
 
@@ -143,7 +143,7 @@ const EditAnimal = () => {
                 description: treatmentDescription,
                 dateTime: new Date(treatmentDateTime).toISOString(),
                 animalId: id,
-                veterinarianId: veterinarianId,
+                assignedUserId: veterinarianId,
                 symptomIds: selectedSymptomIds.map(Number)
             });
         }
@@ -184,8 +184,8 @@ const EditAnimal = () => {
                 enclosure: { id: '' }
             });
         } catch (err) {
-            console.error('Błąd przy dodawaniu zwierzęcia:', err);
-            alert('Dodanie zwierzęcia nie powiodło się.');
+            console.error('Adding animal failure:', err);
+            alert('Adding animal failure.');
         }
     };
 
@@ -194,105 +194,125 @@ const EditAnimal = () => {
             const vets = await getAllVeterinarians();
             setVeterinarians(vets);
         } catch (err) {
-            console.error("Błąd przy pobieraniu weterynarzy:", err);
+            console.error("Fetching animals error:", err);
         }
     };
 
     return (
 
-        <div className="relative p-6 min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-gray-50 pt-0 pr-6 pb-6 pl-6">
             <RegistrarNavbar/>
+            <h1 className="text-2xl font-bold mb-6">Animals</h1>
             {/* Floating Add Button */}
             <button
                 onClick={() => setIsAdding(true)}
                 className="fixed bottom-6 right-6 z-50 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all text-sm"
+                title="Add a new animal"
             >
                 <Plus size={20}/>
             </button>
-
-            {/* Animal Table */}
-            <div className="w-full flex mx-auto overflow-x-auto bg-white rounded-lg shadow-md p-6">
-            <table className="w-full table-auto text-sm text-left text-gray-600">
+            <div className="overflow-auto rounded-lg bg-white shadow-md">
+                <table className="min-w-full divide-y divide-gray-200 text-sm">
                     <thead className="bg-gray-200 text-gray-700">
                     <tr>
-                        <th className="px-4 py-2">ID</th>
-                        <th className="px-4 py-2">Nazwa</th>
-                        <th className="px-4 py-2">Data urodzenia</th>
-                        <th className="px-4 py-2">Gatunek</th>
-                        <th className="px-4 py-2">Stan</th>
-                        <th className="px-4 py-2">Płeć</th>
-                        <th className="px-4 py-2">Waga</th>
-                        <th className="px-4 py-2">Wybieg</th>
-                        <th className="px-4 py-2">Akcje</th>
+                        {['ID', 'Name', 'Birth date', 'Species', 'State', 'Gender', 'Weight', 'Enclosure', 'Actions'].map((header) => (
+                            <th
+                                key={header}
+                                scope="col"
+                                className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700"
+                            >
+                                {header}
+                            </th>
+                        ))}
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="divide-y divide-gray-100">
                     {animals.map((animal) => (
-                        <tr key={animal.id} className="hover:bg-gray-50">
-                            <td className="px-4 py-2">{animal.id}</td>
+                        <tr key={animal.id} className="group hover:bg-gray-50 transition-colors duration-150">
+                            <td className="whitespace-nowrap px-4 py-3 font-medium text-gray-800">{animal.id}</td>
                             {editingAnimal === animal.id ? (
                                 <>
-                                    <td><input name="name" value={editedAnimal.name} onChange={handleEditChange} className="p-1 border rounded" /></td>
-                                    <td><input name="birthDate" value={editedAnimal.birthDate} onChange={handleEditChange} className="p-1 border rounded" /></td>
-                                    <td><select name="species" value={editedAnimal.species} onChange={handleEditChange} className="p-1 border rounded">
-                                        <option value="">Wybierz gatunek</option>
-                                        {speciesOptions.map(species => (
-                                            <option key={species} value={species}>{species}</option>
-                                        ))}
-                                    </select></td>
-                                    <td><select name="condition" value={editedAnimal.condition} onChange={handleEditChange} className="p-1 border rounded">
-                                        <option value="">Wybierz stan zdrowia</option>
-                                        {conditionOptions.map(condition => (
-                                            <option key={condition} value={condition}>{condition}</option>
-                                        ))}
-                                    </select></td>
-                                    <td><select name="sex" value={editedAnimal.sex} onChange={handleEditChange}  className="p-1 border rounded">
-                                        <option value="">Wybierz płeć</option>
-                                        <option value="FEMALE">Female</option>
-                                        <option value="MALE">Male</option>
-                                    </select></td>
-                                    <td><input name="weight" value={editedAnimal.weight} onChange={handleEditChange} className="p-1 border rounded" /></td>
-                                    <td>
+                                    <td className="whitespace-nowrap px-4 py-3">
+                                        <input name="name" placeholder="Name" value={editedAnimal.name} onChange={handleEditChange}  className="border rounded px-1 py-0.5" />
+                                    </td>
+                                    <td className="whitespace-nowrap px-4 py-3">
+                                        <input type="date" name="birthDate" value={editedAnimal.birthDate} onChange={handleEditChange}  className="border rounded px-1 py-0.5" />
+                                    </td>
+                                    <td className="whitespace-nowrap px-4 py-3">
+                                        <select name="species" value={editedAnimal.species} onChange={handleEditChange}  className="border rounded px-1 py-0.5">
+                                            <option value="">Select specie</option>
+                                            {speciesOptions.map(species => (
+                                                <option key={species} value={species}>{species}</option>
+                                            ))}
+                                        </select>
+                                    </td>
+                                    <td className="whitespace-nowrap px-4 py-3">
+                                        <select name="condition" value={editedAnimal.condition} onChange={handleEditChange}  className="border rounded px-1 py-0.5">
+                                            <option value="">Select health state</option>
+                                            {conditionOptions.map(condition => (
+                                                <option key={condition} value={condition}>{condition}</option>
+                                            ))}
+                                        </select>
+                                    </td>
+                                    <td className="whitespace-nowrap px-4 py-3">
+                                        <select name="sex" value={editedAnimal.sex} onChange={handleEditChange}  className="border rounded px-1 py-0.5">
+                                            <option value="">Select gender</option>
+                                            <option value="FEMALE">Female</option>
+                                            <option value="MALE">Male</option>
+                                        </select>
+                                    </td>
+                                    <td className="whitespace-nowrap px-4 py-3">
+                                        <input name="weight" value={editedAnimal.weight} onChange={handleEditChange}  className="border rounded px-1 py-0.5" />
+                                    </td>
+                                    <td className="whitespace-nowrap px-4 py-3">
                                         <select
                                             name="enclosureId"
                                             value={editedAnimal.enclosureId || ''}
                                             onChange={handleEditChange}
-                                            className="p-1 border rounded"
+                                            className="border rounded px-1 py-0.5"
                                         >
-                                            <option value="">Wybierz wybieg</option>
+                                            <option value="">Select enclosure</option>
                                             {enclosures.map((e) => (
                                                 <option key={e.id} value={e.id}>
                                                     {`${e.id} | ${e.terrainType}`}
                                                 </option>
                                             ))}
                                         </select>
-
                                     </td>
-
-
-                                    <td className="flex gap-2">
-                                        <button onClick={() => handleSaveClick(animal.id)} className="px-2 py-1 bg-green-500 text-white rounded hover:bg-green-600">Zapisz</button>
-                                        <button onClick={() => setEditingAnimal(null)} className="px-2 py-1 bg-gray-400 text-white rounded hover:bg-gray-500">Anuluj</button>
+                                    <td className="whitespace-nowrap px-4 py-3 flex gap-3">
+                                        <button onClick={() => handleSaveClick(animal.id)} className="text-green-600 hover:text-green-400" title="Update changes"><Save size={16} /></button>
+                                        <button onClick={() => setEditingAnimal(null)} className="text-gray-600 hover:text-gray-400" title="Cancel changes"><X size={16}/></button>
                                     </td>
                                 </>
                             ) : (
                                 <>
-                                    <td className="px-4 py-2">{animal.name}</td>
-                                    <td className="px-4 py-2">{animal.birthDate}</td>
-                                    <td className="px-4 py-2">{animal.species}</td>
-                                    <td className="px-4 py-2">{animal.condition}</td>
-                                    <td className="px-4 py-2">{animal.sex}</td>
-                                    <td className="px-4 py-2">{animal.weight}</td>
-                                    <td className="px-4 py-2">
+                                    <td className="whitespace-nowrap px-4 py-3">{animal.name}</td>
+                                    <td className="whitespace-nowrap px-4 py-3">{animal.birthDate}</td>
+                                    <td className="whitespace-nowrap px-4 py-3">{animal.species}</td>
+                                    <td className="whitespace-nowrap px-4 py-3">
+                                <span
+                                    className={
+                                        (animal.condition === 'Good' || animal.condition === 'GOOD')
+                                            ? 'text-green-600 font-semibold'
+                                            : animal.condition === 'INJURED'
+                                                ? 'text-yellow-600 font-semibold'
+                                                : 'text-gray-600 font-semibold'
+                                    }
+                                >
+                                    {animal.condition}
+                                </span>
+                                    </td>
+                                    <td className="whitespace-nowrap px-4 py-3">{animal.sex}</td>
+                                    <td className="whitespace-nowrap px-4 py-3">{animal.weight}</td>
+                                    <td className="whitespace-nowrap px-4 py-3">
                                         {animalEnclosures[animal.id]
                                             ? `${animalEnclosures[animal.id].id} | ${animalEnclosures[animal.id].terrainType}`
                                             : ''}
                                     </td>
-
-                                    <td className="flex gap-2">
-                                        <button onClick={() => handleEditClick(animal)} className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"><Pencil size={20} /></button>
-                                        <button onClick={() => handleDeleteClick(animal.id)} className="p-1 text-red-600 hover:text-red-800"><Trash2 size={20} /></button>
-                                        <button onClick={() => window.location.href = `animals/${animal.id}`} className="p-1 text-blue-600 hover:text-blue-800" title="Szczegóły"><ArrowRight size={20} /></button>
+                                    <td className="whitespace-nowrap px-4 py-3 flex gap-3">
+                                        <button onClick={() => handleEditClick(animal)} className="text-blue-600 hover:text-blue-400" title="Edit animal"><Pencil size={16} /></button>
+                                        <button onClick={() => handleDeleteClick(animal.id)} className="text-red-600 hover:text-red-400" title="Delete animal"><Trash2 size={16} /></button>
+                                        <button onClick={() => window.location.href = `animals/${animal.id}`} className="text-gray-600 hover:text-gray-400" title="Go to details"><ArrowRight size={16} /></button>
                                     </td>
                                 </>
                             )}
@@ -306,9 +326,9 @@ const EditAnimal = () => {
             {isAdding && (
                 <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="w-full max-w-lg bg-white p-8 rounded-xl shadow-2xl">
-                        <h2 className="text-2xl font-bold text-center mb-6">Dodaj nowe zwierzę</h2>
+                        <h2 className="text-2xl font-bold text-center mb-6">Add animal</h2>
                         <form onSubmit={handleAddAnimalSubmit} className="flex flex-col gap-4">
-                            <input name="name" placeholder="Nazwa" value={newAnimalData.name} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm" />
+                            <input name="name" placeholder="Name" value={newAnimalData.name} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm" />
                             <input
                                 type="date"
                                 name="birthDate"
@@ -318,24 +338,24 @@ const EditAnimal = () => {
                                 className="p-4 border rounded-lg shadow-sm"
                             />
                             <select name="species" value={newAnimalData.species} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm">
-                                <option value="">Wybierz gatunek</option>
+                                <option value="">Select specie</option>
                                 {speciesOptions.map(species => (
                                     <option key={species} value={species}>{species}</option>
                                 ))}
                             </select>
 
                             <select name="condition" value={newAnimalData.condition} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm">
-                                <option value="">Wybierz stan zdrowia</option>
+                                <option value="">Select health state</option>
                                 {conditionOptions.map(condition => (
                                     <option key={condition} value={condition}>{condition}</option>
                                 ))}
                             </select>
                             <select name="sex" value={newAnimalData.sex} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm">
-                                <option value="">Wybierz płeć</option>
+                                <option value="">Select gender</option>
                                 <option value="FEMALE">Female</option>
                                 <option value="MALE">Male</option>
                             </select>
-                            <input name="weight" type="number" placeholder="Waga" value={newAnimalData.weight} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm" />
+                            <input name="weight" type="number" placeholder="Weight" value={newAnimalData.weight} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm" />
                             <select
                                 name="enclosureId"
                                 value={newAnimalData.enclosureId}
@@ -343,7 +363,7 @@ const EditAnimal = () => {
                                 required
                                 className="p-4 border rounded-lg shadow-sm"
                             >
-                                <option value="">Wybierz wybieg</option>
+                                <option value="">Select enclosure</option>
                                 {enclosures.map((e) => (
                                     <option key={e.id} value={e.id}>
                                         {`${e.id} | ${e.terrainType}`}
@@ -351,8 +371,8 @@ const EditAnimal = () => {
                                 ))}
                             </select>
                             <div className="flex justify-between mt-4">
-                                <button type="submit" className="p-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-all">Dodaj</button>
-                                <button type="button" onClick={() => setIsAdding(false)} className="p-3 bg-gray-500 text-white rounded-lg shadow-md hover:bg-gray-600 transition-all">Anuluj</button>
+                                <button type="submit" title="Add animal" className="p-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-all">Add</button>
+                                <button type="button" title="Cancel adding" onClick={() => setIsAdding(false)} className="p-3 bg-gray-500 text-white rounded-lg shadow-md hover:bg-gray-600 transition-all">Cancel</button>
                             </div>
                         </form>
                     </div>
@@ -362,45 +382,52 @@ const EditAnimal = () => {
             {showVetDialog && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white p-6 rounded shadow-md w-96">
-                        <h2 className="text-lg font-semibold mb-4">Uzupełnij kartę leczenia</h2>
-                        <label className="block mb-2 text-sm font-medium text-gray-700">Opis</label>
+                        <h2 className="text-lg font-semibold mb-4">Treatment card</h2>
+                        <label className="block mb-2 text-sm font-medium text-gray-700">Description</label>
                         <textarea
                             value={treatmentDescription}
+                            placeholder="Enter treatment description"
                             onChange={(e) => setTreatmentDescription(e.target.value)}
                             className="w-full p-2 border rounded mb-4"
                             rows="3"
                         />
-                        <label className="block mb-2 text-sm font-medium text-gray-700">Data i godzina</label>
+                        <label className="block mb-2 text-sm font-medium text-gray-700">Date & time</label>
                         <input
                             type="datetime-local"
                             value={treatmentDateTime}
                             onChange={(e) => setTreatmentDateTime(e.target.value)}
                             className="w-full p-2 border rounded mb-4"
                         />
-                        <label className="block mb-2 text-sm font-medium text-gray-700">Symptomy</label>
-                        <select
-                            multiple
-                            value={selectedSymptomIds}
-                            onChange={(e) =>
-                                setSelectedSymptomIds(
-                                    Array.from(e.target.selectedOptions, (option) => option.value)
-                                )
-                            }
-                            className="w-full p-2 border rounded mb-4"
-                        >
+                        <label className="block mb-2 text-sm font-medium text-gray-700">Symptoms</label>
+                        <div className="border p-2 rounded mb-4 max-h-40 overflow-y-auto">
                             {symptoms.map((symptom) => (
-                                <option key={symptom.id} value={symptom.id}>
-                                    {symptom.name}
-                                </option>
+                                <div key={symptom.id} className="flex items-center mb-1">
+                                    <input
+                                        type="checkbox"
+                                        id={`symptom-${symptom.id}`}
+                                        checked={selectedSymptomIds.includes(symptom.id)}
+                                        onChange={() => {
+                                            setSelectedSymptomIds(prev =>
+                                                prev.includes(symptom.id)
+                                                    ? prev.filter(id => id !== symptom.id)
+                                                    : [...prev, symptom.id]
+                                            );
+                                        }}
+                                        className="mr-2"
+                                    />
+                                    <label htmlFor={`symptom-${symptom.id}`} className="text-sm text-gray-700">
+                                        {symptom.name}
+                                    </label>
+                                </div>
                             ))}
-                        </select>
-                        <label className="block mb-2 text-sm font-medium text-gray-700">Weterynarz</label>
+                        </div>
+                        <label className="block mb-2 text-sm font-medium text-gray-700">Veterinarian</label>
                         <select
                             value={veterinarianId}
                             onChange={(e) => setVeterinarianId(Number(e.target.value))}
                             className="w-full p-2 border rounded mb-4"
                         >
-                            <option value="">Wybierz weterynarza</option>
+                            <option value="">Select veterinarian</option>
                             {veterinarians.map(vet => (
                                 <option key={vet.id} value={vet.id}>
                                     {vet.name} {vet.firstName}
@@ -411,21 +438,23 @@ const EditAnimal = () => {
                             <button
                                 onClick={() => setShowVetDialog(false)}
                                 className="px-4 py-2 bg-gray-300 rounded"
+                                title={"Cancel new treatment"}
                             >
-                                Anuluj
+                                Cancel
                             </button>
                             <button
                                 onClick={() => setShowVetDialog(false)}
                                 className="px-4 py-2 bg-blue-600 text-white rounded"
+                                title={"Create new treatment"}
                             >
-                                Zapisz kartę
+                                Send card
                             </button>
                         </div>
                     </div>
                 </div>
             )}
+            </div>
 
-        </div>
     );
 };
 

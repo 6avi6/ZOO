@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getUser } from '../../services/userService';
+import { getUser } from '../../../services/userService';
 import {
     getPagedWorkSchedules,
     createWorkSchedule,
     updateWorkSchedule,
     deleteWorkSchedule
-} from '../../services/workScheduleService';
-import RegistrarNavbar from "../../components/RegistrarNavbar";
-import { Pencil, Plus, Save, X,ArrowRight } from 'lucide-react';
+} from '../../../services/workScheduleService';
+import RegistrarNavbar from "../../../components/RegistrarNavbar";
+import { Pencil, Plus, Trash2, Save, X } from 'lucide-react';
 
 
 const UserSchedule = () => {
@@ -38,8 +38,8 @@ const UserSchedule = () => {
             const user = await getUser(userId);
             setUsername(user.username);
         } catch (err) {
-            console.error('Błąd podczas ładowania danych użytkownika:', err);
-            setUsername(`Użytkownik #${userId}`);
+            console.error('Error loading user data:', err);
+            setUsername(`User #${userId}`);
         }
     };
 
@@ -48,7 +48,7 @@ const UserSchedule = () => {
             const data = await getPagedWorkSchedules(0, 100, userId);
             setSchedules(data.content);
         } catch (err) {
-            setError('Błąd podczas ładowania harmonogramu pracy.');
+            setError('Error loading work schedule.');
             console.error(err);
         } finally {
             setLoading(false);
@@ -72,17 +72,17 @@ const UserSchedule = () => {
             setDialogVisible(false);
             fetchSchedules();
         } catch (err) {
-            console.error("Błąd przy dodawaniu:", err);
+            console.error("Error adding schedule:", err);
         }
     };
 
     const handleDelete = async (id) => {
-        if (window.confirm("Czy na pewno chcesz usunąć ten wpis?")) {
+        if (window.confirm("Are you sure you want to delete this entry?")) {
             try {
                 await deleteWorkSchedule(id);
                 fetchSchedules();
             } catch (err) {
-                console.error("Błąd przy usuwaniu:", err);
+                console.error("Error deleting schedule:", err);
             }
         }
     };
@@ -111,7 +111,7 @@ const UserSchedule = () => {
             setFormData({ shiftStart: '', shiftEnd: '' });
             fetchSchedules();
         } catch (err) {
-            console.error("Błąd przy aktualizacji:", err);
+            console.error("Error updating schedule:", err);
         }
     };
     const handleUpdate = async (e) => {
@@ -127,23 +127,24 @@ const UserSchedule = () => {
             setDialogVisible(false);
             fetchSchedules();
         } catch (err) {
-            console.error("Błąd przy aktualizacji:", err);
+            console.error("Error updating schedule:", err);
         }
     };
 
-    if (loading) return <div className="p-8">Ładowanie...</div>;
+    if (loading) return <div className="p-8">Loading...</div>;
     if (error) return <div className="p-8 text-red-600">{error}</div>;
 
     return (
-        <div className="relative p-8">
+        <div className="min-h-screen bg-gray-50 p-6">
             <RegistrarNavbar />
-            <h1 className="text-2xl font-bold mb-6">Harmonogram pracy: {username}</h1>
+            <h1 className="text-2xl font-bold mb-6">Work Schedule: {username}</h1>
 
             {/* Dialog modal */}
             {dialogVisible && (
                 <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
                     <div className="bg-white p-6 rounded shadow-md w-full max-w-md">
                         <form onSubmit={editingId ? handleUpdate : handleAddSchedule} className="space-y-4">
+                            <h2 className="text-2xl font-bold text-center mb-6">{editingId ? 'Update' : 'Add'} work hours</h2>
                             <input
                                 name="shiftStart"
                                 type="datetime-local"
@@ -169,14 +170,16 @@ const UserSchedule = () => {
                                         setFormData({ shiftStart: '', shiftEnd: '' });
                                     }}
                                     className="bg-gray-400 text-white px-4 py-2 rounded flex items-center gap-2"
+                                    title="Cancel adding"
                                 >
-                                    <X size={16} /> Anuluj
+                                    <X size={16} /> Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     className="bg-green-500 text-white px-4 py-2 rounded flex items-center gap-2"
+                                    title="Add work hours"
                                 >
-                                    <Save size={16} /> {editingId ? 'Zapisz zmiany' : 'Dodaj'}
+                                    <Save size={16} /> {editingId ? 'Save Changes' : 'Add'}
                                 </button>
                             </div>
                         </form>
@@ -185,68 +188,73 @@ const UserSchedule = () => {
             )}
 
             {schedules.length === 0 ? (
-                <p className="text-gray-500">Brak harmonogramów pracy dla tego użytkownika.</p>
+                <p className="text-gray-500">No work schedules for this user.</p>
             ) : (
-                <div className="overflow-x-auto relative">
-                    <table className="min-w-full border border-gray-300 bg-white shadow-md rounded-lg overflow-hidden">
-                        <thead className="bg-gray-200">
+                <div className="overflow-auto rounded-lg bg-white shadow-md">
+                    <table className="min-w-full divide-y divide-gray-200 text-sm">
+                        <thead className="bg-gray-200 text-gray-700">
                         <tr>
-                            <th className="px-4 py-2">ID</th>
-                            <th className="px-4 py-2">Start</th>
-                            <th className="px-4 py-2">Koniec</th>
-                            <th className="px-4 py-2">Akcje</th>
+                            {['ID', 'Start', 'Species', 'Actions'].map((header) => (
+                                <th
+                                    key={header}
+                                    scope="col"
+                                    className="whitespace-nowrap px-4 py-3 text-left font-semibold text-gray-700"
+                                >
+                                    {header}
+                                </th>
+                            ))}
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="divide-y divide-gray-100">
                         {schedules.map(schedule => (
-                            <tr key={schedule.id} className="border-t">
-                                <td className="px-4 py-2">{schedule.id}</td>
+                            <tr key={schedule.id} className="group hover:bg-gray-50 transition-colors duration-150">
+                                <td className="whitespace-nowrap px-4 py-3 font-medium text-gray-800">{schedule.id}</td>
 
-                                <td className="px-4 py-2">
+                                <td className="whitespace-nowrap px-4 py-3">
                                     {editingId === schedule.id ? (
                                         <input
                                             type="datetime-local"
                                             name="shiftStart"
                                             value={formData.shiftStart}
                                             onChange={handleInputChange}
-                                            className="border rounded p-1"
+                                            className="border p-1 rounded w-full"
                                         />
                                     ) : (
                                         new Date(schedule.shiftStart).toLocaleString()
                                     )}
                                 </td>
 
-                                <td className="px-4 py-2">
+                                <td className="whitespace-nowrap px-4 py-3">
                                     {editingId === schedule.id ? (
                                         <input
                                             type="datetime-local"
                                             name="shiftEnd"
                                             value={formData.shiftEnd}
                                             onChange={handleInputChange}
-                                            className="border rounded p-1"
+                                            className="border p-1 rounded w-full"
                                         />
                                     ) : (
                                         new Date(schedule.shiftEnd).toLocaleString()
                                     )}
                                 </td>
 
-                                <td className={`p-2 flex flex-col gap-2 items-start`}>
+                                <td className="whitespace-nowrap px-4 py-3 flex gap-3">
                                     {editingId === schedule.id ? (
                                         <>
-                                            <button onClick={handleSaveClick} className="text-green-600 font-semibold flex items-center gap-1">
-                                                <Save size={16} /> Zapisz
+                                            <button onClick={handleSaveClick} title="Update schedule" className="text-green-600 hover:text-green-400 px-2 py-2">
+                                                <Save size={16} />
                                             </button>
-                                            <button onClick={handleCancelEdit} className="text-gray-600 flex items-center gap-1">
-                                                <X size={16} /> Anuluj
+                                            <button onClick={handleCancelEdit} title="Cancel update" className="text-gray-600 hover:text-gray-400 px-2 py-2">
+                                                <X size={16} />
                                             </button>
                                         </>
                                     ) : (
                                         <>
-                                            <button onClick={() => handleEdit(schedule)} className="text-blue-600 font-semibold flex items-center gap-1">
-                                                <Pencil size={16} /> Edytuj
+                                            <button onClick={() => handleEdit(schedule)} title="Edit hours" className="text-blue-600 hover:text-blue-400 px-2 py-2">
+                                                <Pencil size={16} />
                                             </button>
-                                            <button onClick={() => handleDelete(schedule.id)} className="text-red-600 font-semibold flex items-center gap-1">
-                                                <X size={16} /> Usuń
+                                            <button onClick={() => handleDelete(schedule.id)} title="Delete hours" className="text-red-600 hover:text-red-400 px-2 py-2">
+                                                <Trash2 size={16} />
                                             </button>
                                         </>
                                     )}
@@ -257,15 +265,17 @@ const UserSchedule = () => {
 
                     </table>
 
-                    {/* Floating Add Button */}
-                    <button
-                        onClick={() => setDialogVisible(true)}
-                        className="fixed bottom-8 right-8 bg-blue-600 text-white p-4 rounded-full shadow-lg z-50 hover:bg-blue-700 transition-all"
-                    >
-                        <Plus size={24} />
-                    </button>
+
                 </div>
             )}
+            {/* Floating Add Button */}
+            <button
+                onClick={() => setDialogVisible(true)}
+                className="fixed bottom-8 right-8 bg-blue-600 text-white p-4 rounded-full shadow-lg z-50 hover:bg-blue-700 transition-all"
+                title="Add work hours"
+            >
+                <Plus size={24} />
+            </button>
         </div>
     );
 };

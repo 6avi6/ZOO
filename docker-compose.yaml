@@ -18,8 +18,8 @@ services:
     build: ./zooBackend 
     container_name: zoo-backend
     environment:
-      PGHOST: localhost
-      PGPORT: 8084
+      PGHOST: postgres
+      PGPORT: 5432
       PGDATABASE: zoo
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin

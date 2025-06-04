@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8083',
+    baseURL: 'https://tab-zoo-backend.nicemeadow-5d15288c.polandcentral.azurecontainerapps.io',
     withCredentials: true,
 });
 
@@ -26,7 +26,7 @@ axiosInstance.interceptors.response.use(
             originalRequest._retry = true;
 
             try {
-                const res = await axios.post('http://localhost:8083/api/auth/refresh', null, {
+                const res = await axios.post('https://tab-zoo-backend.nicemeadow-5d15288c.polandcentral.azurecontainerapps.io/api/auth/refresh', null, {
                     withCredentials: true,
                 });
 

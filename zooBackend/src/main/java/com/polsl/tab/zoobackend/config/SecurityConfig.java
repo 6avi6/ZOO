@@ -40,7 +40,9 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedOriginPatterns(List.of("http://localhost:*", "http://127.0.0.1:*"));
+        corsConfig.setAllowedOriginPatterns(List.of("http://localhost:*",
+                        "http://127.0.0.1:*",
+                        "https://tab-zoo-frontend-aef5ctfnfpfrd5hu.polandcentral-01.azurewebsites.net"));
         corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         corsConfig.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
         corsConfig.setAllowCredentials(true);

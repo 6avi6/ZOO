@@ -9,6 +9,7 @@ export const getFeedingsByAnimalId = async (animalId) => {
         const filteredFeedings = response.data.filter(feeding =>
             feeding.animalIds && feeding.animalIds.includes(id)
         );
+        console.log(filteredFeedings);
         return filteredFeedings;
     } catch (error) {
         console.error(`Błąd przy pobieraniu karmień zwierzęcia ${animalId}:`, error);

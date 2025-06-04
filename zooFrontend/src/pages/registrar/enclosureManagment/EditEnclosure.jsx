@@ -107,13 +107,14 @@ const EditEnclosure = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 p-6">
+        <div className="min-h-screen bg-gray-50 pt-0 pr-6 pb-6 pl-6">
             <RegistrarNavbar />
             <h1 className="text-2xl font-bold mb-6">Enclosures</h1>
 
             <button
                 onClick={() => setIsAdding(true)}
                 className="fixed bottom-6 right-6 z-50 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all text-sm"
+                title="Add Enclosure"
             >
                 <Plus size={20} />
             </button>
@@ -195,6 +196,7 @@ const EditEnclosure = () => {
                                     <td className="whitespace-nowrap px-4 py-3 flex gap-3">
                                         <button
                                             onClick={() => handleSaveClick(enc.id)}
+                                            title="Update enclosure"
                                             className="px-2 py-1 text-green-600 hover:text-green-400 rounded"
                                         >
                                             <Save size={16} />
@@ -202,6 +204,7 @@ const EditEnclosure = () => {
                                         <button
                                             onClick={() => setEditingEnclosure(null)}
                                             className="px-2 py-1 text-gray-600 hover:text-gray-400 rounded"
+                                            title="Cancel update"
                                         >
                                             <X size={16} />
                                         </button>
@@ -218,12 +221,14 @@ const EditEnclosure = () => {
                                         <button
                                             onClick={() => handleEditClick(enc)}
                                             className="px-2 py-1 text-blue-600 hover:text-blue-400"
+                                            title="Edit enclosure"
                                         >
                                             <Pencil size={16} />
                                         </button>
                                         <button
                                             onClick={() => handleDeleteClick(enc.id)}
                                             className="px-2 py-1 text-red-600 hover:text-red-400"
+                                            title="Delete enclosure"
                                         >
                                             <Trash2 size={16} />
                                         </button>
@@ -257,6 +262,7 @@ const EditEnclosure = () => {
                                 <input
                                     type="checkbox"
                                     name="isAccessWater"
+                                    title="Access water"
                                     checked={newEnclosureData.isAccessWater}
                                     onChange={handleAddChange}
                                 />
@@ -296,6 +302,7 @@ const EditEnclosure = () => {
                                 <button
                                     type="submit"
                                     className="p-3 bg-green-700 text-white rounded-lg shadow-md hover:bg-green-800"
+                                    title="Add enclosure"
                                 >
                                     Add
                                 </button>
@@ -303,6 +310,7 @@ const EditEnclosure = () => {
                                     type="button"
                                     onClick={() => setIsAdding(false)}
                                     className="p-3 bg-gray-500 text-white rounded-lg shadow-md hover:bg-gray-600"
+                                    title="Cancel adding"
                                 >
                                     Cancel
                                 </button>

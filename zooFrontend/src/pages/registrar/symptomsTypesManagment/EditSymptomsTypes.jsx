@@ -73,7 +73,7 @@ const EditSymptoms = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 p-6">
+        <div className="min-h-screen bg-gray-50 pt-0 pr-6 pb-6 pl-6">
             <RegistrarNavbar />
 
             <h1 className="text-2xl font-bold mb-6">Symptom Types</h1>
@@ -100,6 +100,7 @@ const EditSymptoms = () => {
                             <td className="whitespace-nowrap px-4 py-3">
                                 {editIndex === index ? (
                                     <input
+                                        placeholder="Name"
                                         type="text"
                                         value={editData.name}
                                         onChange={(e) => handleEditChange('name', e.target.value)}
@@ -110,6 +111,7 @@ const EditSymptoms = () => {
                             <td className="whitespace-nowrap px-4 py-3">
                                 {editIndex === index ? (
                                     <input
+                                        placeholder="Description"
                                         type="text"
                                         value={editData.description}
                                         onChange={(e) => handleEditChange('description', e.target.value)}
@@ -123,10 +125,12 @@ const EditSymptoms = () => {
                                     <button
                                         onClick={() => saveEdit(symptom.id)}
                                         className="px-2 py-1 text-green-600 hover:text-green-400"
+                                        title="Update symptom"
                                     >
                                         <Save size={16} />
                                     </button>
                                     <button
+                                        title="Cancel update"
                                         onClick={cancelEdit}
                                         className=" px-2 py-1 text-gray-600 hover:text-gray-400"
                                     >
@@ -138,12 +142,14 @@ const EditSymptoms = () => {
                                         <button
                                             onClick={() => startEdit(index, symptom)}
                                             className="px-2 py-1 text-blue-600 hover:text-blue-400"
+                                            title="Edit symptom"
                                         >
                                             <Pencil size={16} />
                                         </button>
                                         <button
                                             onClick={() => handleDelete(symptom.id)}
                                             className="px-2 py-1 text-red-600 hover:text-red-400"
+                                            title="Delete symptom"
                                         >
                                             <Trash2 size={16} />
                                         </button>
@@ -160,6 +166,7 @@ const EditSymptoms = () => {
             <button
                 onClick={() => setIsDialogOpen(true)}
                 className="fixed bottom-8 right-8 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg z-50"
+                title="Add new symptom"
             >
                 <Plus size={20} />
             </button>
@@ -188,12 +195,14 @@ const EditSymptoms = () => {
                                 <button
                                     onClick={() => setIsDialogOpen(false)}
                                     className="bg-gray-400 text-white px-4 py-2 rounded flex items-center gap-2"
+                                    title="Cancel adding symptom"
                                 >
                                     <X size={16} /> Cancel
                                 </button>
                                 <button
                                     onClick={handleAddSymptom}
                                     className="bg-green-500 text-white px-4 py-2 rounded flex items-center gap-2"
+                                    title="Add new symptom"
                                 >
                                     <Save size={16} />Add
                                 </button>

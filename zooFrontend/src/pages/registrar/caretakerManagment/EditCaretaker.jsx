@@ -89,7 +89,7 @@ const EditCaretaker = () => {
     const displayOrPlaceholder = (value) => value ? value : <span className="text-gray-400 italic">No data</span>;
 
     return (
-        <div className="min-h-screen bg-gray-50 p-6">
+        <div className="min-h-screen bg-gray-50 pt-0 pr-6 pb-6 pl-6">
             <RegistrarNavbar />
             <h1 className="text-2xl font-bold mb-6">Caregivers</h1>
 
@@ -115,6 +115,7 @@ const EditCaretaker = () => {
                         <div className="flex justify-end gap-2">
                             <button
                                 onClick={handleRegisterClick}
+                                title="Register caregiver"
                                 className="bg-green-600 text-white px-4 py-2 rounded"
                             >
                                 Register
@@ -124,6 +125,7 @@ const EditCaretaker = () => {
                                     setIsAdding(false);
                                     setNewUser({ username: '', password: '', role: 'CAREGIVER' });
                                 }}
+                                title="Cancel adding"
                                 className="bg-gray-500 text-white px-4 py-2 rounded"
                             >
                                 Cancel
@@ -154,16 +156,12 @@ const EditCaretaker = () => {
                             {editingUser === user.id ? (
                                 <>
                                     <td className="whitespace-nowrap px-4 py-3">
-                                        <input
-                                            name="username"
-                                            value={user.username || ''}
-                                            className="border p-1 rounded w-full"
-                                            onChange={handleChange}
-                                        />
+                                        {user.username}
                                     </td>
                                     <td className="whitespace-nowrap px-4 py-3">
                                         <input
                                             name="firstName"
+                                            placeholder="First Name"
                                             value={editedUser.firstName || ''}
                                             onChange={handleChange}
                                             className="border p-1 rounded w-full"
@@ -172,6 +170,7 @@ const EditCaretaker = () => {
                                     <td className="whitespace-nowrap px-4 py-3">
                                         <input
                                             name="lastName"
+                                            placeholder="Last Name"
                                             value={editedUser.lastName || ''}
                                             onChange={handleChange}
                                             className="border p-1 rounded w-full"
@@ -180,6 +179,7 @@ const EditCaretaker = () => {
                                     <td className="whitespace-nowrap px-4 py-3">
                                         <input
                                             name="email"
+                                            placeholder="Email"
                                             value={editedUser.email || ''}
                                             onChange={handleChange}
                                             className="border p-1 rounded w-full"
@@ -197,6 +197,7 @@ const EditCaretaker = () => {
                                     <td className="whitespace-nowrap px-4 py-3 flex gap-3">
                                         <button
                                             onClick={handleSaveClick}
+                                            title="Update caregiver"
                                             className="text-green-600 hover:text-green-400 px-2 py-2"
                                         >
                                             <Save size={16}/>
@@ -204,6 +205,7 @@ const EditCaretaker = () => {
                                         <button
                                             onClick={() => setEditingUser(null)}
                                             className="text-gray-600 hover:text-gray-400 px-2 py-2"
+                                            title="Cancel update"
                                         >
                                             <X size={16} />
                                         </button>
@@ -219,10 +221,10 @@ const EditCaretaker = () => {
                                     <td className="whitespace-nowrap px-4 py-3 flex gap-3">
                                         <button
                                             onClick={() => handleEditClick(user)}
-                                            className="px-2 py-1 text-blue-600 hover:text-blue-400"><Pencil size={16} /></button>
+                                            className="px-2 py-1 text-blue-600 hover:text-blue-400" title="Edit caretaker"><Pencil size={16}/></button>
                                         <button
                                             onClick={() => handleDeleteClick(user.id)}
-                                            className="px-2 py-1 text-red-600 hover:text-red-400"><Trash2 size={16} /></button>
+                                            className="px-2 py-1 text-red-600 hover:text-red-400" title="Delete caretaker"><Trash2 size={16}/></button>
                                     </td>
                                 </>
                             )}
@@ -234,6 +236,7 @@ const EditCaretaker = () => {
                 <button
                     onClick={() => setIsAdding(true)}
                     className="fixed bottom-6 right-6 z-50 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all text-sm"
+                    title="Add caretaker"
                 >
                     <Plus size={20}/>
                 </button>

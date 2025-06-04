@@ -109,7 +109,7 @@ const MyAnimals = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 p-6">
+        <div className="min-h-screen bg-gray-50 pt-0 pr-6 pb-6 pl-6">
             <CaregiverNavbar />
             <h1 className="text-2xl font-bold mb-6">My Animals</h1>
 
@@ -192,12 +192,14 @@ const MyAnimals = () => {
                                         <button
                                             onClick={handleSaveClick}
                                             className="px-2 py-1d text-green-600  hover:text-green-400"
+                                            title={"Update animal"}
                                         >
                                             <Save size={16} />
                                         </button>
                                         <button
                                             onClick={() => handleEditClick(null)}
                                             className="px-2 py-1  text-gray-600 hover:text-gray-400"
+                                            title={"Cancel update"}
                                         >
                                             <X size={16} />
                                         </button>
@@ -207,6 +209,7 @@ const MyAnimals = () => {
                                         <button
                                             onClick={() => handleEditClick(animal)}
                                             className="px-2 py-1 text-blue-600 hover:text-blue-400"
+                                            title={"Edit animal"}
                                         >
                                             <Pencil size={16} />
                                         </button>
@@ -214,6 +217,7 @@ const MyAnimals = () => {
                                             onClick={() => handleDetailClick(animal.id)}
                                             className="px-2 py-1  text-gray-600 hover:text-gray-400"
                                             aria-label="Details"
+                                            title={"Animal details"}
                                         >
                                             <ArrowRight size={16} />
                                         </button>

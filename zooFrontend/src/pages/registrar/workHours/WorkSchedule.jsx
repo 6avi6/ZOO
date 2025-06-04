@@ -24,7 +24,7 @@ const WorkSchedule = () => {
     const displayOrPlaceholder = (value) => value ? value : <span className="text-gray-400 italic">No data</span>;
 
     return (
-        <div className="min-h-screen bg-gray-50 p-6">
+        <div className="min-h-screen bg-gray-50 pt-0 pr-6 pb-6 pl-6">
             <RegistrarNavbar />
             <h1 className="text-2xl font-bold mb-6">User List</h1>
 
@@ -57,7 +57,7 @@ const WorkSchedule = () => {
                                 <button
                                     onClick={() => navigate(`/registrar/work-schedule/${user.id}`)}
                                     className="text-gray-600 hover:text-gray-400 font-semibold flex items-center gap-1 px-2 py-2"
-                                    title="View schedule"
+                                    title="View user schedule"
                                 >
                                     <ArrowRight size={16} />
                                 </button>

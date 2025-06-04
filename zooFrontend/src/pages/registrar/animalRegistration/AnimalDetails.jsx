@@ -226,7 +226,7 @@ const AnimalDetails = () => {
     if (!animal) return <div className="p-8 text-center">Loading animal data...</div>;
 
     return (
-        <div className="min-h-screen bg-gray-100 relative">
+        <div className="min-h-screen bg-gray-100 relative pt-0 pr-6 pb-6 pl-6">
             <RegistrarNavbar />
             <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg mt-8 rounded-xl">
                 <h1 className="text-3xl font-bold mb-6">Details: {animal.name}</h1>
@@ -247,7 +247,7 @@ const AnimalDetails = () => {
 
                         <div className="flex items-center justify-between mt-4">
                             <h2 className="text-lg font-semibold">Current Caretakers:</h2>
-                            <button onClick={handleEditClick} className="text-blue-600 hover:text-blue-800">
+                            <button onClick={handleEditClick} className="text-blue-600 hover:text-blue-800" title="Edit assigned caretakers">
                                 <FaEdit />
                             </button>
                         </div>
@@ -366,12 +366,14 @@ const AnimalDetails = () => {
                                                 <button
                                                     onClick={handleUpdateFeeding}
                                                     className="text-green-600 px-2 py-1 rounded hover:text-green-400"
+                                                    title="Update Feeding"
                                                 >
                                                     <Save size={16} />
                                                 </button>
                                                 <button
                                                     onClick={cancelEditFeeding}
                                                     className="text-gray-600 px-2 py-1 rounded hover:text-gray-400"
+                                                    title="Cancel"
                                                 >
                                                     <X size={16} />
                                                 </button>
@@ -387,7 +389,7 @@ const AnimalDetails = () => {
                                                     ? `${f.foodTypeId} | ${foodTypes.find(ft => ft.id === f.foodTypeId).name}`
                                                     : `ID ${f.foodTypeId}`}
                                             </td>
-                                            <td className="whitespace-nowrap px-4 py-3">{f.isCompleted ? 'Completed' : 'Not completed'}</td>
+                                            <td className="whitespace-nowrap px-4 py-3">{f.isCompleted ? 'Fed' : 'Not fed'}</td>
                                             <td className="whitespace-nowrap px-4 py-3">
                                                 {f.userIds.map((uid) => {
                                                     const user = allUsers.find((c) => c.id === uid);
@@ -398,12 +400,14 @@ const AnimalDetails = () => {
                                                 <button
                                                     onClick={() => startEditFeeding(f)}
                                                     className="text-blue-600 px-2 py-1 rounded hover:text-blue-400"
+                                                    title="Edit feeding"
                                                 >
                                                     <Pencil size={16} />
                                                 </button>
                                                 <button
                                                     onClick={() => handleDeleteFeeding(f.id)}
                                                     className="text-red-600 px-2 py-1 rounded hover:text-red-400"
+                                                    title="Delete feeding"
                                                 >
                                                     <Trash2 size={16} />
                                                 </button>
@@ -422,6 +426,7 @@ const AnimalDetails = () => {
                 {/* FAB Button */}
                 <button
                     onClick={() => setShowAddForm(true)}
+                    title="Add a new feeding"
                     className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-md hover:bg-blue-700 z-50"
                 >
                     <Plus size={24} />

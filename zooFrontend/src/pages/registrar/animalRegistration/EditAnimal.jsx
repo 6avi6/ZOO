@@ -25,7 +25,7 @@ const EditAnimal = () => {
     const [showVetDialog, setShowVetDialog] = useState(false);
     const [symptoms, setSymptoms] = useState([]);
     const [selectedSymptomIds, setSelectedSymptomIds] = useState([]);
-    const [treatmentDescription, setTreatmentDescription] = useState('Default description');
+    const [treatmentDescription, setTreatmentDescription] = useState('');
     const [treatmentDateTime, setTreatmentDateTime] = useState(new Date().toISOString().slice(0, 16));
     const [veterinarianId, setVeterinarianId] = useState(1);
     const [veterinarians, setVeterinarians] = useState([]);
@@ -200,13 +200,14 @@ const EditAnimal = () => {
 
     return (
 
-        <div className="min-h-screen bg-gray-50 p-6">
+        <div className="min-h-screen bg-gray-50 pt-0 pr-6 pb-6 pl-6">
             <RegistrarNavbar/>
             <h1 className="text-2xl font-bold mb-6">Animals</h1>
             {/* Floating Add Button */}
             <button
                 onClick={() => setIsAdding(true)}
                 className="fixed bottom-6 right-6 z-50 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all text-sm"
+                title="Add a new animal"
             >
                 <Plus size={20}/>
             </button>
@@ -232,10 +233,10 @@ const EditAnimal = () => {
                             {editingAnimal === animal.id ? (
                                 <>
                                     <td className="whitespace-nowrap px-4 py-3">
-                                        <input name="name" value={editedAnimal.name} onChange={handleEditChange}  className="border rounded px-1 py-0.5" />
+                                        <input name="name" placeholder="Name" value={editedAnimal.name} onChange={handleEditChange}  className="border rounded px-1 py-0.5" />
                                     </td>
                                     <td className="whitespace-nowrap px-4 py-3">
-                                        <input name="birthDate" value={editedAnimal.birthDate} onChange={handleEditChange}  className="border rounded px-1 py-0.5" />
+                                        <input type="date" name="birthDate" value={editedAnimal.birthDate} onChange={handleEditChange}  className="border rounded px-1 py-0.5" />
                                     </td>
                                     <td className="whitespace-nowrap px-4 py-3">
                                         <select name="species" value={editedAnimal.species} onChange={handleEditChange}  className="border rounded px-1 py-0.5">
@@ -279,8 +280,8 @@ const EditAnimal = () => {
                                         </select>
                                     </td>
                                     <td className="whitespace-nowrap px-4 py-3 flex gap-3">
-                                        <button onClick={() => handleSaveClick(animal.id)} className="text-green-600 hover:text-green-400"><Save size={16} /></button>
-                                        <button onClick={() => setEditingAnimal(null)} className="text-gray-600 hover:text-gray-400"><X size={16} /></button>
+                                        <button onClick={() => handleSaveClick(animal.id)} className="text-green-600 hover:text-green-400" title="Update changes"><Save size={16} /></button>
+                                        <button onClick={() => setEditingAnimal(null)} className="text-gray-600 hover:text-gray-400" title="Cancel changes"><X size={16}/></button>
                                     </td>
                                 </>
                             ) : (
@@ -309,9 +310,9 @@ const EditAnimal = () => {
                                             : ''}
                                     </td>
                                     <td className="whitespace-nowrap px-4 py-3 flex gap-3">
-                                        <button onClick={() => handleEditClick(animal)} className="text-blue-600 hover:text-blue-400"><Pencil size={16} /></button>
-                                        <button onClick={() => handleDeleteClick(animal.id)} className="text-red-600 hover:text-red-400"><Trash2 size={16} /></button>
-                                        <button onClick={() => window.location.href = `animals/${animal.id}`} className="text-gray-600 hover:text-gray-400" title="Szczegóły"><ArrowRight size={16} /></button>
+                                        <button onClick={() => handleEditClick(animal)} className="text-blue-600 hover:text-blue-400" title="Edit animal"><Pencil size={16} /></button>
+                                        <button onClick={() => handleDeleteClick(animal.id)} className="text-red-600 hover:text-red-400" title="Delete animal"><Trash2 size={16} /></button>
+                                        <button onClick={() => window.location.href = `animals/${animal.id}`} className="text-gray-600 hover:text-gray-400" title="Go to details"><ArrowRight size={16} /></button>
                                     </td>
                                 </>
                             )}
@@ -325,9 +326,9 @@ const EditAnimal = () => {
             {isAdding && (
                 <div className="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="w-full max-w-lg bg-white p-8 rounded-xl shadow-2xl">
-                        <h2 className="text-2xl font-bold text-center mb-6">Dodaj nowe zwierzę</h2>
+                        <h2 className="text-2xl font-bold text-center mb-6">Add animal</h2>
                         <form onSubmit={handleAddAnimalSubmit} className="flex flex-col gap-4">
-                            <input name="name" placeholder="Nazwa" value={newAnimalData.name} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm" />
+                            <input name="name" placeholder="Name" value={newAnimalData.name} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm" />
                             <input
                                 type="date"
                                 name="birthDate"
@@ -354,7 +355,7 @@ const EditAnimal = () => {
                                 <option value="FEMALE">Female</option>
                                 <option value="MALE">Male</option>
                             </select>
-                            <input name="weight" type="number" placeholder="Waga" value={newAnimalData.weight} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm" />
+                            <input name="weight" type="number" placeholder="Weight" value={newAnimalData.weight} onChange={handleAddAnimalChange} required className="p-4 border rounded-lg shadow-sm" />
                             <select
                                 name="enclosureId"
                                 value={newAnimalData.enclosureId}
@@ -370,8 +371,8 @@ const EditAnimal = () => {
                                 ))}
                             </select>
                             <div className="flex justify-between mt-4">
-                                <button type="submit" className="p-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-all">Add</button>
-                                <button type="button" onClick={() => setIsAdding(false)} className="p-3 bg-gray-500 text-white rounded-lg shadow-md hover:bg-gray-600 transition-all">Cancel</button>
+                                <button type="submit" title="Add animal" className="p-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-all">Add</button>
+                                <button type="button" title="Cancel adding" onClick={() => setIsAdding(false)} className="p-3 bg-gray-500 text-white rounded-lg shadow-md hover:bg-gray-600 transition-all">Cancel</button>
                             </div>
                         </form>
                     </div>
@@ -385,6 +386,7 @@ const EditAnimal = () => {
                         <label className="block mb-2 text-sm font-medium text-gray-700">Description</label>
                         <textarea
                             value={treatmentDescription}
+                            placeholder="Enter treatment description"
                             onChange={(e) => setTreatmentDescription(e.target.value)}
                             className="w-full p-2 border rounded mb-4"
                             rows="3"
@@ -436,12 +438,14 @@ const EditAnimal = () => {
                             <button
                                 onClick={() => setShowVetDialog(false)}
                                 className="px-4 py-2 bg-gray-300 rounded"
+                                title={"Cancel new treatment"}
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={() => setShowVetDialog(false)}
                                 className="px-4 py-2 bg-blue-600 text-white rounded"
+                                title={"Create new treatment"}
                             >
                                 Send card
                             </button>

@@ -43,7 +43,6 @@ const CaregiverFeedings = () => {
                 const animalMapData = {};
                 animals.forEach(animal => { animalMapData[animal.id] = animal; });
                 setAnimalMap(animalMapData);
-
                 const enclosureMapData = {};
                 enclosures.forEach(enc => {
                     if (enc && enc.id !== null) {
@@ -57,6 +56,7 @@ const CaregiverFeedings = () => {
             }
         };
         fetchFeedings();
+        console.log(feedings);
     }, []);
 
     const handleEditClick = (feeding) => {
@@ -77,8 +77,8 @@ const CaregiverFeedings = () => {
                 feedingDateTime: editData.feedingDateTime,
                 foodTypeId: Number(editData.foodTypeId),
                 isCompleted: editData.isCompleted,
-                enclosureId: editData.enclosureId,
-                animalIds: editData.animalIds,
+                enclosureId: editData.enclosureId === null ? null : editData.enclosureId,
+                animalIds: Array.isArray(editData.animalIds) ? editData.animalIds : [editData.animalIds],
                 userIds: editData.userIds
             });
             const updated = await getMyFeedings();
@@ -90,12 +90,12 @@ const CaregiverFeedings = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 p-6">
+        <div className="min-h-screen bg-gray-50 pt-0 pr-6 pb-6 pl-6">
             <CaregiverNavbar />
             <h1 className="text-2xl font-bold mb-6">My Feedings</h1>
             <div className="overflow-auto rounded-lg bg-white shadow-md">
 
-                {feedings.length > 0 ? (
+                {(feedings.length > 0 ) ? (
                     <table className="min-w-full divide-y divide-gray-200 text-sm">
                         <thead className="bg-gray-200 text-gray-700">
                         <tr>
@@ -108,8 +108,10 @@ const CaregiverFeedings = () => {
                         </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100">
-                        {feedings.map(f => (
-                            <tr key={f.id} className="group hover:bg-gray-50 transition-colors duration-150">
+                        {feedings
+                            .filter(f => f.animalIds && f.animalIds.length > 0)
+                            .map(f => (
+                                <tr key={f.id} className="group hover:bg-gray-50 transition-colors duration-150">
                                 <td className="whitespace-nowrap px-4 py-3">
                                     {editingId === f.id ? (
                                         <input
@@ -156,7 +158,11 @@ const CaregiverFeedings = () => {
                                     )}
                                 </td>
                                 <td className="whitespace-nowrap px-4 py-3">
-                                    {enclosureMap[f.enclosureId] ? `${f.enclosureId} | ${enclosureMap[f.enclosureId].terrainType}` : 'N/A'}
+                                    {enclosureMap[f.enclosureId] ? (
+                                        `${f.enclosureId} | ${enclosureMap[f.enclosureId].terrainType}`
+                                    ) : (
+                                        <span className="text-gray-500 italic">Not assigned</span>
+                                    )}
                                 </td>
                                 <td className="whitespace-nowrap px-4 py-3">
                                     {f.animalIds.map(id => animalMap[id] ? `${id} | ${animalMap[id].name}` : `ID ${id}`).join(', ')}
@@ -164,15 +170,15 @@ const CaregiverFeedings = () => {
                                 <td className="whitespace-nowrap px-4 py-3">
                                     {editingId === f.id ? (
                                         <>
-                                            <button onClick={() => handleSave(f.id)} className="px-2 py-1 text-green-600 hover:text-green-400">
+                                            <button onClick={() => handleSave(f.id)} title="Update feeding" className="px-2 py-1 text-green-600 hover:text-green-400">
                                                 <Save size={16} />
                                             </button>
-                                            <button onClick={() => setEditingId(null)} className="px-2 py-1 text-gray-600 hover:text-gray-400">
+                                            <button onClick={() => setEditingId(null)} title="Cancel update" className="px-2 py-1 text-gray-600 hover:text-gray-400">
                                                 <X size={16} />
                                             </button>
                                         </>
                                     ) : (
-                                        <button onClick={() => handleEditClick(f)} className="px-2 py-1 text-blue-600 hover:text-blue-400">
+                                        <button onClick={() => handleEditClick(f)} title="Edit feeding" className="px-2 py-1 text-blue-600 hover:text-blue-400">
                                             <Pencil size={16} />
                                         </button>
                                     )}

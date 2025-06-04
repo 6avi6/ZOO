@@ -23,7 +23,7 @@ const CaregiverScheduler = () => {
     }, []);
 
     return (
-        <div className="min-h-screen bg-gray-50 p-6">
+        <div className="min-h-screen bg-gray-50 pt-0 pr-6 pb-6 pl-6">
             <CaregiverNavbar />
 
             <h1 className="text-2xl font-bold mb-6">My Work Schedule</h1>

@@ -144,6 +144,7 @@ const UserSchedule = () => {
                 <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
                     <div className="bg-white p-6 rounded shadow-md w-full max-w-md">
                         <form onSubmit={editingId ? handleUpdate : handleAddSchedule} className="space-y-4">
+                            <h2 className="text-2xl font-bold text-center mb-6">{editingId ? 'Update' : 'Add'} work hours</h2>
                             <input
                                 name="shiftStart"
                                 type="datetime-local"
@@ -169,12 +170,14 @@ const UserSchedule = () => {
                                         setFormData({ shiftStart: '', shiftEnd: '' });
                                     }}
                                     className="bg-gray-400 text-white px-4 py-2 rounded flex items-center gap-2"
+                                    title="Cancel adding"
                                 >
                                     <X size={16} /> Cancel
                                 </button>
                                 <button
                                     type="submit"
                                     className="bg-green-500 text-white px-4 py-2 rounded flex items-center gap-2"
+                                    title="Add work hours"
                                 >
                                     <Save size={16} /> {editingId ? 'Save Changes' : 'Add'}
                                 </button>
@@ -238,19 +241,19 @@ const UserSchedule = () => {
                                 <td className="whitespace-nowrap px-4 py-3 flex gap-3">
                                     {editingId === schedule.id ? (
                                         <>
-                                            <button onClick={handleSaveClick} className="text-green-600 hover:text-green-400 px-2 py-2">
+                                            <button onClick={handleSaveClick} title="Update schedule" className="text-green-600 hover:text-green-400 px-2 py-2">
                                                 <Save size={16} />
                                             </button>
-                                            <button onClick={handleCancelEdit} className="text-gray-600 hover:text-gray-400 px-2 py-2">
+                                            <button onClick={handleCancelEdit} title="Cancel update" className="text-gray-600 hover:text-gray-400 px-2 py-2">
                                                 <X size={16} />
                                             </button>
                                         </>
                                     ) : (
                                         <>
-                                            <button onClick={() => handleEdit(schedule)} className="text-blue-600 hover:text-blue-400 px-2 py-2">
+                                            <button onClick={() => handleEdit(schedule)} title="Edit hours" className="text-blue-600 hover:text-blue-400 px-2 py-2">
                                                 <Pencil size={16} />
                                             </button>
-                                            <button onClick={() => handleDelete(schedule.id)} className="text-red-600 hover:text-red-400 px-2 py-2">
+                                            <button onClick={() => handleDelete(schedule.id)} title="Delete hours" className="text-red-600 hover:text-red-400 px-2 py-2">
                                                 <Trash2 size={16} />
                                             </button>
                                         </>
@@ -269,6 +272,7 @@ const UserSchedule = () => {
             <button
                 onClick={() => setDialogVisible(true)}
                 className="fixed bottom-8 right-8 bg-blue-600 text-white p-4 rounded-full shadow-lg z-50 hover:bg-blue-700 transition-all"
+                title="Add work hours"
             >
                 <Plus size={24} />
             </button>

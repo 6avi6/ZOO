@@ -113,7 +113,7 @@ const AnimalDetails = () => {
     if (!animal) return <div className="p-8 text-center">Loading animal data...</div>;
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-gray-100 pt-0 pr-6 pb-6 pl-6">
             <CaregiverNavbar />
             <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg mt-8 rounded-xl">
                 <h1 className="text-3xl font-bold mb-6">Details: {animal.name}</h1>
@@ -214,12 +214,14 @@ const AnimalDetails = () => {
                                                     <button
                                                         onClick={handleUpdateFeeding}
                                                         className="text-green-600 px-2 py-1 hover:text-green-400"
+                                                        title="Update feeding"
                                                     >
-                                                        <Save size={20} />
+                                                        <Save size={16} />
                                                     </button>
                                                     <button
                                                         onClick={cancelEditFeeding}
                                                         className="text-gray-600 px-2 py-1 hover:text-gray-400"
+                                                        title="Cancel update"
                                                     >
                                                         <X size={16} />
                                                     </button>
@@ -233,7 +235,7 @@ const AnimalDetails = () => {
                                                 </td>
                                                 <td className="whitespace-nowrap px-4 py-3">{enclosure ? `${enclosure.id} | ${enclosure.terrainType}` : 'No data'}</td>
                                                 <td className="whitespace-nowrap px-4 py-3">
-                                                    {f.isCompleted ? 'Complete' : 'Not complete'}
+                                                    {f.isCompleted ? 'Fed' : 'Not fed'}
                                                 </td>
                                                 <td className="whitespace-nowrap px-4 py-3">
                                                     {f.userIds.map((uid) => {
@@ -245,8 +247,9 @@ const AnimalDetails = () => {
                                                     <button
                                                         onClick={() => startEditFeeding(f)}
                                                         className="text-blue-600 hover:text-blue-400"
+                                                        title={"Edit feeding"}
                                                     >
-                                                        <Pencil size={18} />
+                                                        <Pencil size={16} />
                                                     </button>
                                                 </td>
                                             </>

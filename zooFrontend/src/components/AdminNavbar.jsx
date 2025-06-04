@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import logo from '../assets/logo.png';
-import { IoClose, IoLogOutOutline, IoMenu } from 'react-icons/io5';
+import { IoClose, IoLogOutOutline, IoMenu, IoChevronDown, IoChevronUp } from 'react-icons/io5';
 import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../services/authService';
 
 const AdminNavbar = () => {
     const [menu, setMenu] = useState(false);
+    const [dictionaryOpen, setDictionaryOpen] = useState(false); // 👈 do rozwijanego menu
+    const [mobileDictionaryOpen, setMobileDictionaryOpen] = useState(false); // 👈 do mobilnego menu
     const navigate = useNavigate();
 
     const toggleMenu = () => setMenu(!menu);
+    const toggleDictionary = () => setDictionaryOpen(!dictionaryOpen);
+    const toggleMobileDictionary = () => setMobileDictionaryOpen(!mobileDictionaryOpen);
 
     const handleLogout = async () => {
         try {
@@ -31,18 +35,43 @@ const AdminNavbar = () => {
             <div className="hidden sm:flex flex-row items-center justify-between w-full ml-auto">
                 <div className="flex flex-row gap-4 ml-12">
                     <Link to="/admin/manage-users">
-                        <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-[#F4E7CB] transition-all duration-200">
-                            Użytkownicy
+                        <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-[#F4E7CB]  transition-all duration-200">
+                            Users
                         </p>
                     </Link>
-                    <Link to="/admin/manage-dictionary">
-                        <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-[#F4E7CB] transition-all duration-200">
-                            Słownik
-                        </p>
-                    </Link>
+
+                    <div className="relative">
+                        <button
+                            onClick={toggleDictionary}
+                            className={`flex items-center text-xl p-[23px] text-gray-800 h-full border-b-4 border-white hover:border-[#F4E7CB] ${dictionaryOpen ? 'border-[#F4E7CB]' : 'border-white'} transition-all duration-200`}
+                        >
+                            Dictionary {dictionaryOpen ? <IoChevronUp size={14} className="ml-2 inline" /> : <IoChevronDown size={14}  className="ml-2 inline" />}
+                        </button>
+                        <div
+                            className={`absolute left-0 mt-[1px] bg-white shadow-md rounded-b-md z-10 w-[158px] border-b border-l border-r border-b-gray-200 overflow-hidden transition-all duration-[400ms] ease-in-out ${
+                                dictionaryOpen ? 'max-h-48' : 'max-h-0'
+                            }`}
+                        >
+                            {/*<Link to="/admin/dictionary/animals">
+                                <p className="px-4 py-2 hover:text-[#A68A64]">Animals</p>
+                            </Link>
+                            <Link to="/admin/dictionary/terrains">
+                                <p className="px-4 py-2 hover:text-[#A68A64]">Terrains</p>
+                            </Link>*/}
+                            <Link to="/admin/dictionary/feed">
+                                <p className="px-4 py-2 hover:text-[#A68A64]">Feed</p>
+                            </Link>
+                            <Link to="/admin/dictionary/symptoms">
+                                <p className="px-4 py-2 rounded-b-md hover:text-[#A68A64]">Symptoms</p>
+                            </Link>
+                        </div>
+
+
+                    </div>
+
                     <Link to="/admin/account">
                         <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-[#F4E7CB] transition-all duration-200">
-                            Konto
+                            Account
                         </p>
                     </Link>
                 </div>
@@ -73,11 +102,30 @@ const AdminNavbar = () => {
                             Użytkownicy
                         </li>
                     </Link>
-                    <Link to="/admin/manage-dictionary">
-                        <li className="p-3 mb-2 text-gray-800 border-b-2 border-gray-200 hover:pl-2 hover:border-[#F4E7CB] duration-200">
-                            Słownik
-                        </li>
-                    </Link>
+
+                    <li
+                        onClick={toggleMobileDictionary}
+                        className="flex justify-between items-center p-3 mb-2 text-gray-800 border-b-2 border-gray-200 cursor-pointer hover:pl-2 hover:border-[#F4E7CB] duration-200"
+                    >
+                        Słownik {mobileDictionaryOpen ? <IoChevronUp /> : <IoChevronDown />}
+                    </li>
+                    {mobileDictionaryOpen && (
+                        <div className="ml-4">
+                            <Link to="/admin/dictionary/animals">
+                                <li className="py-2 text-gray-800 hover:pl-2 hover:text-[#A68A64]">Animals</li>
+                            </Link>
+                            <Link to="/admin/dictionary/terrains">
+                                <li className="py-2 text-gray-800 hover:pl-2 hover:text-[#A68A64]">Terrains</li>
+                            </Link>
+                            <Link to="/admin/dictionary/feed">
+                                <li className="py-2 text-gray-800 hover:pl-2 hover:text-[#A68A64]">Feed</li>
+                            </Link>
+                            <Link to="/admin/dictionary/symptoms">
+                                <li className="py-2 text-gray-800 hover:pl-2 hover:text-[#A68A64]">Symptoms</li>
+                            </Link>
+                        </div>
+                    )}
+
                     <Link to="/admin/account">
                         <li className="p-3 mb-2 text-gray-800 border-b-2 border-gray-200 hover:pl-2 hover:border-[#F4E7CB] duration-200">
                             Konto

@@ -25,6 +25,7 @@ export const getUserWorkSchedule = async (id) => {
 
 export const registerUser = async (data) => {
     try {
+        console.log(data);
         const response = await axiosInstance.post('api/auth/register', data);
         return response.data;
     } catch (error) {

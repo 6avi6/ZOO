@@ -4,6 +4,8 @@ import { IoClose, IoLogOutOutline, IoMenu } from 'react-icons/io5';
 import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../services/authService';
 
+// [ ... importy bez zmian ]
+
 const DirectorNavbar = () => {
     const [menu, setMenu] = useState(false);
     const navigate = useNavigate();
@@ -12,10 +14,10 @@ const DirectorNavbar = () => {
 
     const handleLogout = async () => {
         try {
-            await logout(); // funkcja identyczna jak w adminie
+            await logout();
             navigate('/login');
         } catch (error) {
-            console.error('Błąd podczas wylogowania:', error);
+            console.error('Error during logout:', error);
         }
     };
 
@@ -32,20 +34,20 @@ const DirectorNavbar = () => {
                 <div className="flex flex-row gap-4 ml-12">
                     <Link to="/director/reports">
                         <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-[#F4E7CB] transition-all duration-200">
-                            Raporty
+                            Reports
                         </p>
                     </Link>
                     <Link to="/director/buy-animal">
                         <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-[#F4E7CB] transition-all duration-200">
-                            Kup zwierzę
-                        </p>
-                    </Link>
-                    <Link to="/director/account">
-                        <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-[#F4E7CB] transition-all duration-200">
-                            Konto
+                            Buy Animal
                         </p>
                     </Link>
                     
+                    <Link to="/director/account">
+                        <p className="text-xl p-[23px] text-gray-800 cursor-pointer h-full border-b-4 border-white hover:border-[#F4E7CB] transition-all duration-200">
+                            Account
+                        </p>
+                    </Link>
                 </div>
                 <IoLogOutOutline
                     onClick={handleLogout}
@@ -79,6 +81,7 @@ const DirectorNavbar = () => {
                             Kup zwierzę
                         </li>
                     </Link>
+                   
                     <Link to="/director/account">
                         <li className="p-3 mb-2 text-gray-800 border-b-2 border-gray-200 hover:pl-2 hover:border-green-300 duration-200">
                             Konto

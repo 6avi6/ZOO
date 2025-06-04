@@ -1,6 +1,5 @@
 import axiosInstance from "./axiosInstance";
 
-// Pobierz wszystkie karty leczenia zwierząt
 export const getAllAnimalTreatmentCards = async () => {
     try {
         const response = await axiosInstance.get('/api/animal-treatment-card');
@@ -11,7 +10,6 @@ export const getAllAnimalTreatmentCards = async () => {
     }
 };
 
-// Utwórz nową kartę leczenia zwierzęcia
 export const createAnimalTreatmentCard = async (cardData) => {
     try {
         const response = await axiosInstance.post('/api/animal-treatment-card', cardData);
@@ -22,9 +20,9 @@ export const createAnimalTreatmentCard = async (cardData) => {
     }
 };
 
-// Aktualizuj kartę leczenia
 export const updateAnimalTreatmentCard = async (id, cardData) => {
     try {
+        console.log('Update payload wysyłany do backendu:', cardData);
         const response = await axiosInstance.put(`/api/animal-treatment-card/${id}`, cardData);
         return response.data;
     } catch (error) {
@@ -33,7 +31,6 @@ export const updateAnimalTreatmentCard = async (id, cardData) => {
     }
 };
 
-// Usuń kartę leczenia
 export const deleteAnimalTreatmentCard = async (id) => {
     try {
         await axiosInstance.delete(`/api/animal-treatment-card/${id}`);
@@ -43,7 +40,6 @@ export const deleteAnimalTreatmentCard = async (id) => {
     }
 };
 
-// Pobierz wszystkie zwierzęta
 export const getAllAnimals = async () => {
     try {
         const response = await axiosInstance.get('/api/animals');
@@ -54,7 +50,6 @@ export const getAllAnimals = async () => {
     }
 };
 
-// Pobierz wszystkie symptomy
 export const getAllSymptoms = async () => {
     try {
         const response = await axiosInstance.get('/api/symptoms');

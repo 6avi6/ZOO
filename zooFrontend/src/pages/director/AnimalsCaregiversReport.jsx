@@ -16,7 +16,7 @@ const AnimalsCaregiversReport = () => {
         const result = await getAnimalsCaregiversReport();
         setData(result);
       } catch (err) {
-        setError('Nie udało się pobrać danych o zwierzętach i opiekunach.');
+        setError('Failed to fetch animal and caregiver data.');
       } finally {
         setLoading(false);
       }
@@ -29,19 +29,19 @@ const AnimalsCaregiversReport = () => {
     const doc = new jsPDF();
 
     doc.setFontSize(18);
-    doc.text('Zwierzeta i ich opiekunowie', 14, 20);
+    doc.text('Enclosure and Animal Count', 14, 20);
 
     doc.setFontSize(11);
     doc.setTextColor(100);
-    doc.text(`Raport na dzien: ${today}`, 14, 28);
+    doc.text(`Report as of: ${today}`, 14, 28);
 
-    const tableColumn = ['ID zwierz.', 'Nazwa zwierz.', 'Opiekun'];
+    const tableColumn = ['ID animal', 'Animal name', 'Caregiver'];
     const tableRows = data.map((animal) => [
       animal.animalId,
       animal.animalName,
       animal.caregivers.length > 0
         ? animal.caregivers.map(c => `${c.firstName} ${c.lastName}`).join(', ')
-        : 'Brak opiekuna',
+        : 'No caregiver',
     ]);
 
     autoTable(doc, {
@@ -51,23 +51,23 @@ const AnimalsCaregiversReport = () => {
     });
 
     doc.text(
-      `Liczba zwierzat z opiekunami: ${data.length}`,
+      `Number of Animals with Caregivers: ${data.length}`,
       14,
       doc.lastAutoTable.finalY + 10
     );
 
-    doc.save('raport_zwierzeta_opiekunowie.pdf');
+    doc.save('report_animals_caregivers.pdf');
   };
 
   return (
     <div>
       <DirectorNavbar />
       <div className="bg-white mt-12 mx-auto w-[80%] rounded-lg border shadow-sm border-gray-300 p-8">
-        <h1 className="text-2xl font-semibold text-center mb-2">Zwierzęta i ich opiekunowie</h1>
-        <p className="text-center text-gray-500 mb-6">Raport na dzień: {today}</p>
+        <h1 className="text-2xl font-semibold text-center mb-2">Enclosure and Animal </h1>
+        <p className="text-center text-gray-500 mb-6">Report as of: {today}</p>
 
         {loading ? (
-          <p>Ładowanie...</p>
+          <p>Loading...</p>
         ) : error ? (
           <p className="text-red-500">{error}</p>
         ) : (
@@ -75,9 +75,9 @@ const AnimalsCaregiversReport = () => {
             <table className="w-full table-auto border-collapse">
               <thead>
                 <tr className="bg-gray-100 border-b">
-                  <th className="p-3">ID zwierzęcia</th>
-                  <th className="p-3">Nazwa zwierzęcia</th>
-                  <th className="p-3">Opiekunowie</th>
+                  <th className="p-3">ID animal</th>
+                  <th className="p-3">Animal name</th>
+                  <th className="p-3">Caregivers</th>
                 </tr>
               </thead>
               <tbody>
@@ -95,7 +95,7 @@ const AnimalsCaregiversReport = () => {
                           ))}
                         </ul>
                       ) : (
-                        <span className="text-gray-500 italic">Brak opiekuna</span>
+                        <span className="text-gray-500 italic">No caregiver</span>
                       )}
                     </td>
                   </tr>
@@ -104,7 +104,7 @@ const AnimalsCaregiversReport = () => {
             </table>
 
             <p className="mt-4 text-right font-semibold text-gray-700">
-              Liczba zwierząt z opiekunami: {data.length}
+              Number of Animals with Caregivers: {data.length}
             </p>
 
             <div className="flex justify-end mt-6">
@@ -112,7 +112,7 @@ const AnimalsCaregiversReport = () => {
                 onClick={downloadPDF}
                 className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
               >
-                Pobierz raport w formacie PDF
+                Download PDF Report
               </button>
             </div>
           </>

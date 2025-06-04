@@ -4,6 +4,7 @@ import axios from "axios";
 // Usuń zwierzę po ID
 export const deleteAnimal = async (id) => {
   try {
+    console.log("deleteAnimal", id);
     const response = await axiosInstance.delete(`/api/animals/${id}`);
     return response.data;
   } catch (error) {
@@ -46,6 +47,12 @@ export const getAnimalById = async (id) => {
   }
 };
 
+// Pobierz wszystkich opiekunów danego zwierzęcia
+export const getAnimalCaretakers = async (animalId) => {
+  const response = await axiosInstance.get(`/api/animals/${animalId}/caretakers`);
+  return response.data;
+};
+
 // Zaktualizuj dane zwierzęcia
 export const updateAnimal = async (id, animalData) => {
   try {
@@ -71,14 +78,47 @@ export const createAnimal = async (animalData) => {
 
 // Dyrektor: przypisz opiekunów
 export const assignCaregivers = async (animalId, caregiverIds) => {
-  await axiosInstance.put(`/api/animals/${animalId}/employees`, caregiverIds);
+  await axiosInstance.put(`/api/animals/${animalId}/caretakers`, caregiverIds, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
 };
+
+export const removeCaretakers = async (animalId, employeeIds) => {
+  const token = localStorage.getItem('accessToken');
+  
+  const response = await axiosInstance.delete(`/api/animals/${animalId}/caretakers`, {
+    data: employeeIds,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  return response.data;
+};
+
+
+// PATCH - dodawanie opiekunów
+export const addCaretakers = async (animalId, employeeIds) => {
+  const response = await axiosInstance.patch(`/api/animals/${animalId}/add-caretakers`, employeeIds, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+  return response.data;
+};
+
 
 // Pobierz listę gatunków
 export const getSpecies = async () => {
   const response = await axiosInstance.get('/api/animals/species');
-  return response.data;
+  console.log('Response z /species:', response.data); 
+   return response.data;
+ 
 };
+
+
 
 // Pobierz wszystkich użytkowników
 export const getAllUsers = async () => {

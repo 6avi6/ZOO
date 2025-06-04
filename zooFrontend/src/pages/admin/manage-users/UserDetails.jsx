@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import {useParams} from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import AdminNavbar from "../../../components/AdminNavbar";
-import {getUserWorkSchedule} from '../../../services/adminService';
-import {getUser} from "../../../services/userService";
-
-
-
-
+import { getUserWorkSchedule } from '../../../services/adminService';
+import { getUser } from "../../../services/userService";
 
 const UserDetails = () => {
   const { id } = useParams();
@@ -17,9 +13,8 @@ const UserDetails = () => {
 
   const formatDate = (isoString) => {
     const date = new Date(isoString);
-    return date.toLocaleString('pl-PL'); // np. "3.05.2025, 06:00:00"
+    return date.toLocaleString('en-GB'); // e.g. "03/05/2025, 06:00:00"
   };
-
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -31,8 +26,7 @@ const UserDetails = () => {
       } finally {
         setLoading(false);
       }
-    }
-
+    };
 
     const fetchSchedule = async () => {
       try {
@@ -52,21 +46,21 @@ const UserDetails = () => {
   return (
       <div>
         <AdminNavbar />
-        <div className="bg-white mt-12 mx-auto overflow-x-auto min-h-[300px] w-[80%] rounded-lg border shadow-sm border-gray-300  p-8">
+        <div className="bg-white mt-12 mx-auto overflow-x-auto min-h-[300px] w-[80%] rounded-lg border shadow-sm border-gray-300 p-8">
           <div>
-            <h2 className="text-2xl font-semibold mb-4">Dane osobowe</h2>
+            <h2 className="text-2xl font-semibold mb-4">Personal Information</h2>
             <table className="w-full border border-gray-200 rounded-lg overflow-hidden">
               <tbody className="divide-y divide-gray-200">
               <tr>
-                <th className="text-left px-4 py-2 font-medium text-gray-800">Imię</th>
+                <th className="text-left px-4 py-2 font-medium text-gray-800">First Name</th>
                 <td className="px-4 py-2">{user.firstName}</td>
               </tr>
               <tr>
-                <th className="text-left px-4 py-2 font-medium text-gray-800">Nazwisko</th>
+                <th className="text-left px-4 py-2 font-medium text-gray-800">Last Name</th>
                 <td className="px-4 py-2">{user.lastName}</td>
               </tr>
               <tr>
-                <th className="text-left px-4 py-2 font-medium text-gray-800">Nazwa użytkownika</th>
+                <th className="text-left px-4 py-2 font-medium text-gray-800">Username</th>
                 <td className="px-4 py-2">{user.username}</td>
               </tr>
               <tr>
@@ -74,37 +68,34 @@ const UserDetails = () => {
                 <td className="px-4 py-2">{user.email}</td>
               </tr>
               <tr>
-                <th className="text-left px-4 py-2 font-medium text-gray-800">Data zatrudnienia</th>
+                <th className="text-left px-4 py-2 font-medium text-gray-800">Hire Date</th>
                 <td className="px-4 py-2">{user.hireDate}</td>
               </tr>
               <tr>
-                <th className="text-left px-4 py-2 font-medium text-gray-800">Rola</th>
+                <th className="text-left px-4 py-2 font-medium text-gray-800">Role</th>
                 <td className="px-4 py-2">{user.role}</td>
               </tr>
               </tbody>
             </table>
           </div>
 
+          <div className="my-6 w-[20%] mx-auto h-[1px] bg-gray-400" />
 
-          <div className="my-6 w-[20%] mx-auto  h-[1px] bg-gray-400">
-
-          </div>
-          <p className="text-2xl font-semibold mb-4">Harmonogram pracy</p>
+          <p className="text-2xl font-semibold mb-4">Work Schedule</p>
           {loading ? (
-              <p>Ładowanie...</p>
+              <p>Loading...</p>
           ) : error ? (
               <p className="text-red-500">{error}</p>
           ) : (
               <table className="w-full text-left border-collapse">
                 <thead>
                 <tr className="border-b">
-                  <th className="text-left px-4 py-2 font-medium text-gray-800">Od</th>
-                  <th className="text-left px-4 py-2 font-medium text-gray-800">Do</th>
+                  <th className="text-left px-4 py-2 font-medium text-gray-800">From</th>
+                  <th className="text-left px-4 py-2 font-medium text-gray-800">To</th>
                 </tr>
                 </thead>
                 <tbody>
                 {schedule.map((s) => (
-
                     <tr key={s.id} className="hover:bg-gray-50">
                       <td className="p-3">{formatDate(s.shiftStart)}</td>
                       <td className="p-3">{formatDate(s.shiftEnd)}</td>

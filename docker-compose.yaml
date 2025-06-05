@@ -15,7 +15,7 @@ services:
       - zoo-network  # Przypisanie do własnej sieci
 
   backend:
-    build: .
+    build: ./zooBackend 
     container_name: zoo-backend
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/zoo
@@ -27,6 +27,14 @@ services:
       - "8083:8083"
     networks:
       - zoo-network  # Przypisanie do tej samej sieci
+
+  frontend:
+    build: ./zooFrontend     
+    container_name: zoo-frontend
+    ports:
+      - "3000:80"                 # mapujemy port 80 w kontenerze na 3000 lokalnie
+    networks:
+      - zoo-network
 
 volumes:
   postgres_data:
